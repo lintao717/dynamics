@@ -16,16 +16,14 @@ Typical Task 3 integration pattern:
 
     sim = Simulation.init(config)
     for t in range(T):
-        # 1. Query agent states for LLM prompting
-        states = sim.get_agent_states(agent_ids)
-        # 2. LLM agents make decisions
-        llm_decisions = call_llm(states, context)
-        # 3. Inject LLM decisions into the state
-        sim.inject_llm_decisions(llm_decisions)
-        # 4. Run one step for parametric agents
-        sim.step()
-        # 5. Collect metrics
-        metrics = sim.get_metrics()
+        # 1. Run dynamics step (kernel controls all state)
+        metrics = sim.step()
+        # 2. Get text requests for agents in state A
+        requests = sim.get_text_requests()
+        # 3. LLM renders language (does NOT modify state)
+        texts = call_llm(requests)
+        # 4. Record generated texts
+        sim.record_generated_texts(texts)
 """
 
 from __future__ import annotations
@@ -113,12 +111,11 @@ class Simulation:
     Usage:
         sim = Simulation.init(n_agents=500, params="default", network="sbm")
         for t in range(100):
-            # LLM agents decide (Task 3's responsibility)
-            snapshots = sim.get_agent_snapshots(llm_agent_ids)
-            decisions = your_llm_function(snapshots)
-            sim.inject_llm_decisions(decisions)
-            # Step parametric agents
             metrics = sim.step()
+            # Text generation for agents in state A:
+            # requests = sim.get_text_requests()
+            # texts = your_llm_function(requests)
+            # sim.record_generated_texts(texts)
     """
 
     def __init__(self):
@@ -235,14 +232,36 @@ class Simulation:
         sim = cls()
         sim._rng = np.random.default_rng(seed)
 
+        # ── Input validation ──
+        G_s = np.asarray(G_s, dtype=float)
+        G_o = np.asarray(G_o, dtype=float)
+        if G_s.ndim != 2 or G_s.shape[0] != G_s.shape[1]:
+            raise ValueError(f"G_s must be square, got shape {G_s.shape}")
+        if G_o.shape != G_s.shape:
+            raise ValueError(f"G_o shape {G_o.shape} != G_s shape {G_s.shape}")
+        if np.any(np.isnan(G_s)) or np.any(np.isinf(G_s)):
+            raise ValueError("G_s contains NaN or Inf")
+        if np.any(np.isnan(G_o)) or np.any(np.isinf(G_o)):
+            raise ValueError("G_o contains NaN or Inf")
+        if np.any(G_s < 0) or np.any(G_o < 0):
+            raise ValueError("Network weights must be non-negative")
+        if n_agents != G_s.shape[0]:
+            raise ValueError(f"n_agents={n_agents} != G_s.shape[0]={G_s.shape[0]}")
+        if communities is not None:
+            all_nodes = set()
+            for nodes in communities.values():
+                all_nodes.update(nodes)
+            if all_nodes != set(range(n_agents)):
+                raise ValueError("communities must cover all nodes 0..n_agents-1")
+
         if isinstance(params, str):
             from dynamics_simulation.config import PRESETS
             sim._params = PRESETS.get(params, default_params())
         else:
             sim._params = params
 
-        sim._G_s = G_s
-        sim._G_o = G_o
+        sim._G_s = G_s.copy()
+        sim._G_o = G_o.copy()
         sim._communities = communities or {0: list(range(n_agents))}
 
         sim._state = initialize_agents(
@@ -395,11 +414,11 @@ class Simulation:
         novelty: float = 0.0,
         media_exposure: Optional[np.ndarray] = None,
     ) -> StepMetrics:
-        """Execute one simulation step for PARAMETRIC agents only.
+        """Execute one dynamics step for ALL agents.
 
-        LLM-controlled agents (registered via init or marked via
-        inject_llm_decisions) are frozen during the parametric transition.
-        Their state changes are applied only through inject_llm_decisions().
+        The dynamics kernel controls all state transitions and numerical
+        variables (z, o, o_hat, h, f). LLM text generation via
+        get_text_requests() / record_generated_texts() does not modify state.
 
         Args:
             shock: External shock intensity [0, 1] for this step.

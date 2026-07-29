@@ -56,10 +56,31 @@ def test_mini_simulation():
     assert metrics.peak_A > 0
     assert len(metrics.steps) > 0
 
+def test_from_network():
+    """Verify Simulation.from_network() with external networks."""
+    from dynamics_simulation.api import Simulation
+    import numpy as np
+    G_s = np.array([[0,1,0],[0,0,1],[0,0,0]], dtype=float)
+    G_o = G_s.copy()
+    for i in range(3):
+        s = G_o[i].sum()
+        if s > 0: G_o[i] /= s
+    sim = Simulation.from_network(G_s=G_s, G_o=G_o, n_agents=3, initial_active=1, seed=42)
+    assert sim.n_agents == 3
+    m = sim.step()
+    assert m.step == 1
+    # Verify shape mismatch raises
+    try:
+        Simulation.from_network(G_s=G_s, G_o=np.eye(4), n_agents=3)
+        assert False, "Should have raised ValueError"
+    except ValueError:
+        pass
+
 if __name__ == "__main__":
     test_network_generation(); print("[PASS] Network generation")
     test_agent_initialization(); print("[PASS] Agent initialization")
     test_single_step(); print("[PASS] Single step")
     test_m_flag_propagation(); print("[PASS] m_i flag propagation")
     test_mini_simulation(); print("[PASS] Mini simulation")
+    test_from_network(); print("[PASS] from_network")
     print("\nALL SMOKE TESTS PASSED")

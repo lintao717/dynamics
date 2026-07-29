@@ -19,5 +19,7 @@ jobs:
         run: python tests/test_smoke.py
       - name: Network direction tests
         run: python tests/test_network_direction.py
+      - name: Identifiability tests
+        run: python tests/test_identifiability.py
       - name: Validation suite (quick)
         run: python -m dynamics_simulation.validation --quick

@@ -733,14 +733,9 @@ def run_all_validation(quick: bool = False) -> dict:
     n_passed = sum(1 for t in all_tests if t.passed)
     overall_score = np.mean([t.score for t in all_tests])
 
-    passed_dims = set()
-    for t in all_tests:
-        if t.passed:
-            passed_dims.add(t.dimension)
-
-    # Verdict
-    executed_dimensions = sorted(passed_dims)
-    dims_str = ", ".join(executed_dimensions) if executed_dimensions else "none"
+    executed_dims = sorted({t.dimension for t in all_tests})
+    passed_dims = sorted({t.dimension for t in all_tests if t.passed})
+    dims_str = ", ".join(executed_dims) if executed_dims else "none"
     if n_passed == n_total and overall_score > 0.8:
         verdict = f"PASS — All executed tests passed ({dims_str})"
     elif n_passed / n_total >= 0.7:

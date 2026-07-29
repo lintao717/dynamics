@@ -28,7 +28,7 @@ CI:              GitHub Actions (smoke + network direction + quick validation)
 | 9 | delta_f direction | 1.00 | PASS |
 | 10 | r_1 direction | 1.00 | PASS |
 
-Output: `data/validation_v11_final.json`
+Output: `data/validation_v1.1.json`
 
 ## Known Limitations
 
@@ -64,11 +64,11 @@ Repo root:
 - Fixed silent-neighbor-treated-as-zero-opinion bug
 - Fixed V_MIN=1.0 making climate permanently invisible
 - Fixed Task 3 API V(t) persistence
-- Fixed LLM agent state consistency (all 6 fields)
+- Replaced LLM state control with text-generation-only integration
+- Added TextGenerationRequest / GeneratedText interface
 - Fixed R_eff mean(sigma) calculation
 - Fixed full validation identifiability crash
 - Added TransitionEvents to MetricsCollector
-- Added LLM posts to PVA V(t)
 - Added climate_visible to AgentSnapshot
 - R_eff formula: added S_i, L_j, q_j, PVA channel
 - U renamed: Uncertain → Unaware

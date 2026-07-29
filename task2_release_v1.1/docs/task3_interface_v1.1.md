@@ -66,7 +66,7 @@ Step 6: Process A -> D (decay) and D -> A (reactivation)
 Step 7: Generate public expressions ô_i(t+1) for active agents
 ```
 
-In **hybrid mode** (Task 3), LLM agents skip Steps 2, 5, 6 and instead receive their decisions from an external LLM call. Their private opinions may also be modified by the LLM.
+In **text-generation mode** (Task 3), ALL agents complete Steps 1-7 through the dynamics kernel. After the kernel determines state, stance, and arousal, agents in state A may be routed to an LLM for natural language rendering via `TextGenerationRequest`. The LLM returns `GeneratedText` without modifying any numerical state.
 
 ## 4. Design Concepts
 
@@ -87,7 +87,7 @@ In **hybrid mode** (Task 3), LLM agents skip Steps 2, 5, 6 and instead receive t
 
 ### 4.3 Adaptation
 
-Agents do NOT adapt strategically. They follow reactive decision rules. In hybrid mode, LLM agents MAY exhibit adaptive behavior through their LLM reasoning.
+Agents do NOT adapt strategically. They follow reactive decision rules determined by the dynamics kernel. LLM text generation does not confer adaptive decision-making capability — it only renders pre-computed states as language.
 
 ### 4.4 Interaction
 

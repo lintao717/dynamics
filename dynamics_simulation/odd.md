@@ -16,7 +16,7 @@ The model simulates the co-evolution of information propagation and public opini
 
 The model is designed to be used in two modes:
 - **Standalone**: Parametric simulation with homogeneous decision rules
-- **Hybrid (Task 3)**: Some agents controlled by LLMs (e.g., DeepSeek API), others by parametric rules
+- **LLM text generation (Task 3)**: All agents follow parametric rules for state transitions. LLM is used only to render natural language for agents in state A via TextGenerationRequest/GeneratedText.
 
 ## 2. Entities, State Variables, and Scales
 
@@ -32,7 +32,7 @@ Each agent i at time t is described by:
 
 | Variable | Symbol | Range | Description |
 |----------|--------|-------|-------------|
-| Propagation state | z_i(t) | {U, E, A, D} | U=Uncertain, E=Exposed(transient), A=Active, D=Dormant |
+| Propagation state | z_i(t) | {U, E, A, D} | U=Unaware, E=Exposed(transient), A=Active, D=Dormant |
 | Private opinion | o_i(t) | [-1, 1] | Internal stance on the proposition |
 | Public expression | ô_i(t) | [-1, 1] ∪ {∅} | Expressed stance (∅ when z_i ≠ A) |
 | Emotional arousal | h_i(t) | [0, 1] | Intensity of emotional activation |
@@ -66,7 +66,7 @@ Step 6: Process A -> D (decay) and D -> A (reactivation)
 Step 7: Generate public expressions ô_i(t+1) for active agents
 ```
 
-In **hybrid mode** (Task 3), LLM agents skip Steps 2, 5, 6 and instead receive their decisions from an external LLM call. Their private opinions may also be modified by the LLM.
+In **text-generation mode** (Task 3), ALL agents complete Steps 1-7 through the dynamics kernel. After state determination, agents in state A may receive LLM text rendering via TextGenerationRequest, without modifying numerical state.
 
 ## 4. Design Concepts
 
@@ -87,7 +87,7 @@ In **hybrid mode** (Task 3), LLM agents skip Steps 2, 5, 6 and instead receive t
 
 ### 4.3 Adaptation
 
-Agents do NOT adapt strategically. They follow reactive decision rules. In hybrid mode, LLM agents MAY exhibit adaptive behavior through their LLM reasoning.
+Agents do NOT adapt strategically. They follow reactive decision rules determined by the dynamics kernel. LLM text generation does not add adaptive decision capability.
 
 ### 4.4 Interaction
 
