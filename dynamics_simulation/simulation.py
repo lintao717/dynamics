@@ -64,6 +64,11 @@ class SimulationConfig:
     # ── Random seed ──
     seed: int = 42
 
+    # ── External network (optional) ──
+    G_s: Optional[np.ndarray] = None  # Pre-built propagation network
+    G_o: Optional[np.ndarray] = None  # Pre-built opinion network
+    communities: Optional[dict] = None
+
     # ── Output control ──
     verbose: bool = True
     snapshot_interval: int = 1   # Save snapshot every N steps
@@ -108,15 +113,22 @@ class SimulationRunner:
             print(f"=== Simulation: N={cfg.n_agents}, T={cfg.T}, "
                   f"net={cfg.network_type}, seed={cfg.seed} ===")
 
-        # ── Generate networks ──
-        if cfg.verbose:
-            print("Generating networks...")
-        self.G_s, self.G_o, self.communities = generate_networks(
-            network_type=cfg.network_type,
-            n=cfg.n_agents,
-            rng=self._net_rng,
-            **cfg.network_kwargs,
-        )
+        # ── Generate or use external networks ──
+        if cfg.G_s is not None and cfg.G_o is not None:
+            self.G_s = cfg.G_s
+            self.G_o = cfg.G_o
+            self.communities = cfg.communities or {0: list(range(cfg.n_agents))}
+            if cfg.verbose:
+                print(f"Using external network: {(self.G_s > 0).sum()} edges")
+        else:
+            if cfg.verbose:
+                print("Generating networks...")
+            self.G_s, self.G_o, self.communities = generate_networks(
+                network_type=cfg.network_type,
+                n=cfg.n_agents,
+                rng=self._net_rng,
+                **cfg.network_kwargs,
+            )
         # G_h defaults to G_o
         self.G_h = self.G_o.copy()
 
@@ -128,6 +140,7 @@ class SimulationRunner:
             initial_active=cfg.initial_active,
             initial_opinion_dist=cfg.initial_opinion_dist,
             rng=self._agent_rng,
+            opinion_params=cfg.params.opinion,
         )
         o_initial = state.o.copy()  # Store for anchoring term
 
@@ -161,11 +174,11 @@ class SimulationRunner:
             )
             V_current = V_next  # Carry forward to next step
 
-            # Record snapshot with exact transition events
+            # Record snapshot with exact transition events + actual time step
             if t % cfg.snapshot_interval == 0 or t == cfg.T - 1:
                 self.metrics.record(
                     state, communities=self.communities,
-                    G_s=self.G_s, G_o=self.G_o, events=events,
+                    G_s=self.G_s, G_o=self.G_o, events=events, t=t,
                 )
 
             if cfg.verbose and t % 10 == 9:

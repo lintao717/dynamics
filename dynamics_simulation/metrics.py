@@ -152,7 +152,8 @@ class MetricsCollector:
         communities: Optional[Dict[int, List[int]]] = None,
         G_s: Optional[np.ndarray] = None,
         G_o: Optional[np.ndarray] = None,
-        events: Optional[Any] = None,  # TransitionEvents
+        events: Optional[Any] = None,
+        t: Optional[int] = None,
     ) -> None:
         """Record a snapshot of the current state.
 
@@ -162,9 +163,10 @@ class MetricsCollector:
             G_s: Propagation network (for κ computation).
             G_o: Opinion influence network (for κ computation).
             events: Optional TransitionEvents from this step.
+            t: Actual simulation step index (overrides internal counter).
         """
         n = state.n
-        step = len(self._snapshots)
+        step = t if t is not None else len(self._snapshots)
 
         # ── Opinion polarization index ──
         # Bimodality: high when there are two distinct clusters

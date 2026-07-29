@@ -9,11 +9,11 @@
       "direction",
       "degeneracy"
     ],
-    "elapsed_s": 3.4
+    "elapsed_s": 3.3
   },
   "tests": [
     {
-      "name": "SIR degeneracy (alpha_1=alpha_3=beta_M=lambda_spiral=0)",
+      "name": "SIR consistency (alpha_1=alpha_3=beta_M=lambda_spiral=0)",
       "dimension": "degeneracy",
       "passed": true,
       "score": 0.980971828818965,
@@ -27,7 +27,7 @@
       "interpretation": "SIR-like: monotonic=True, SI_corr=0.95, peak_A=28@t=22 \u2014 degeneracy holds"
     },
     {
-      "name": "HK degeneracy (beta=0, opinion-only)",
+      "name": "HK bounded confidence consistency (beta=0, opinion-only)",
       "dimension": "degeneracy",
       "passed": true,
       "score": 0.75,
@@ -81,11 +81,11 @@
       "passed": true,
       "score": 1.0,
       "evidence": {
-        "low": 10.3,
-        "high": 17.7,
-        "ratio": 1.71
+        "low": 10.7,
+        "high": 18.0,
+        "ratio": 1.69
       },
-      "interpretation": "beta: 10 -> 18 ( inc )"
+      "interpretation": "beta: 11 -> 18 ( inc )"
     },
     {
       "name": "alpha_1  inc  -> peak_A  inc ",
@@ -93,11 +93,11 @@
       "passed": true,
       "score": 1.0,
       "evidence": {
-        "low": 13.3,
-        "high": 20.7,
-        "ratio": 1.55
+        "low": 12.3,
+        "high": 19.0,
+        "ratio": 1.54
       },
-      "interpretation": "alpha_1: 13 -> 21 ( inc )"
+      "interpretation": "alpha_1: 12 -> 19 ( inc )"
     },
     {
       "name": "gamma_1  inc  -> late_A  dec ",
@@ -105,10 +105,10 @@
       "passed": true,
       "score": 1.0,
       "evidence": {
-        "low": 5.5,
-        "high": 5.2
+        "low": 5.4,
+        "high": 4.7
       },
-      "interpretation": "gamma_1: late_A 5.5 -> 5.2 ( dec )"
+      "interpretation": "gamma_1: late_A 5.4 -> 4.7 ( dec )"
     },
     {
       "name": "delta_f  inc  -> final_f  dec ",
@@ -116,10 +116,10 @@
       "passed": true,
       "score": 1.0,
       "evidence": {
-        "low": 0.233,
-        "high": 0.026
+        "low": 0.221,
+        "high": 0.031
       },
-      "interpretation": "delta_f: f_final 0.233 -> 0.026 ( dec )"
+      "interpretation": "delta_f: f_final 0.221 -> 0.031 ( dec )"
     },
     {
       "name": "r_1  inc  -> shock_reactivation  inc ",
@@ -127,10 +127,10 @@
       "passed": "True",
       "score": 1.0,
       "evidence": {
-        "low": 12.7,
-        "high": 72.0
+        "low": 10.3,
+        "high": 64.3
       },
-      "interpretation": "r_1: reactivation 13 -> 72 ( inc )"
+      "interpretation": "r_1: reactivation 10 -> 64 ( inc )"
     }
   ]
 }

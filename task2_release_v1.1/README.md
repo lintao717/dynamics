@@ -47,7 +47,7 @@ $$X_i(t) = (z_i(t), m_i(t), o_i(t), \hat{o}_i(t), h_i(t), f_i(t))$$
 
 ## Validation
 
-- **9/10 tests passed** (overall score 0.885)
+- **10/10 tests passed** (overall score 0.973)
 - SIR consistency: SI correlation 0.95
 - Expression fidelity: per-agent error 0.0
 - All 5 parameter directions: correct

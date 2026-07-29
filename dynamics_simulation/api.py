@@ -194,6 +194,7 @@ class Simulation:
             initial_active=initial_active,
             initial_opinion_dist=initial_opinion,
             rng=sim._rng,
+            opinion_params=sim._params.opinion,
         )
         sim._o_initial = sim._state.o.copy()
         sim._engine = TransitionEngine(sim._params, sim._rng)
@@ -490,50 +491,50 @@ def load_params_from_json(path: str) -> ModelParams:
     return p
 
 
-def create_llm_prompt(snapshot: AgentSnapshot, event_context: str = "") -> str:
-    """Create a prompt for an LLM agent based on its current state.
+def create_llm_prompt(req: TextGenerationRequest, event_context: str = "") -> str:
+    """Create a text-generation prompt for an agent already determined to be active.
 
-    Task 3 can use this as a starting point for building LLM prompts.
+    The dynamics kernel has ALREADY decided this agent is in state A and has
+    ALREADY computed the target stance (req.target_stance). The LLM's job is
+    ONLY to generate natural language text consistent with that stance.
 
     Args:
-        snapshot: The agent's current state snapshot.
+        req: TextGenerationRequest with pre-computed stance and arousal.
         event_context: Description of the event being discussed.
 
     Returns:
         A prompt string for the LLM.
     """
-    z_descriptions = {
-        "U": "You have NOT yet been exposed to information about this event.",
-        "E": "You have JUST been exposed to information about this event.",
-        "A": "You are CURRENTLY actively discussing this event.",
-        "D": "You are AWARE of this event but currently SILENT.",
-    }
-
-    climate_desc = (
-        "supportive of the measures" if snapshot.local_climate > 0.2
-        else "opposed to the measures" if snapshot.local_climate < -0.2
-        else "mixed or neutral"
+    stance_desc = (
+        "strongly supportive" if req.target_stance > 0.5
+        else "moderately supportive" if req.target_stance > 0.1
+        else "neutral" if req.target_stance > -0.1
+        else "moderately opposed" if req.target_stance > -0.5
+        else "strongly opposed"
     )
+    arousal_desc = (
+        "highly emotional" if req.target_arousal > 0.6
+        else "somewhat emotional" if req.target_arousal > 0.3
+        else "calm and matter-of-fact"
+    )
+    climate_desc = (
+        "supportive of the measures" if req.local_climate > 0.2
+        else "opposed to the measures" if req.local_climate < -0.2
+        else "mixed or neutral"
+    ) if req.climate_visible else "unclear (insufficient visible expression)"
 
-    prompt = f"""You are Agent #{snapshot.agent_id} in a social media simulation about a public event.
+    prompt = f"""You are a social media user in a simulation about a public event.
 
 {event_context}
 
-YOUR CURRENT STATE:
-- Awareness: {z_descriptions.get(snapshot.z_name, 'Unknown')}
-- Your private opinion on the event: {snapshot.o:+.2f} (scale: -1.0=strongly oppose to +1.0=strongly support)
-- Your emotional arousal: {snapshot.h:.2f} (0.0=calm, 1.0=highly agitated)
-- Your information fatigue: {snapshot.f:.2f} (0.0=fresh, 1.0=exhausted)
-- Your tendency to self-censor: {snapshot.c:.2f} (0.0=outspoken, 1.0=very cautious)
+YOUR TASK: Write a short social media post (1-3 sentences, in Chinese).
 
-YOUR LOCAL ENVIRONMENT:
-- Active neighbors discussing this: {snapshot.n_active_neighbors}
-- Local opinion climate: {climate_desc}
+CONSTRAINTS:
+- Your stance should be: {stance_desc} (numerical score: {req.target_stance:+.2f})
+- Your emotional tone should be: {arousal_desc} (numerical level: {req.target_arousal:.2f})
+- Your private opinion is {req.private_opinion:+.2f}
+- The local opinion climate is {climate_desc}
 
-DECISION: Based on your state, decide:
-1. If you will publicly express your opinion (post/comment/share)?
-2. If expressing, what stance will you take?
-
-Respond with a JSON object: {{"action": "express"|"remain_silent", "opinion": float}}
+Return ONLY a JSON object: {{"text": "your post here"}}
 """
     return prompt
