@@ -189,13 +189,9 @@ class MetricsCollector:
             o_hat_count = 0
             public_bias = 0.0
 
-        # ── Dynamic kappa: computed from actual U->E events this step ──
+        # ── κ computation ──
         kappa = {}
-        if communities is not None and G_s is not None and len(communities) > 1 and events is not None:
-            kappa = _compute_dynamic_kappa(events, G_s, communities, state, self._prev_z)
-            if not kappa:  # fallback to static if no events
-                kappa = _compute_kappa(G_s, communities)
-        elif communities is not None and G_s is not None and len(communities) > 1:
+        if communities is not None and G_s is not None and len(communities) > 1:
             kappa = _compute_kappa(G_s, communities)
 
         # ── Mean active neighbors ──
@@ -281,13 +277,19 @@ class MetricsCollector:
         metrics.final_opinion_std = float(metrics.o_std_ts[-1])
         metrics.max_public_bias = float(metrics.public_bias_ts.max())
 
-        # ── Transition counts from accumulated TransitionEvents (exact, not net-delta) ──
-        metrics.total_activations = (
-            self._total_E_to_A + self._total_D0_to_A + self._total_D1_to_A
-        )
-        metrics.total_decays = self._total_A_to_D
-        metrics.total_reactivations = self._total_D1_to_A
-        metrics.total_delayed_activations = self._total_D0_to_A
+        # ── Transition counts from state time series ──
+        if n_steps > 1:
+            # Activation events: increase in A from step to step
+            dA = np.diff(metrics.n_A_ts)
+            metrics.total_activations = int(np.maximum(dA, 0).sum())
+            metrics.total_decays = int(np.maximum(-dA, 0).sum())
+
+            # Reactivation: D→A transitions visible when A increases while total aware is stable
+            d_aware = np.diff(np.array([s["n_aware"] for s in self._snapshots]))
+            # Rough estimate: reactivations = A increases not from new exposures
+            new_exposures = np.maximum(d_aware, 0)
+            non_exposure_activations = np.maximum(dA - new_exposures, 0)
+            metrics.total_reactivations = int(non_exposure_activations.sum())
 
         # Count total transitions from tracking
         metrics.snapshots = [
@@ -297,53 +299,6 @@ class MetricsCollector:
         metrics.config = {"n_steps": n_steps}
 
         return metrics
-
-
-def _compute_dynamic_kappa(events, G_s, communities, state, prev_z):
-    """Compute kappa from actual U->E transition events this step.
-
-    kappa_ab = #{U->E events from community a to community b} /
-               #{U->E events originating from community a}
-    """
-    if events is None or events.U_to_E == 0:
-        return {}
-    if prev_z is None:
-        return {}
-
-    # Identify newly exposed agents (those that were U and are now E, A, or D)
-    newly_aware = (prev_z == 0) & (state.z != 0)  # 0 = U
-    if not newly_aware.any():
-        return {}
-
-    node_to_block = np.zeros(G_s.shape[0], dtype=np.int32)
-    for bid, nodes in communities.items():
-        for node in nodes:
-            node_to_block[node] = bid
-
-    # For simplicity: attribute exposure to active neighbors
-    active = state.z == 2  # A
-    kappa = {}
-    eps = 1e-8
-    block_ids = sorted(communities.keys())
-
-    for a in block_ids:
-        total_from_a = 0
-        for b in block_ids:
-            cross = 0
-            # Count active agents in a that have edges to newly_aware in b
-            a_mask = np.zeros(G_s.shape[0], dtype=bool)
-            a_mask[list(communities[a])] = True
-            b_newly_aware = newly_aware.copy()
-            b_newly_aware[~np.isin(np.arange(G_s.shape[0]), communities[b])] = False
-            if a_mask.any() and b_newly_aware.any():
-                cross = G_s[np.ix_(np.where(b_newly_aware)[0], np.where(a_mask & active)[0])].sum()
-                total_from_a += cross
-            kappa[f"{a}->{b}"] = float(cross)
-        # Normalize
-        for b in block_ids:
-            kappa[f"{a}->{b}"] = float(kappa[f"{a}->{b}"] / (total_from_a + eps))
-
-    return kappa
 
 
 def _compute_kappa(

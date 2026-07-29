@@ -150,37 +150,20 @@ class AgentAttributes:
 # ─────────────────────────────────────────────────────────────
 
 
-def _beta_params_from_opinion(op) -> dict:
-    """Convert OpinionParams mean+concentration to Beta(a,b) parameters."""
-    def to_beta(mean, conc):
-        mean = max(0.01, min(0.99, mean))
-        a = mean * conc; b = (1 - mean) * conc
-        return (max(0.5, a), max(0.5, b))
-    return {
-        "mu_beta": to_beta(op.mu_mean, op.mu_conc),
-        "zeta_beta": to_beta(op.zeta_mean, op.zeta_conc),
-        "epsilon_beta": to_beta(op.epsilon_mean / 2.0, op.epsilon_conc),
-        "sigma_xi_beta": to_beta(op.sigma_xi / 0.5, 5.0),
-        "eta_beta": to_beta(op.eta_mean, op.eta_conc),
-        "chi_beta": to_beta(op.chi_mean, op.chi_conc),
-    }
-
-
 def initialize_agents(
     n: int = 500,
     initial_active: int = 10,
     initial_opinion_dist: str = "polarized",
     opinion_seeds: Optional[tuple[float, ...]] = None,
     rng: Optional[Generator] = None,
-    opinion_params = None,  # Optional OpinionParams from config
-    # Fallback Beta distribution parameters (used if opinion_params is None)
-    c_beta: tuple[float, float] = (2.0, 5.0),
-    mu_beta: tuple[float, float] = (2.5, 7.5),
-    zeta_beta: tuple[float, float] = (5.5, 4.5),
-    epsilon_beta: tuple[float, float] = (3.0, 4.5),
-    sigma_xi_beta: tuple[float, float] = (1.5, 8.0),
-    eta_beta: tuple[float, float] = (1.5, 8.5),
-    chi_beta: tuple[float, float] = (1.5, 6.0),
+    # Attribute distribution parameters
+    c_beta: tuple[float, float] = (2.0, 5.0),          # expression cost: skewed low
+    mu_beta: tuple[float, float] = (2.5, 7.5),         # update speed: skewed low-moderate
+    zeta_beta: tuple[float, float] = (5.5, 4.5),       # anchoring: centered ~0.55
+    epsilon_beta: tuple[float, float] = (3.0, 4.5),    # bounded confidence: ~0.40
+    sigma_xi_beta: tuple[float, float] = (1.5, 8.0),   # noise: skewed low
+    eta_beta: tuple[float, float] = (1.5, 8.5),        # info sensitivity: skewed low
+    chi_beta: tuple[float, float] = (1.5, 6.0),        # official info trust: varied
 ) -> AgentState:
     """Initialize N agents with realistic heterogeneous attributes.
 
@@ -201,16 +184,6 @@ def initialize_agents(
     """
     if rng is None:
         rng = np.random.default_rng()
-
-    # ── Override Beta params from config if provided ──
-    if opinion_params is not None:
-        bp = _beta_params_from_opinion(opinion_params)
-        mu_beta = bp["mu_beta"]
-        zeta_beta = bp["zeta_beta"]
-        epsilon_beta = bp["epsilon_beta"]
-        sigma_xi_beta = bp["sigma_xi_beta"]
-        eta_beta = bp["eta_beta"]
-        chi_beta = bp["chi_beta"]
 
     # ── Fixed attributes from Beta distributions ──
 

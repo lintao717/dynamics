@@ -64,30 +64,14 @@ class AgentSnapshot:
 
 
 @dataclass
-class TextGenerationRequest:
-    """Request for LLM text generation for an agent in state A.
+class LLMDecision:
+    """Decision from an LLM agent to inject into the simulation.
 
-    The dynamics kernel has ALREADY determined that this agent is active (z=A)
-    and has ALREADY computed its expressed opinion o_hat. The LLM's job is
-    purely linguistic: generate text consistent with the pre-computed stance.
+    Task 3 uses this to override the parametric transition for specific agents.
     """
     agent_id: int
-    target_stance: float       # o_hat value to express (-1 to +1)
-    target_arousal: float      # emotional intensity [0,1]
-    private_opinion: float     # o_i for context
-    local_climate: float       # perceived opinion climate
-    climate_visible: bool
-    event_context: str = ""    # description of current event state
-    facts: list = None         # relevant facts/updates for this step
-
-
-@dataclass
-class GeneratedText:
-    """LLM-generated text with validation scores."""
-    agent_id: int
-    text: str                  # the generated post/comment
-    stance_score: float        # NLP-computed stance [-1,1] for validation
-    arousal_score: float       # NLP-computed arousal [0,1] for validation
+    action: str       # "express" | "remain_silent" | "no_change"
+    expressed_opinion: Optional[float] = None  # if action=="express"
 
 
 @dataclass
@@ -131,7 +115,8 @@ class Simulation:
         self._o_initial: Optional[np.ndarray] = None
         self._t: int = 0
         self._rng: Optional[Generator] = None
-        self._llm_texts: Dict[int, str] = {}  # agent_id -> generated text (per step)
+        self._llm_agent_ids: List[int] = []
+        self._llm_decisions: Dict[int, LLMDecision] = {}
         self._metrics_history: List[StepMetrics] = []
         self._V: float = 0.0  # platform viral intensity, persisted across steps
 
@@ -148,13 +133,10 @@ class Simulation:
         network_kwargs: Optional[dict] = None,
         initial_opinion: str = "polarized",
         initial_active: int = 10,
+        llm_agent_ids: Optional[List[int]] = None,
         seed: int = 42,
     ) -> "Simulation":
         """Initialize a simulation with the given configuration.
-
-        The dynamics kernel controls ALL state transitions. LLM integration
-        is for TEXT GENERATION only — agents in state A can have their
-        public expressions rendered as natural language by an LLM.
 
         Args:
             n_agents: Number of agents in the population.
@@ -163,6 +145,9 @@ class Simulation:
             network_kwargs: Passed to the network generator.
             initial_opinion: "polarized", "uniform", "moderate", or "consensus".
             initial_active: Number of initially active agents.
+            llm_agent_ids: List of agent IDs that Task 3 will control via LLM.
+                           These agents skip the parametric transition and wait
+                           for inject_llm_decisions() each step.
             seed: Random seed for reproducibility.
 
         Returns:
@@ -198,6 +183,10 @@ class Simulation:
         sim._o_initial = sim._state.o.copy()
         sim._engine = TransitionEngine(sim._params, sim._rng)
         sim._t = 0
+
+        # Register LLM-controlled agents
+        if llm_agent_ids is not None:
+            sim._llm_agent_ids = list(llm_agent_ids)
 
         # Record initial metrics
         sim._record_metrics()
@@ -286,52 +275,40 @@ class Simulation:
         return [j for j in range(self._state.n) if G[agent_id, j] > 0]
 
     # ═══════════════════════════════════════════════════════════
-    # Text generation for Task 3 (LLM renders language for A-state agents)
+    # State injection for Task 3 (LLM agent decisions)
     # ═══════════════════════════════════════════════════════════
 
-    def get_text_requests(self, agent_ids: Optional[List[int]] = None) -> List[TextGenerationRequest]:
-        """Get text generation requests for agents currently in state A.
+    def inject_llm_decisions(self, decisions: List[LLMDecision]) -> None:
+        """Inject LLM agent decisions into the current state.
 
-        The dynamics kernel has ALREADY determined that these agents are active
-        and has ALREADY computed their o_hat stance. The LLM's job is to
-        generate natural language text consistent with this stance.
-
-        Args:
-            agent_ids: Specific agents to generate text for. None = all A-state agents.
-
-        Returns:
-            List of TextGenerationRequest objects for LLM processing.
-        """
-        st = self._state
-        if agent_ids is None:
-            agent_ids = [i for i in range(st.n) if st.z[i] == A]
-        else:
-            agent_ids = [i for i in agent_ids if st.z[i] == A]
-
-        requests = []
-        for aid in agent_ids:
-            snap = self.get_agent_snapshot(aid)
-            requests.append(TextGenerationRequest(
-                agent_id=aid,
-                target_stance=float(st.o_hat[aid]) if not np.isnan(st.o_hat[aid]) else float(st.o[aid]),
-                target_arousal=float(st.h[aid]),
-                private_opinion=float(st.o[aid]),
-                local_climate=snap.local_climate,
-                climate_visible=snap.climate_visible,
-            ))
-        return requests
-
-    def record_generated_texts(self, texts: List[GeneratedText]) -> None:
-        """Record LLM-generated texts for this step (no state modification).
-
-        The texts are stored for export/analysis. The dynamics kernel's
-        state (z, o, o_hat, h, f) is NOT modified by this call.
+        This is called BEFORE step(). LLM agents' states are modified
+        according to the decisions, and they are excluded from the
+        parametric transition in the subsequent step().
 
         Args:
-            texts: List of GeneratedText objects from LLM.
+            decisions: List of LLMDecision objects.
         """
-        for t in texts:
-            self._llm_texts[t.agent_id] = t.text
+        self._llm_decisions = {}
+        for d in decisions:
+            self._llm_decisions[d.agent_id] = d
+
+            if d.action == "express":
+                self._state.z[d.agent_id] = A
+                if d.expressed_opinion is not None:
+                    self._state.o_hat[d.agent_id] = np.clip(d.expressed_opinion, -1.0, 1.0)
+                else:
+                    self._state.o_hat[d.agent_id] = self._state.o[d.agent_id]
+            elif d.action == "remain_silent":
+                if self._state.z[d.agent_id] != U:
+                    self._state.z[d.agent_id] = D
+
+    def set_agent_opinion(self, agent_id: int, opinion: float) -> None:
+        """Override an agent's private opinion (for LLM-driven opinion change)."""
+        self._state.o[agent_id] = np.clip(opinion, -1.0, 1.0)
+
+    def set_agent_arousal(self, agent_id: int, arousal: float) -> None:
+        """Override an agent's emotional arousal."""
+        self._state.h[agent_id] = np.clip(arousal, 0.0, 1.0)
 
     # ═══════════════════════════════════════════════════════════
     # Step execution
@@ -357,21 +334,75 @@ class Simulation:
         Returns:
             StepMetrics with aggregate statistics after the step.
         """
-        # Dynamics kernel controls ALL state transitions
-        inputs = ExternalInputs(
-            V=self._V, shock=shock, novelty=novelty,
+        st = self._state
+        n = st.n
+
+        # Save pre-step FULL state of LLM agents (all 6 fields + V)
+        llm_mask = np.zeros(n, dtype=bool)
+        llm_mask[self._llm_agent_ids] = True
+        for aid in self._llm_decisions:
+            llm_mask[aid] = True
+
+        llm_saved = {
+            "z": st.z[llm_mask].copy(),
+            "m": st.m[llm_mask].copy(),
+            "o": st.o[llm_mask].copy(),
+            "o_hat": st.o_hat[llm_mask].copy(),
+            "h": st.h[llm_mask].copy(),
+            "f": st.f[llm_mask].copy(),
+        }
+
+        # Run parametric transition for ALL agents
+        inputs = ExternalInputs(V=self._V,
+            shock=shock,
+            novelty=novelty,
             staleness=self._t / max(self._t + 1, 1),
             media_exposure=media_exposure,
         )
 
-        new_state, V_next, events = self._engine.step(
-            state=self._state, G_s=self._G_s, G_o=self._G_o, G_h=None,
-            inputs=inputs, o_initial=self._o_initial, t=self._t,
+        new_state, V_next, _ = self._engine.step(
+            state=st,
+            G_s=self._G_s,
+            G_o=self._G_o,
+            G_h=None,
+            inputs=inputs,
+            o_initial=self._o_initial,
+            t=self._t,
         )
-        self._V = V_next
+        self._V = V_next  # Persist V(t) across steps
+
+        # Restore FULL LLM agent state (their transitions are controlled by Task 3)
+        for field in ["z", "m", "o", "o_hat", "h", "f"]:
+            getattr(new_state, field)[llm_mask] = llm_saved[field]
+
+        # Apply LLM decisions and count LLM new posts for PVA
+        llm_new_post_count = 0
+        for aid, decision in self._llm_decisions.items():
+            prev_z = llm_saved["z"][list(llm_mask).index(aid)] if aid in np.where(llm_mask)[0] else st.z[aid]
+            if decision.action == "express":
+                new_state.z[aid] = A
+                new_state.m[aid] = 1
+                if prev_z != A:
+                    llm_new_post_count += 1  # newly activated by LLM
+                if decision.expressed_opinion is not None:
+                    new_state.o_hat[aid] = np.clip(decision.expressed_opinion, -1.0, 1.0)
+                else:
+                    new_state.o_hat[aid] = new_state.o[aid]
+            elif decision.action == "remain_silent":
+                if new_state.z[aid] != U:
+                    new_state.z[aid] = D
+                    new_state.o_hat[aid] = np.nan
+
+        # Feed LLM new posts into V(t) update
+        if llm_new_post_count > 0:
+            vp = self._params.viral
+            q_mean = float(np.abs(new_state.o[list(self._llm_decisions.keys())]).mean()) if self._llm_decisions else 0.5
+            self._V += vp.eta_V * llm_new_post_count * q_mean
+            self._V = min(self._V, 1.0)
+
         self._state = new_state
         self._t += 1
-        self._llm_texts = {}
+        self._llm_decisions = {}
 
         return self._record_metrics()
 
@@ -442,7 +473,7 @@ class Simulation:
             "o_std": float(st.o.std()),
             "h_mean": float(st.h.mean()),
             "f_mean": float(st.f.mean()),
-            "n_agents_A": st.n_A,
+            "n_llm_agents": len(self._llm_agent_ids),
             "network": {
                 "n_edges": int((self._G_s > 0).sum()),
                 "k_mean": float(self._G_s.sum(axis=0).mean()),

@@ -569,15 +569,14 @@ class TransitionEngine:
         u_i = inputs_dict["official_info"]
         I_m = inputs_dict["info_emotion"]
 
+        # Record which agents were NOT U before Step 2 (for opinion update mask)
+        not_u_before = state.z != U
+
         # ── Step 1: Compute exposure ──
         Lambda = self.compute_exposure(state, G_s, q_j, M_i, inputs.V)
 
         # ── Step 2: U → E ──
         z_after_expose = self.expose_agents(state, Lambda)
-
-        # V1.1 fix: newly exposed agents (U->E) must absorb information
-        # before E->A decision. Use post-exposure state for update mask.
-        aware_after_exposure = z_after_expose != U
 
         # Track which agents are newly E (for Step 5 and Step 6 exclusion)
         new_e_mask = (state.z == U) & (z_after_expose == E)
@@ -620,7 +619,7 @@ class TransitionEngine:
         ) + xi
 
         o_new = state.o.copy()
-        o_new[aware_after_exposure] = o_new[aware_after_exposure] + delta_o[aware_after_exposure]
+        o_new[not_u_before] = o_new[not_u_before] + delta_o[not_u_before]
         o_new = np.clip(o_new, -1.0, 1.0)
 
         # ── Step 4: Update emotion and fatigue ──

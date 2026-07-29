@@ -1,0 +1,72 @@
+# V1.1 Default Parameters
+# Calibrated for N=500 SBM network with full bidirectional coupling.
+
+propagation:
+  beta: 0.15
+  beta_M: 0.08
+  theta_Lambda: 0.0
+
+activation:
+  alpha_0: -2.5
+  alpha_1: 1.5
+  alpha_2: 2.0
+  alpha_3: 1.8
+  alpha_4: 1.5
+  alpha_5: 1.0
+
+decay:
+  gamma_0: 0.0
+  gamma_1: 2.0
+  gamma_2: 1.5
+  gamma_3: 1.2
+
+reactivation:
+  r_0_0: -3.0    # delayed activation (m=0): higher baseline
+  r_1_0: 2.5     # delayed activation (m=0): lower shock response
+  r_0_1: -4.0    # true reactivation (m=1): lower baseline
+  r_1_1: 3.5     # true reactivation (m=1): higher shock response
+  r_2: 1.0
+  r_3: 1.2
+
+opinion:
+  mu_mean: 0.25
+  mu_conc: 5.0
+  zeta_mean: 0.55
+  zeta_conc: 4.0
+  epsilon_mean: 0.40
+  epsilon_conc: 4.0
+  sigma_xi: 0.02
+  eta_mean: 0.15
+  eta_conc: 5.0
+  chi_mean: 0.20
+  chi_conc: 3.0
+  lambda_c: 0.35
+  lambda_h: 0.15
+  lambda_spiral: 0.50
+
+emotion_fatigue:
+  delta_h: 0.30
+  eta_h: 0.15
+  omega_h: 0.10
+  chi_h: 0.35
+  nu_h: 0.12
+  delta_f: 0.15
+  eta_f: 0.05
+  omega_f: 0.08
+
+viral:
+  beta_V: 0.012
+  delta_V: 0.40
+  eta_V: 0.08
+
+simulation:
+  n_agents: 500
+  initial_active: 10
+  T: 100
+  network_type: sbm
+  network_kwargs:
+    n_blocks: 3
+    p_in: 0.15
+    p_out: 0.02
+  initial_opinion_dist: polarized
+  climate_visibility_threshold: 1.0

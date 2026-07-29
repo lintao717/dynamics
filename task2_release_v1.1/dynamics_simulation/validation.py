@@ -126,7 +126,7 @@ def test_sir_degeneracy(seed: int = 42) -> TestResult:
     passed = score >= 0.5
 
     return TestResult(
-        name="SIR consistency (alpha_1=alpha_3=beta_M=lambda_spiral=0)",
+        name="SIR degeneracy (alpha_1=alpha_3=beta_M=lambda_spiral=0)",
         dimension="degeneracy",
         passed=passed,
         score=score,
@@ -207,7 +207,7 @@ def test_hk_degeneracy(seed: int = 42) -> TestResult:
     passed = score >= 0.5
 
     return TestResult(
-        name="HK bounded confidence consistency (beta=0, opinion-only)",
+        name="HK degeneracy (beta=0, opinion-only)",
         dimension="degeneracy",
         passed=passed,
         score=score,

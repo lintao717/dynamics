@@ -30,7 +30,8 @@ __version__ = "0.1.0"
 from dynamics_simulation.api import (
     Simulation,
     AgentSnapshot,
-    LLMDecision,
+    TextGenerationRequest,
+    GeneratedText,
     StepMetrics,
     load_params_from_json,
     create_llm_prompt,

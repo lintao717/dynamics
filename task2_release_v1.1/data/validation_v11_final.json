@@ -1,0 +1,136 @@
+{
+  "summary": {
+    "total_tests": 10,
+    "passed": 10,
+    "failed": 0,
+    "overall_score": 0.973,
+    "verdict": "PASS \u2014 Equations are feasible across all dimensions",
+    "dimensions_covered": [
+      "direction",
+      "degeneracy"
+    ],
+    "elapsed_s": 3.4
+  },
+  "tests": [
+    {
+      "name": "SIR degeneracy (alpha_1=alpha_3=beta_M=lambda_spiral=0)",
+      "dimension": "degeneracy",
+      "passed": true,
+      "score": 0.980971828818965,
+      "evidence": {
+        "aware_monotonic": "True",
+        "SI_correlation": 0.9524,
+        "peak_A": 28,
+        "peak_t": 22,
+        "U_at_peak": 59
+      },
+      "interpretation": "SIR-like: monotonic=True, SI_corr=0.95, peak_A=28@t=22 \u2014 degeneracy holds"
+    },
+    {
+      "name": "HK degeneracy (beta=0, opinion-only)",
+      "dimension": "degeneracy",
+      "passed": true,
+      "score": 0.75,
+      "evidence": {
+        "final_std": 0.6465,
+        "n_clusters": 1,
+        "initial_std": 0.6828,
+        "mean_opinion_change": 0.1452
+      },
+      "interpretation": "HK-like: sigma_final=0.647, clusters~=1, \u0394o=0.145 \u2014 opinions cluster without collapse"
+    },
+    {
+      "name": "Expression fidelity (lambda_c=lambda_h=lambda_spiral=0)",
+      "dimension": "degeneracy",
+      "passed": true,
+      "score": 1.0,
+      "evidence": {
+        "per_agent_diff": 0.0,
+        "n_samples": 244
+      },
+      "interpretation": "o_hat~=o: per-agent |diff|=0.000000 \u2014 expression is faithful"
+    },
+    {
+      "name": "Frozen opinion independence (mu_i=0, all opinion paths off)",
+      "dimension": "degeneracy",
+      "passed": true,
+      "score": 1.0,
+      "evidence": {
+        "norm_rms_diff": 0.0,
+        "n_seeds_per_condition": 5,
+        "polarized_peak_mean": 10.0,
+        "uniform_peak_mean": 10.0
+      },
+      "interpretation": "Mean A(t) norm_RMS_diff=0.00% \u2014 propagation indep of opinion"
+    },
+    {
+      "name": "No spontaneous reactivation (r_0=-10, no shocks)",
+      "dimension": "degeneracy",
+      "passed": true,
+      "score": 1.0,
+      "evidence": {
+        "consecutive_zero_A_steps": 54,
+        "final_A": 0,
+        "final_D": 35
+      },
+      "interpretation": "A stays at 0 for 54 steps after reaching D-only \u2014 no spontaneous reactivation"
+    },
+    {
+      "name": "beta  inc  -> peak_A  inc ",
+      "dimension": "direction",
+      "passed": true,
+      "score": 1.0,
+      "evidence": {
+        "low": 10.3,
+        "high": 17.7,
+        "ratio": 1.71
+      },
+      "interpretation": "beta: 10 -> 18 ( inc )"
+    },
+    {
+      "name": "alpha_1  inc  -> peak_A  inc ",
+      "dimension": "direction",
+      "passed": true,
+      "score": 1.0,
+      "evidence": {
+        "low": 13.3,
+        "high": 20.7,
+        "ratio": 1.55
+      },
+      "interpretation": "alpha_1: 13 -> 21 ( inc )"
+    },
+    {
+      "name": "gamma_1  inc  -> late_A  dec ",
+      "dimension": "direction",
+      "passed": true,
+      "score": 1.0,
+      "evidence": {
+        "low": 5.5,
+        "high": 5.2
+      },
+      "interpretation": "gamma_1: late_A 5.5 -> 5.2 ( dec )"
+    },
+    {
+      "name": "delta_f  inc  -> final_f  dec ",
+      "dimension": "direction",
+      "passed": true,
+      "score": 1.0,
+      "evidence": {
+        "low": 0.233,
+        "high": 0.026
+      },
+      "interpretation": "delta_f: f_final 0.233 -> 0.026 ( dec )"
+    },
+    {
+      "name": "r_1  inc  -> shock_reactivation  inc ",
+      "dimension": "direction",
+      "passed": "True",
+      "score": 1.0,
+      "evidence": {
+        "low": 12.7,
+        "high": 72.0
+      },
+      "interpretation": "r_1: reactivation 13 -> 72 ( inc )"
+    }
+  ]
+}
