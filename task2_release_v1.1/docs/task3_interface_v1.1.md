@@ -16,7 +16,7 @@ The model simulates the co-evolution of information propagation and public opini
 
 The model is designed to be used in two modes:
 - **Standalone**: Parametric simulation with homogeneous decision rules
-- **Hybrid (Task 3)**: Some agents controlled by LLMs (e.g., DeepSeek API), others by parametric rules
+- **LLM text generation (Task 3)**: Dynamics kernel determines all state transitions (z, o, h, f) and expression decisions. LLM is called only for agents already placed in state A by the kernel, to render their pre-computed stance as natural language text. LLM does NOT control state.
 
 ## 2. Entities, State Variables, and Scales
 

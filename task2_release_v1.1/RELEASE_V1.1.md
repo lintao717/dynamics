@@ -1,7 +1,7 @@
 # Task 2 V1.1 Release Candidate
 
 **Date**: 2026-07-29
-**Status**: **Release Candidate** — core implementation single-sourced; test/doc sync pending.
+**Status**: **Release Candidate** — core tests pass, CI configured.
 **Predecessor**: V1.0 (2026-07-17) → V1.1-alpha → V1.1-beta0 → V1.1-RC
 
 ---
@@ -47,7 +47,7 @@
 | Silent agents treated as expressing opinion 0 | `expressed_mask` + only A-state agents with valid o_hat participate |
 | V_MIN=1.0 made climate permanently invisible | Parameterized to `climate_visibility_threshold=0.10` |
 | Task 3 API V(t) not persisted | `self._V` tracked across steps |
-| LLM agent state inconsistency (only z, o_hat frozen) | All 6 fields frozen; m=1 on express; NaN on silent |
+| LLM bypassed dynamics kernel | Restructured to text-generation-only: kernel controls all state, LLM renders language |
 | Full validation crashed on identifiability | Tuple unpacking fixed |
 | R_eff mean(sigma) miscalculated | `mean(sigma(x))` replaces `1/mean(1+exp(-x))` |
 | No per-step transition event recording | `TransitionEvents` dataclass with 7 counts |
@@ -66,8 +66,8 @@
 
 | Feature | Status |
 |---------|:---:|
-| TransitionEvents → MetricsCollector | Connected |
-| LLM posts → PVA V(t) | Connected |
+| TransitionEvents → MetricsCollector | Connected (every step) |
+| LLM text generation (TextGenerationRequest/GeneratedText) | Kernel determines state; LLM renders language |
 | AgentSnapshot climate_visible | Added |
 | Frozen opinion test | Proper state cloning, 0% diff |
 | Phase diagram | Extended range, honest results |
@@ -91,36 +91,20 @@
 ## File Inventory
 
 ```
-task2_release_v1.1/
-├── RELEASE_V1.1.md          ← This file
-├── README.md
-├── CHANGELOG.md
-├── RELEASE_MANIFEST.md
-├── docs/
-│   ├── model_definition_v1.1.md
-│   ├── theoretical_analysis_v1.1.md
-│   ├── equation_feasibility_v1.1.md
-│   ├── simulation_results_v1.1.md
-│   ├── data_requirements_v1.1.md
-│   └── task3_interface_v1.1.md
-├── dynamics_simulation/
-│   ├── config.py             ← 7 parameter groups incl. ViralParams + climate_visibility_threshold
-│   ├── agents.py             ← AgentState with m_i flag
-│   ├── networks.py           ← ER/BA/WS/SBM generators
-│   ├── transitions.py        ← 7-step engine + TransitionEvents + expressed_mask + v_i threshold
-│   ├── simulation.py         ← SimulationRunner with V(t) tracking
-│   ├── metrics.py            ← MetricsCollector with TransitionEvents accumulation
-│   ├── reff.py               ← R_eff with S_i, L_j, q_j, PVA
-│   ├── api.py                ← Task 3 Simulation class + LLM freeze + PVA integration
-│   ├── validation.py         ← 10-test automated suite (10/10, 0.973)
-│   └── odd.md
-├── tests/
-│   ├── test_smoke.py
-│   └── test_identifiability.py
-├── configs/
-│   └── default_v1.1.yaml
-└── data/
-    └── validation_v11_final.json
+Repo root:
+├── dynamics_simulation/          ← single source of truth
+│   ├── config.py, agents.py, networks.py
+│   ├── transitions.py, simulation.py, metrics.py
+│   ├── reff.py, api.py, validation.py, odd.md
+├── tests/                        ← test suite
+│   ├── test_smoke.py, test_network_direction.py, test_identifiability.py
+├── .github/workflows/test.yml    ← CI
+│
+└── task2_release_v1.1/           ← release docs + configs + data
+    ├── RELEASE_V1.1.md (this file), README.md, CHANGELOG.md
+    ├── docs/ (8 docs)
+    ├── configs/ (default_v1.1.yaml)
+    └── data/ (validation_v1.1.json)
 ```
 
 ---
@@ -133,6 +117,10 @@ from dynamics_simulation.api import Simulation
 sim = Simulation.init(n_agents=500, params="default", network="sbm", seed=42)
 for t in range(100):
     metrics = sim.step()
+    # LLM text generation (kernel already decided state A + stance):
+    # requests = sim.get_text_requests()  # -> List[TextGenerationRequest]
+    # texts = call_llm(requests)          # -> List[GeneratedText]
+    # sim.record_generated_texts(texts)
     if t % 10 == 0:
         print(f"t={t}: A={metrics.n_A} D={metrics.n_D} V={metrics.V:.3f}")
 ```

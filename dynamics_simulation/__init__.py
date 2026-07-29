@@ -12,9 +12,10 @@ State vector X_i(t) = (z_i, o_i, o_hat_i, h_i, f_i)
 - f_i in [0, 1]: information fatigue
 
 Public API (for Task 3 integration):
-    from dynamics_simulation.api import Simulation, LLMDecision
+    from dynamics_simulation.api import Simulation, TextGenerationRequest, GeneratedText
     sim = Simulation.init(n_agents=500, params="default")
     metrics = sim.step()
+    requests = sim.get_text_requests()  # agents in state A -> LLM prompt
 
 Quick start:
     from dynamics_simulation.api import Simulation

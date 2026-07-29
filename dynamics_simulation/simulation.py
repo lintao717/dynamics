@@ -178,7 +178,7 @@ class SimulationRunner:
             self.metrics.record(
                 state, communities=self.communities,
                 G_s=self.G_s, G_o=self.G_o, events=events, t=t + 1,
-                snapshot=(t % cfg.snapshot_interval == 0 or t == cfg.T - 1),
+                snapshot=((t + 1) % cfg.snapshot_interval == 0 or t == cfg.T - 1),
             )
 
             if cfg.verbose and t % 10 == 9:

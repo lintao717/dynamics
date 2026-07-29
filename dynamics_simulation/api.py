@@ -205,6 +205,57 @@ class Simulation:
 
         return sim
 
+    @classmethod
+    def from_network(
+        cls,
+        G_s: np.ndarray,
+        G_o: np.ndarray,
+        n_agents: int,
+        communities: Optional[Dict[int, List[int]]] = None,
+        params: str | ModelParams = "default",
+        initial_opinion: str = "polarized",
+        initial_active: int = 10,
+        seed: int = 42,
+    ) -> "Simulation":
+        """Initialize with pre-built networks (e.g., from real data).
+
+        Args:
+            G_s: Pre-built propagation network (N×N, G[dst,src] convention).
+            G_o: Pre-built opinion influence network (N×N, row-normalized).
+            n_agents: Number of agents (must match G_s.shape).
+            communities: Optional community membership dict.
+            params: Model parameters.
+            initial_opinion: Initial opinion distribution.
+            initial_active: Number of initially active agents.
+            seed: Random seed.
+
+        Returns:
+            Initialized Simulation using the provided networks.
+        """
+        sim = cls()
+        sim._rng = np.random.default_rng(seed)
+
+        if isinstance(params, str):
+            from dynamics_simulation.config import PRESETS
+            sim._params = PRESETS.get(params, default_params())
+        else:
+            sim._params = params
+
+        sim._G_s = G_s
+        sim._G_o = G_o
+        sim._communities = communities or {0: list(range(n_agents))}
+
+        sim._state = initialize_agents(
+            n=n_agents, initial_active=initial_active,
+            initial_opinion_dist=initial_opinion,
+            rng=sim._rng, opinion_params=sim._params.opinion,
+        )
+        sim._o_initial = sim._state.o.copy()
+        sim._engine = TransitionEngine(sim._params, sim._rng)
+        sim._t = 0
+        sim._record_metrics()
+        return sim
+
     # ═══════════════════════════════════════════════════════════
     # State access for Task 3
     # ═══════════════════════════════════════════════════════════

@@ -1,13 +1,14 @@
 # V1.1 Release Manifest
 
 ```
-release_name:    Task2-V1.1-RC
+release_name:    Task2-V1.1
 release_date:    2026-07-29
-status:          Release Candidate (test + doc sync pending)
+status:          Release Candidate
 python_version:  3.11
 validation:      10/10 passed (degeneracy + direction), score 0.973
 random_seeds:    42, 123, 789
 dimensions_covered: degeneracy, direction
+CI:              GitHub Actions (smoke + network direction + quick validation)
 ```
 
 ---
@@ -40,18 +41,19 @@ Output: `data/validation_v11_final.json`
 ## File Inventory
 
 ```
-task2_release_v1.1/
-├── RELEASE_V1.1.md
-├── RELEASE_MANIFEST.md (this file)
-├── README.md
-├── CHANGELOG.md
-├── docs/ (8 docs)
-├── tests/ (test_smoke.py, test_identifiability.py, test_network_direction.py)
-├── configs/ (default_v1.1.yaml)
-└── data/ (validation_v1.1.json)
-
-dynamics_simulation/          ← single source of truth (root of repo)
-tests/                        ← test suite (root of repo)
+Repo root:
+├── dynamics_simulation/          ← single source of truth
+├── tests/                        ← test suite (root of repo)
+├── .github/workflows/test.yml    ← CI
+│
+└── task2_release_v1.1/           ← release docs + configs + validation log
+    ├── RELEASE_V1.1.md
+    ├── RELEASE_MANIFEST.md (this file)
+    ├── README.md
+    ├── CHANGELOG.md
+    ├── docs/ (8 docs)
+    ├── configs/ (default_v1.1.yaml)
+    └── data/ (validation_v1.1.json)
 ```
 
 ## Changelog (V1.0 → V1.1)

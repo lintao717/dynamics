@@ -739,8 +739,10 @@ def run_all_validation(quick: bool = False) -> dict:
             passed_dims.add(t.dimension)
 
     # Verdict
+    executed_dimensions = sorted(passed_dims)
+    dims_str = ", ".join(executed_dimensions) if executed_dimensions else "none"
     if n_passed == n_total and overall_score > 0.8:
-        verdict = "PASS — All executed tests passed (degeneracy + direction only)"
+        verdict = f"PASS — All executed tests passed ({dims_str})"
     elif n_passed / n_total >= 0.7:
         verdict = "CONDITIONAL PASS — Equations are mostly feasible; review failures"
     elif n_passed / n_total >= 0.5:
@@ -770,8 +772,8 @@ def run_all_validation(quick: bool = False) -> dict:
         "tests": [{
             "name": t.name,
             "dimension": t.dimension,
-            "passed": t.passed,
-            "score": t.score,
+            "passed": bool(t.passed),
+            "score": float(t.score),
             "evidence": t.evidence,
             "interpretation": t.interpretation,
         } for t in all_tests],
