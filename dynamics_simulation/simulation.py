@@ -149,7 +149,7 @@ class SimulationRunner:
 
         # ── Record initial snapshot ──
         self.metrics.record(state, communities=self.communities,
-                           G_s=self.G_s, G_o=self.G_o)
+                           G_s=self.G_s, G_o=self.G_o, t=0)
 
         if cfg.verbose:
             counts = state.state_counts()
@@ -174,12 +174,12 @@ class SimulationRunner:
             )
             V_current = V_next  # Carry forward to next step
 
-            # Record snapshot with exact transition events + actual time step
-            if t % cfg.snapshot_interval == 0 or t == cfg.T - 1:
-                self.metrics.record(
-                    state, communities=self.communities,
-                    G_s=self.G_s, G_o=self.G_o, events=events, t=t,
-                )
+            # Accumulate transition events EVERY step
+            self.metrics.record(
+                state, communities=self.communities,
+                G_s=self.G_s, G_o=self.G_o, events=events, t=t + 1,
+                snapshot=(t % cfg.snapshot_interval == 0 or t == cfg.T - 1),
+            )
 
             if cfg.verbose and t % 10 == 9:
                 counts = state.state_counts()

@@ -4,7 +4,7 @@
     "passed": 10,
     "failed": 0,
     "overall_score": 0.973,
-    "verdict": "PASS \u2014 Equations are feasible across all dimensions",
+    "verdict": "PASS \u2014 All executed tests passed (degeneracy + direction only)",
     "dimensions_covered": [
       "direction",
       "degeneracy"

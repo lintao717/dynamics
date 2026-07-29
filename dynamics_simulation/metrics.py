@@ -154,8 +154,9 @@ class MetricsCollector:
         G_o: Optional[np.ndarray] = None,
         events: Optional[Any] = None,
         t: Optional[int] = None,
+        snapshot: bool = True,
     ) -> None:
-        """Record a snapshot of the current state.
+        """Record state. Events are accumulated every call. Snapshot is optional.
 
         Args:
             state: Current agent state.
@@ -163,8 +164,22 @@ class MetricsCollector:
             G_s: Propagation network (for κ computation).
             G_o: Opinion influence network (for κ computation).
             events: Optional TransitionEvents from this step.
-            t: Actual simulation step index (overrides internal counter).
+            t: Actual simulation step index.
+            snapshot: If True, save a full snapshot. If False, only accumulate events.
         """
+        # ── Always accumulate transition events ──
+        if events is not None:
+            self._total_U_to_E += events.U_to_E
+            self._total_E_to_A += events.E_to_A
+            self._total_E_to_D += events.E_to_D
+            self._total_A_to_D += events.A_to_D
+            self._total_D0_to_A += events.D0_to_A
+            self._total_D1_to_A += events.D1_to_A
+
+        if not snapshot:
+            self._prev_z = state.z.copy()
+            return
+
         n = state.n
         step = t if t is not None else len(self._snapshots)
 
@@ -234,19 +249,7 @@ class MetricsCollector:
         }
         self._snapshots.append(snap)
 
-        # ── Track transitions from previous step ──
-        if self._prev_z is not None:
-            # Count transitions (will be summarized at finalize)
-            pass
-        # Accumulate exact transition counts if events provided
-        if events is not None:
-            self._total_U_to_E += events.U_to_E
-            self._total_E_to_A += events.E_to_A
-            self._total_E_to_D += events.E_to_D
-            self._total_A_to_D += events.A_to_D
-            self._total_D0_to_A += events.D0_to_A
-            self._total_D1_to_A += events.D1_to_A
-
+        # ── Track state for next step's comparison ──
         self._prev_z = state.z.copy()
 
     def finalize(self) -> None:

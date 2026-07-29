@@ -30,7 +30,7 @@ def test_single_step():
     state = initialize_agents(n=100, initial_active=5, rng=rng)
     engine = TransitionEngine(default_params(), rng)
     o_init = state.o.copy()
-    new_state, V = engine.step(state, G_s, G_o, None, ExternalInputs(), o_init, t=0)
+    new_state, V, events = engine.step(state, G_s, G_o, None, ExternalInputs(), o_init, t=0)
     assert new_state.n_E == 0, f"E should be 0 after step, got {new_state.n_E}"
     assert 0.0 <= V <= 1.0
 
@@ -43,7 +43,7 @@ def test_m_flag_propagation():
     engine = TransitionEngine(default_params(), rng)
     o_init = state.o.copy()
     for t in range(10):
-        state, _ = engine.step(state, G_s, G_o, None, ExternalInputs(), o_init, t)
+        state, _, events = engine.step(state, G_s, G_o, None, ExternalInputs(), o_init, t)
     # All A agents should have m=1
     assert (state.m[state.z == A] == 1).all()
 

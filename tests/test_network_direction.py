@@ -12,7 +12,7 @@ CONVENTION: G[dst, src] = weight
   - Step 2: node 1 expresses -> node 2 gets exposed
 """
 import sys, os
-sys.path.insert(0, str(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, str(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 import numpy as np
 from dynamics_simulation.config import default_params

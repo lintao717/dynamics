@@ -24,9 +24,9 @@ Quick start:
     print(sim.summary())
 """
 
-__version__ = "0.1.0"
+__version__ = "1.1.0"
 
-# Public API exports
+# Public API exports (LLM integration is text-generation only)
 from dynamics_simulation.api import (
     Simulation,
     AgentSnapshot,

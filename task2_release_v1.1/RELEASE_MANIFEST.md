@@ -1,12 +1,13 @@
 # V1.1 Release Manifest
 
 ```
-release_name:    Task2-V1.1
-release_date:    2026-07-27
-status:          RELEASE (Stage Baseline)
+release_name:    Task2-V1.1-RC
+release_date:    2026-07-29
+status:          Release Candidate (test + doc sync pending)
 python_version:  3.11
-validation:      10/10 passed, score 0.973
+validation:      10/10 passed (degeneracy + direction), score 0.973
 random_seeds:    42, 123, 789
+dimensions_covered: degeneracy, direction
 ```
 
 ---
@@ -44,11 +45,13 @@ task2_release_v1.1/
 ├── RELEASE_MANIFEST.md (this file)
 ├── README.md
 ├── CHANGELOG.md
-├── docs/ (8 docs, all V1.1 headers)
-├── dynamics_simulation/ (14 modules)
-├── tests/ (test_smoke.py, test_identifiability.py)
+├── docs/ (8 docs)
+├── tests/ (test_smoke.py, test_identifiability.py, test_network_direction.py)
 ├── configs/ (default_v1.1.yaml)
-└── data/ (validation_v11_final.json)
+└── data/ (validation_v1.1.json)
+
+dynamics_simulation/          ← single source of truth (root of repo)
+tests/                        ← test suite (root of repo)
 ```
 
 ## Changelog (V1.0 → V1.1)

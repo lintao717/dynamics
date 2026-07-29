@@ -45,7 +45,7 @@ def generate_trajectory(params, G_s, G_o, n, T, n_seeds=3, base_seed=42):
         A_ts = []
         for t in range(T):
             inputs = ExternalInputs(V=V)
-            state, V = engine.step(state, G_s, G_o, None, inputs, o_init, t)
+            state, V, events = engine.step(state, G_s, G_o, None, inputs, o_init, t)
             A_ts.append(state.n_A)
         all_A.append(np.array(A_ts))
     return np.mean(all_A, axis=0)

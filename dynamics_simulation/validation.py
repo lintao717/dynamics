@@ -740,7 +740,7 @@ def run_all_validation(quick: bool = False) -> dict:
 
     # Verdict
     if n_passed == n_total and overall_score > 0.8:
-        verdict = "PASS — Equations are feasible across all dimensions"
+        verdict = "PASS — All executed tests passed (degeneracy + direction only)"
     elif n_passed / n_total >= 0.7:
         verdict = "CONDITIONAL PASS — Equations are mostly feasible; review failures"
     elif n_passed / n_total >= 0.5:

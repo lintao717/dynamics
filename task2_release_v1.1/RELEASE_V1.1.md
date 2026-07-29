@@ -1,8 +1,8 @@
-# Task 2 V1.1 Release
+# Task 2 V1.1 Release Candidate
 
-**Date**: 2026-07-27
-**Status**: **RELEASE** — all 10 automated tests pass. Model structure frozen.
-**Predecessor**: V1.0 (2026-07-17) → V1.1-alpha → V1.1-beta0 → V1.1
+**Date**: 2026-07-29
+**Status**: **Release Candidate** — core implementation single-sourced; test/doc sync pending.
+**Predecessor**: V1.0 (2026-07-17) → V1.1-alpha → V1.1-beta0 → V1.1-RC
 
 ---
 
