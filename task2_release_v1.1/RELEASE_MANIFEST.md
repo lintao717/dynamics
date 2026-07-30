@@ -8,7 +8,7 @@ python_version:  3.11
 validation:      10/10 passed (degeneracy + direction), score 0.973
 random_seeds:    42, 123, 789
 dimensions_covered: degeneracy, direction
-CI:              GitHub Actions (smoke + network direction + quick validation)
+CI:              GitHub Actions (smoke + network direction + identifiability + quick validation)
 ```
 
 ---

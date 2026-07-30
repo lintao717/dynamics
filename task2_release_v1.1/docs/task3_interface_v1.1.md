@@ -1,7 +1,7 @@
 # ODD Protocol: Integrated Propagation-Opinion Dynamics Model
 
-**Version**: 1.0
-**Date**: 2026-07-25
+**Version**: 1.1
+**Date**: 2026-07-30
 **Format**: ODD (Overview, Design concepts, Details) — Grimm et al. (2006, 2010, 2020)
 
 ---
@@ -32,7 +32,7 @@ Each agent i at time t is described by:
 
 | Variable | Symbol | Range | Description |
 |----------|--------|-------|-------------|
-| Propagation state | z_i(t) | {U, E, A, D} | U=Uncertain, E=Exposed(transient), A=Active, D=Dormant |
+| Propagation state | z_i(t) | {U, E, A, D} | U=Unaware, E=Exposed(transient), A=Active, D=Dormant |
 | Private opinion | o_i(t) | [-1, 1] | Internal stance on the proposition |
 | Public expression | ô_i(t) | [-1, 1] ∪ {∅} | Expressed stance (∅ when z_i ≠ A) |
 | Emotional arousal | h_i(t) | [0, 1] | Intensity of emotional activation |

@@ -1,7 +1,7 @@
 # ODD Protocol: Integrated Propagation-Opinion Dynamics Model
 
-**Version**: 1.0
-**Date**: 2026-07-25
+**Version**: 1.1
+**Date**: 2026-07-30
 **Format**: ODD (Overview, Design concepts, Details) — Grimm et al. (2006, 2010, 2020)
 
 ---

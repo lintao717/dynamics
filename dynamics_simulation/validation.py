@@ -792,3 +792,7 @@ if __name__ == "__main__":
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(results, f, indent=2, default=str)
         print(f"\nResults saved to: {out_path}")
+
+    # CI gate: non-zero exit if any test failed
+    if results["summary"]["failed"] > 0:
+        raise SystemExit(1)
