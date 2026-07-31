@@ -62,7 +62,27 @@ class ExternalInputs:
     content_influence: Optional[np.ndarray] = None # q_j(t) ∈ [0, 1] (for each agent as source)
 
     def resolve(self, n: int) -> Dict[str, np.ndarray]:
-        """Resolve all fields to numpy arrays of length n."""
+        """Resolve all fields to numpy arrays of length n with range validation.
+
+        Ranges:
+          shock, novelty, staleness, V: [0, 1]
+          media_exposure, info_emotion, content_influence: [0, 1]
+          info_evidence, official_info: [-1, 1]
+          All arrays: exact shape (n,), finite, no NaN.
+        """
+        # ── Validate scalars ──
+        for name, low, high in [
+            ("shock", 0.0, 1.0),
+            ("novelty", 0.0, 1.0),
+            ("staleness", 0.0, 1.0),
+            ("V", 0.0, 1.0),
+        ]:
+            val = getattr(self, name)
+            if not (low <= val <= high):
+                raise ValueError(
+                    f"{name}={val} is outside [{low}, {high}]"
+                )
+
         defaults = {
             "media_exposure": np.zeros(n),
             "info_evidence": np.zeros(n),
@@ -70,10 +90,35 @@ class ExternalInputs:
             "info_emotion": np.zeros(n),
             "content_influence": np.ones(n),  # default: all agents equal influence
         }
+        range_checks = {
+            "media_exposure": (0.0, 1.0),
+            "info_evidence": (-1.0, 1.0),
+            "official_info": (-1.0, 1.0),
+            "info_emotion": (0.0, 1.0),
+            "content_influence": (0.0, 1.0),
+        }
+
         for name, default in defaults.items():
             val = getattr(self, name)
             if val is None:
                 setattr(self, name, default)
+                val = default
+
+            arr = np.asarray(val, dtype=np.float64)
+            if arr.shape != (n,):
+                raise ValueError(
+                    f"{name} has shape {arr.shape}, expected ({n},)"
+                )
+            if np.any(np.isnan(arr)) or np.any(np.isinf(arr)):
+                raise ValueError(
+                    f"{name} contains NaN or Inf"
+                )
+            low, high = range_checks[name]
+            if np.any(arr < low) or np.any(arr > high):
+                raise ValueError(
+                    f"{name} values outside [{low}, {high}]"
+                )
+
         return {
             "media_exposure": self.media_exposure,
             "info_evidence": self.info_evidence,
