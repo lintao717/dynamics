@@ -1,0 +1,16 @@
+{
+  "label": "fake",
+  "id": "root-hash",
+  "date": "2020-04-02 08:52",
+  "user_id": "root-user-hash",
+  "text": "root text",
+  "analysis": "expert analysis",
+  "comments": [
+    {"id": "c1", "date": "2020-04-02 09:10", "user_id": "u1", "text": "c1"},
+    {"id": "c2", "date": "2020-04-02 10:10", "user_id": "u2", "text": "c2"}
+  ],
+  "reposts": [
+    {"id": "r1", "date": "2020-04-02 09:30", "user_id": "u3", "text": "r1"},
+    {"id": "r2", "date": "2020-04-02 11:30", "user_id": "u1", "text": "r2"}
+  ]
+}

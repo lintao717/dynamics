@@ -14,7 +14,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
-        run: pip install numpy scipy
+        run: pip install numpy scipy pytest
       - name: Smoke tests
         run: python tests/test_smoke.py
       - name: Network direction tests
@@ -23,3 +23,20 @@ jobs:
         run: python tests/test_identifiability.py
       - name: Validation suite (quick)
         run: python -m dynamics_simulation.validation --quick
+      - name: Real-data integration tests
+        run: >-
+          python -m pytest
+          tests/test_data_schema.py
+          tests/test_checked_adapter.py
+          tests/test_ced_adapter.py
+          tests/test_timegrid.py
+          tests/test_observations.py
+          tests/test_temporal_networks.py
+          tests/test_initial_state.py
+          tests/test_event_timeline.py
+          tests/test_simulation_external_state.py
+          tests/test_replay.py
+          tests/test_calibration_objective.py
+          tests/test_parameter_estimator.py
+          tests/test_end_to_end_checked.py
+          -v
