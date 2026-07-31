@@ -23,3 +23,11 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Third-party and derived research data
+data/raw/
+data/processed/
+data/results/
+*.parquet
+*.sqlite
+*.db
