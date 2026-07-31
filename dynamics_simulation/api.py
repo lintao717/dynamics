@@ -213,6 +213,7 @@ class Simulation:
         initial_opinion: str = "polarized",
         initial_active: int = 10,
         seed: int = 42,
+        initial_state: Optional[AgentState] = None,
     ) -> "Simulation":
         """Initialize with pre-built networks (e.g., from real data).
 
@@ -225,6 +226,7 @@ class Simulation:
             initial_opinion: Initial opinion distribution.
             initial_active: Number of initially active agents.
             seed: Random seed.
+            initial_state: Optional pre-built AgentState (V1.2).
 
         Returns:
             Initialized Simulation using the provided networks.
@@ -264,11 +266,19 @@ class Simulation:
         sim._G_o = G_o.copy()
         sim._communities = communities or {0: list(range(n_agents))}
 
-        sim._state = initialize_agents(
-            n=n_agents, initial_active=initial_active,
-            initial_opinion_dist=initial_opinion,
-            rng=sim._rng, opinion_params=sim._params.opinion,
-        )
+        # ── Use supplied state or random init ──
+        if initial_state is not None:
+            if initial_state.n != n_agents:
+                raise ValueError(
+                    f"initial_state.n={initial_state.n} != n_agents={n_agents}"
+                )
+            sim._state = initial_state.copy()
+        else:
+            sim._state = initialize_agents(
+                n=n_agents, initial_active=initial_active,
+                initial_opinion_dist=initial_opinion,
+                rng=sim._rng, opinion_params=sim._params.opinion,
+            )
         sim._o_initial = sim._state.o.copy()
         sim._engine = TransitionEngine(sim._params, sim._rng)
         sim._t = 0

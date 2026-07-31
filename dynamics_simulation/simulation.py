@@ -25,7 +25,7 @@ from dynamics_simulation.agents import (
     AgentState, initialize_agents, U, E, A, D, STATE_NAMES,
 )
 from dynamics_simulation.transitions import (
-    TransitionEngine, ExternalInputs, default_inputs,
+    TransitionEngine, ExternalInputs, default_inputs, TransitionEvents,
 )
 from dynamics_simulation.metrics import MetricsCollector, SimulationMetrics
 
@@ -72,6 +72,17 @@ class SimulationConfig:
     # ── Output control ──
     verbose: bool = True
     snapshot_interval: int = 1   # Save snapshot every N steps
+
+    # ── External state and network injection (V1.2) ──
+    initial_state: Optional[AgentState] = None
+    """Pre-built AgentState. If supplied, overrides random initialization."""
+
+    network_provider: Optional[Callable[[int], tuple[np.ndarray, np.ndarray, dict]]] = None
+    """Dynamic (G_s, G_o, communities) provider called each step.
+    Signature: provider(step) → (G_s, G_o, communities). Overrides static G_s/G_o."""
+
+    step_observer: Optional[Callable[[int, AgentState, TransitionEvents], None]] = None
+    """Called after each completed step with (step_index, state_copy, events)."""
 
 
 class SimulationRunner:
@@ -132,16 +143,25 @@ class SimulationRunner:
         # G_h defaults to G_o
         self.G_h = self.G_o.copy()
 
-        # ── Initialize agents ──
-        if cfg.verbose:
-            print("Initializing agents...")
-        state = initialize_agents(
-            n=cfg.n_agents,
-            initial_active=cfg.initial_active,
-            initial_opinion_dist=cfg.initial_opinion_dist,
-            rng=self._agent_rng,
-            opinion_params=cfg.params.opinion,
-        )
+        # ── Initialize agents (use supplied state or random init) ──
+        if cfg.initial_state is not None:
+            state = cfg.initial_state.copy()
+            if state.n != cfg.n_agents:
+                raise ValueError(
+                    f"initial_state.n={state.n} != n_agents={cfg.n_agents}"
+                )
+            if cfg.verbose:
+                print("Using supplied initial state...")
+        else:
+            if cfg.verbose:
+                print("Initializing agents...")
+            state = initialize_agents(
+                n=cfg.n_agents,
+                initial_active=cfg.initial_active,
+                initial_opinion_dist=cfg.initial_opinion_dist,
+                rng=self._agent_rng,
+                opinion_params=cfg.params.opinion,
+            )
         o_initial = state.o.copy()  # Store for anchoring term
 
         # ── Set up input function ──
@@ -160,6 +180,15 @@ class SimulationRunner:
         # ── Main loop ──
         V_current = 0.0  # Track viral intensity across steps
         for t in range(cfg.T):
+            # Dynamic network provider overrides static networks each step
+            if cfg.network_provider is not None:
+                net_G_s, net_G_o, net_comms = cfg.network_provider(t)
+                self.G_s = np.asarray(net_G_s, dtype=np.float64)
+                self.G_o = np.asarray(net_G_o, dtype=np.float64)
+                self.G_h = self.G_o.copy()
+                if net_comms:
+                    self.communities = net_comms
+
             inputs = input_fn(cfg.n_agents, t, cfg.T)
             inputs.V = V_current  # Feed V into this step
 
@@ -173,6 +202,10 @@ class SimulationRunner:
                 t=t,
             )
             V_current = V_next  # Carry forward to next step
+
+            # Step observer (called after each step with t+1)
+            if cfg.step_observer is not None:
+                cfg.step_observer(t + 1, state.copy(), events)
 
             # Accumulate transition events EVERY step
             self.metrics.record(
