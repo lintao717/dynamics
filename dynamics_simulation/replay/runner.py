@@ -179,9 +179,23 @@ def run_replay(
     }
 
     assumption_flags = {
-        "broadcast_primary": config.network_mode == ReplayNetworkMode.BROADCAST,
-        "no_future_leakage": config.network_mode != ReplayNetworkMode.ORACLE_STATIC,
-        "oracle_is_upper_bound": config.network_mode == ReplayNetworkMode.ORACLE_STATIC,
+        # ── Network-level guarantees ──
+        "no_future_edge_leakage": (
+            config.network_mode != ReplayNetworkMode.ORACLE_STATIC
+        ),
+        # ── Participant cohort — NodeIndex is built from all event
+        #     participants, so the model knows the final cohort at t=0.
+        "future_participant_cohort_known": True,
+        "cohort_conditioned_replay": True,
+        "causal_forecast": False,
+        # ── Mode metadata ──
+        "broadcast_primary": (
+            config.network_mode == ReplayNetworkMode.BROADCAST
+        ),
+        "oracle_is_upper_bound": (
+            config.network_mode == ReplayNetworkMode.ORACLE_STATIC
+        ),
+        # ── Latent variables ──
         "latent_E": True,
         "latent_private_opinion": True,
     }
