@@ -89,11 +89,10 @@ def fit_stage1(
             "active_count", np.ones(mask_shape, dtype=bool)
         ),
     }
-    weights = LossWeights(
-        active_count=1.0, cumulative_users=0.0,
-        interaction_count=0.0, peak_time=0.0, final_size=0.0,
-        stance=0.0, arousal=0.0,
-    )
+    # Stage 1: only active_count is in simulated_mean.
+    # All other metrics default to weight 0 in LossWeights().
+    weights = LossWeights()
+    # (active_count=1.0 is the only non-zero default)
 
     iteration_count = [0]  # mutable counter
 
