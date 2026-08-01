@@ -168,15 +168,20 @@ def run_replay(
     # Aggregate
     agg = _aggregate_seeds(per_seed)
 
-    # Build params dict
-    params_dict = {
-        "propagation.beta": params.propagation.beta,
-        "propagation.beta_M": params.propagation.beta_M,
-        "activation.alpha_0": params.activation.alpha_0,
-        "activation.alpha_1": params.activation.alpha_1,
-        "decay.gamma_0": params.decay.gamma_0,
-        "viral.beta_V": params.viral.beta_V,
-    }
+    # Build full params dict (all fields, not just 6)
+    from dataclasses import asdict
+    params_dict = asdict(params)
+
+    # Resolve git commit at replay time
+    import subprocess
+    git_sha = "unknown"
+    try:
+        git_sha = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"],
+            text=True, stderr=subprocess.DEVNULL,
+        ).strip()
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+        pass
 
     assumption_flags = {
         # ── Network-level guarantees ──
@@ -218,4 +223,5 @@ def run_replay(
         simulated_p95=agg.get("p95", {}),
         params_dict=params_dict,
         assumption_flags=assumption_flags,
+        git_sha=git_sha,
     )

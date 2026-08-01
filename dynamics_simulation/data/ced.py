@@ -8,6 +8,10 @@ CED format:
 CED does not reliably distinguish comment from repost, so all
 interaction records use kind="interaction". Interaction IDs are
 deterministic SHA-256 hashes of (case_id, uid, timestamp, text).
+
+All raw user IDs are namespace-hashed with a "CED:" prefix before
+use, per the data-governance policy. CHECKED IDs are already hashed
+by the dataset authors; CED IDs are not.
 """
 
 from __future__ import annotations
@@ -50,6 +54,18 @@ def _make_interaction_id(case_id: str, uid: str, ts: datetime, text: str) -> str
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
 
 
+def _hash_user_id(raw_id: str) -> str:
+    """Hash a raw CED user ID with namespace prefix.
+
+    CED user IDs are not guaranteed to be pre-hashed (unlike CHECKED).
+    Per data-governance policy, all external user IDs must be hashed
+    at the adapter boundary.
+    """
+    return hashlib.sha256(
+        f"CED:{raw_id}".encode("utf-8")
+    ).hexdigest()[:16]
+
+
 def load_ced_case(original_path: Path, interactions_path: Path, label: str) -> EventCase:
     """Load a CED case from original + interactions JSON files.
 
@@ -74,11 +90,12 @@ def load_ced_case(original_path: Path, interactions_path: Path, label: str) -> E
         orig = json.load(fh)
 
     root_text = orig.get("text", "")
-    root_user = orig.get("user", {}).get("id", "")
-    if not root_user:
+    root_user_raw = orig.get("user", {}).get("id", "")
+    if not root_user_raw:
         raise ValueError(
             f"Missing user.id in {original_path}"
         )
+    root_user = _hash_user_id(root_user_raw)
 
     root_time_raw = orig.get("time")
     if root_time_raw is None:
@@ -118,7 +135,7 @@ def load_ced_case(original_path: Path, interactions_path: Path, label: str) -> E
         interactions.append(InteractionRecord(
             interaction_id=ix_id,
             root_post_id=case_id,
-            user_id=uid,
+            user_id=_hash_user_id(uid),
             timestamp=ts,
             kind="interaction",
             text=text,

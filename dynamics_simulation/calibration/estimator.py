@@ -47,6 +47,7 @@ def fit_stage1(
     base_params: ModelParams | None = None,
     replay_config: ReplayConfig | None = None,
     split: TemporalSplit | None = None,
+    train_fraction: float = 0.7,
 ) -> CalibrationResult:
     """Fit stage-1 parameters (4 params) to a single event case.
 
@@ -58,7 +59,9 @@ def fit_stage1(
         case: Validated EventCase to fit.
         base_params: Base ModelParams (default: default_params()).
         replay_config: Replay configuration (default: broadcast, 5 seeds).
-        split: TemporalSplit (default: 70/30 on total steps).
+        split: TemporalSplit (default: computed from train_fraction).
+        train_fraction: Fraction of steps for training (default 0.7).
+            Ignored when *split* is explicitly provided.
 
     Returns:
         CalibrationResult with best vector, losses, and provenance.
@@ -77,7 +80,9 @@ def fit_stage1(
     T = len(result_ref.observed.steps) - 1
 
     if split is None:
-        split = TemporalSplit.by_fraction(total_steps=T, train_fraction=0.7)
+        split = TemporalSplit.by_fraction(
+            total_steps=T, train_fraction=train_fraction,
+        )
 
     # Pre-build observation dict and masks (only active_count is in simulated_mean)
     obs_dict = {
