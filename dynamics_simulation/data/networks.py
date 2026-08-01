@@ -120,7 +120,7 @@ def build_network_provider(
     """
     case.validate()
     N = len(index)
-    T = grid.total_steps
+    T = grid.final_step
     root_idx = 0  # guaranteed by NodeIndex
 
     snapshots: list[NetworkSnapshot] = []

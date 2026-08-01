@@ -57,7 +57,7 @@ def test_broadcast_g_s_is_all_zero():
     provider = build_network_provider(case, index, grid,
                                       mode=ReplayNetworkMode.BROADCAST)
 
-    for step in range(grid.total_steps + 1):
+    for step in range(grid.final_step + 1):
         snap = provider.snapshot_at(step)
         assert np.all(snap.G_s == 0), f"G_s not zero at step {step}"
 
@@ -135,7 +135,7 @@ def test_go_row_sums_are_zero_or_one():
     for mode in [ReplayNetworkMode.CUMULATIVE_INTERACTION,
                  ReplayNetworkMode.ORACLE_STATIC]:
         provider = build_network_provider(case, index, grid, mode=mode)
-        snap = provider.snapshot_at(grid.total_steps)
+        snap = provider.snapshot_at(grid.final_step)
         row_sums = snap.G_o.sum(axis=1)
         for s in row_sums:
             assert s == pytest.approx(0.0, abs=1e-6) or s == pytest.approx(1.0, abs=1e-6), \

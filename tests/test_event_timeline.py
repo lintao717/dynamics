@@ -94,7 +94,7 @@ def test_timeline_root_exposure_is_zero():
     timeline = EventInputTimeline(case, index, grid)
     root_idx = index.user_to_idx["root"]
 
-    inputs = timeline.inputs_at(index.n, 0, grid.total_steps)
+    inputs = timeline.inputs_at(index.n, 0, grid.final_step)
     resolved = inputs.resolve(index.n)
     assert resolved["media_exposure"][root_idx] == 0.0
 
@@ -106,7 +106,7 @@ def test_timeline_non_root_gets_exposure():
     timeline = EventInputTimeline(case, index, grid)
     u1_idx = index.user_to_idx["u1"]
 
-    inputs = timeline.inputs_at(index.n, 0, grid.total_steps)
+    inputs = timeline.inputs_at(index.n, 0, grid.final_step)
     resolved = inputs.resolve(index.n)
     assert resolved["media_exposure"][u1_idx] > 0.0
 
@@ -120,8 +120,8 @@ def test_timeline_is_deterministic():
     t2 = EventInputTimeline(case, index, grid)
 
     for step in range(3):
-        i1 = t1.inputs_at(index.n, step, grid.total_steps)
-        i2 = t2.inputs_at(index.n, step, grid.total_steps)
+        i1 = t1.inputs_at(index.n, step, grid.final_step)
+        i2 = t2.inputs_at(index.n, step, grid.final_step)
         assert np.allclose(
             i1.resolve(index.n)["media_exposure"],
             i2.resolve(index.n)["media_exposure"],
@@ -151,8 +151,8 @@ def test_timeline_no_interaction_dependency():
     tl_empty = EventInputTimeline(case_empty, index, grid_empty)
 
     for step in range(3):
-        i1 = tl.inputs_at(index.n, step, grid.total_steps)
-        i2 = tl_empty.inputs_at(index.n, step, grid_empty.total_steps)
+        i1 = tl.inputs_at(index.n, step, grid.final_step)
+        i2 = tl_empty.inputs_at(index.n, step, grid_empty.final_step)
         assert np.allclose(
             i1.resolve(index.n)["media_exposure"],
             i2.resolve(index.n)["media_exposure"],

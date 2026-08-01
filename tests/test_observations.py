@@ -122,7 +122,7 @@ def test_shape_consistency():
     grid = TimeGrid.from_case(case, step_hours=1.0, tail_steps=1)
     traj = build_observed_trajectory(case, index, grid)
 
-    T_plus_1 = grid.total_steps + 1  # steps 0..total_steps
+    T_plus_1 = grid.final_step + 1  # steps 0..total_steps
     N = len(index.idx_to_user)
     assert traj.active_count.shape == (T_plus_1,)
     assert traj.active_mask.shape == (T_plus_1, N)

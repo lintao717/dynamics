@@ -63,7 +63,7 @@ def _run_one_seed(
     # Configure and run simulation
     sim_cfg = SimulationConfig(
         n_agents=len(index),
-        T=grid.total_steps,
+        T=grid.final_step,
         seed=seed,
         params=params,
         initial_state=state,

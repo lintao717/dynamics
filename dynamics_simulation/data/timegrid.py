@@ -2,6 +2,13 @@
 
 Step 0 = root post time. Interaction at t0 < t < t0+Δt → step 1.
 Interaction exactly at t0+Δt → step 1.
+
+``final_step`` is the LAST simulation step index (not a count).
+``n_trajectory_points = final_step + 1`` is the number of trajectory
+points (including step 0).
+
+``SimulationConfig(T=grid.final_step)`` runs ``final_step`` state
+updates, producing ``final_step + 1`` trajectory points.
 """
 
 from __future__ import annotations
@@ -23,7 +30,9 @@ class TimeGrid:
 
     start_time: datetime
     step_hours: float
-    total_steps: int
+    final_step: int
+    """Last simulation step index. SimulationConfig(T=final_step)
+    runs final_step updates, producing final_step + 1 trajectory points."""
 
     @classmethod
     def from_case(
@@ -37,7 +46,7 @@ class TimeGrid:
         Args:
             case: Validated EventCase.
             step_hours: Duration of each simulation step in hours.
-            tail_steps: Extra steps appended after the last interaction.
+            tail_steps: Extra steps appended after the last data step.
         """
         case.validate()
         start = case.root.timestamp
@@ -49,15 +58,17 @@ class TimeGrid:
 
         delta = last_ts - start
         hours = delta.total_seconds() / 3600.0
-        # Step of last interaction: ceil(hours / step_hours)
+        # Step of last data interaction: ceil(hours / step_hours)
         #   hours=0   → step 0 (root only)
         #   0 < hours ≤ Δt → step 1
-        last_step = math.ceil(hours / step_hours)
-        # Total steps: cover step 0 through last_step, plus tail
-        total = last_step + 1 + int(tail_steps)
+        last_data_step = math.ceil(hours / step_hours)
+
+        # final_step = last_data_step + tail_steps
+        # (No spurious +1 — final_step is an index, not a count.)
+        final = last_data_step + int(tail_steps)
 
         return cls(start_time=start, step_hours=float(step_hours),
-                   total_steps=int(total))
+                   final_step=int(final))
 
     def step_of(self, timestamp: datetime) -> int:
         """Return the integer step index for *timestamp*.
@@ -77,11 +88,29 @@ class TimeGrid:
 
     @property
     def end_time(self) -> datetime:
+        """End of the last simulation step."""
         return self.start_time + timedelta(
-            hours=self.step_hours * self.total_steps
+            hours=self.step_hours * self.final_step
         )
 
     @property
+    def n_trajectory_points(self) -> int:
+        """Number of trajectory points = final_step + 1.
+
+        This is the length of observation and simulation arrays
+        (steps 0 through final_step inclusive).
+        """
+        return self.final_step + 1
+
+    @property
     def n_data_steps(self) -> int:
-        """Number of steps that contain observations (total - tail)."""
-        return self.total_steps
+        """Number of steps that contain real-world observations.
+
+        This is final_step - tail_steps + 1 (since step 0 is the root
+        post, which is real data). Conservatively returns
+        n_trajectory_points — the tail steps are a config-time
+        parameter not stored in the grid itself.
+
+        For precise computation use TimeGrid.from_case() tail_steps.
+        """
+        return self.n_trajectory_points
