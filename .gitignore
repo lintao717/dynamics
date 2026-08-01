@@ -31,3 +31,7 @@ data/results/
 *.parquet
 *.sqlite
 *.db
+**/.venv/
+data/MediaCrawler/
+data/sim_results/
+**/papers_pdf/
