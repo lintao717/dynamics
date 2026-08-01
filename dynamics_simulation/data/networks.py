@@ -5,15 +5,15 @@ Three modes with explicit no-leak guarantees:
 
   broadcast (PRIMARY):
     G_s = 0 everywhere; exposure enters through media_exposure.
-    No future information.
+    Single shared snapshot — no per-step allocation.
 
   cumulative_interaction:
-    Root->user edge only after that user's first observed action.
-    The edge may influence later steps but cannot explain the first action.
+    Root→user edge only after that user's first observed action.
+    Computed on demand from an edge schedule — no O(T·N²) storage.
 
   oracle_static (SENSITIVITY ONLY):
-    All observed root->user edges exist from step 0.
-    Upper-bound sensitivity run — NOT causal validation.
+    All observed root→user edges exist from step 0.
+    Single shared snapshot — upper-bound sensitivity, NOT causal.
 
 All networks follow G[dst, src] > 0 convention.
 """
@@ -70,28 +70,15 @@ class NetworkSnapshot:
 
 
 class TemporalNetworkProvider:
-    """Provides NetworkSnapshots for each simulation step.
+    """Abstract temporal network provider.
 
-    Immutable after construction. snapshot_at(step) is deterministic.
+    Subclasses implement lazy evaluation so per-step snapshots
+    are not pre-allocated O(T·N²).
     """
 
-    def __init__(self, snapshots: list[NetworkSnapshot]):
-        self._snapshots = tuple(snapshots)
-
     def snapshot_at(self, step: int) -> NetworkSnapshot:
-        """Return the network snapshot for *step*.
-
-        If step exceeds the stored range, returns the last snapshot
-        (tail steps after the last data step).
-        """
-        if step < 0:
-            raise ValueError(f"step must be non-negative, got {step}")
-        idx = min(step, len(self._snapshots) - 1)
-        return self._snapshots[idx]
-
-    @property
-    def max_step(self) -> int:
-        return len(self._snapshots) - 1
+        """Return the network snapshot for *step*."""
+        raise NotImplementedError
 
 
 def _row_normalize(adj: np.ndarray, eps: float = 1e-8) -> np.ndarray:
@@ -100,60 +87,133 @@ def _row_normalize(adj: np.ndarray, eps: float = 1e-8) -> np.ndarray:
     return adj / np.maximum(row_sums, eps)
 
 
+# ── Lazy providers ──
+
+
+class BroadcastProvider(TemporalNetworkProvider):
+    """Broadcast mode: G_s = 0 always. Single shared snapshot.
+
+    Memory: O(N²) — one snapshot, regardless of T.
+    """
+
+    def __init__(self, n: int):
+        self._snapshot = NetworkSnapshot(
+            G_s=np.zeros((n, n), dtype=np.float64),
+            G_o=np.zeros((n, n), dtype=np.float64),
+            communities={0: list(range(n))},
+        )
+
+    def snapshot_at(self, step: int) -> NetworkSnapshot:
+        """Same zero snapshot for every step."""
+        return self._snapshot
+
+
+class CumulativeProvider(TemporalNetworkProvider):
+    """Cumulative interaction mode: edges accumulate on demand.
+
+    Each call to snapshot_at(step) computes the network by replaying
+    all edges up to and including *step*. No snapshot history is stored.
+
+    Memory: O(N² + I) where I = number of interactions.
+    """
+
+    def __init__(
+        self,
+        n: int,
+        edges: list[tuple[int, int, int]],  # (step, dst_idx, src_idx)
+        communities: Mapping[int, list[int]],
+    ):
+        self._n = n
+        self._edges = edges  # pre-sorted by step
+        self._communities = communities or {0: list(range(n))}
+
+    def snapshot_at(self, step: int) -> NetworkSnapshot:
+        """Compute the accumulated network up to *step* on the fly."""
+        if step < 0:
+            raise ValueError(f"step must be non-negative, got {step}")
+
+        accumulated = np.zeros((self._n, self._n), dtype=np.float64)
+
+        for edge_step, dst_idx, src_idx in self._edges:
+            if edge_step <= step:
+                accumulated[dst_idx, src_idx] = 1.0
+            else:
+                break  # edges are pre-sorted by step
+
+        G_o = _row_normalize(accumulated.copy())
+        return NetworkSnapshot(
+            G_s=accumulated,
+            G_o=G_o,
+            communities=self._communities,
+        )
+
+
+class OracleStaticProvider(TemporalNetworkProvider):
+    """Oracle mode: all edges from step 0. Single shared snapshot.
+
+    Memory: O(N²) — one snapshot.
+    """
+
+    def __init__(self, snapshot: NetworkSnapshot):
+        self._snapshot = snapshot
+
+    def snapshot_at(self, step: int) -> NetworkSnapshot:
+        """Same full-network snapshot for every step."""
+        return self._snapshot
+
+
+# ── Public builder ──
+
+
 def build_network_provider(
     case: EventCase,
     index: NodeIndex,
     grid: TimeGrid,
     mode: ReplayNetworkMode = ReplayNetworkMode.BROADCAST,
 ) -> TemporalNetworkProvider:
-    """Build a TemporalNetworkProvider for *case* under *mode*.
+    """Build a lazy TemporalNetworkProvider for *case* under *mode*.
 
     Args:
         case: Validated EventCase.
         index: NodeIndex for the case.
-        grid: TimeGrid for the case.
+        grid: TimeGrid for the case (used only for validation, not storage).
         mode: Replay network construction mode.
 
     Returns:
         A TemporalNetworkProvider whose snapshot_at(step) returns the
-        appropriate networks for that step with no future leakage.
+        appropriate networks with no future edge leakage and O(N²) memory
+        (not O(T·N²)).
     """
     case.validate()
     N = len(index)
-    T = grid.final_step
     root_idx = 0  # guaranteed by NodeIndex
 
-    snapshots: list[NetworkSnapshot] = []
-
     if mode == ReplayNetworkMode.BROADCAST:
-        # G_s is always zero; G_o starts empty and stays empty
-        for step in range(T + 1):
-            snapshots.append(NetworkSnapshot(
-                G_s=np.zeros((N, N), dtype=np.float64),
-                G_o=np.zeros((N, N), dtype=np.float64),
-                communities={0: list(range(N))},
-            ))
+        return BroadcastProvider(N)
 
     elif mode == ReplayNetworkMode.CUMULATIVE_INTERACTION:
-        accumulated = np.zeros((N, N), dtype=np.float64)
-        for step in range(T + 1):
-            # Add edges for interactions that occur in this step
-            for ix in case.interactions:
-                ix_step = grid.step_of(ix.timestamp)
-                if ix_step == step:
-                    user_idx = index.user_to_idx[ix.user_id]
-                    # Root → user edge (G[dst=user, src=root])
-                    accumulated[user_idx, root_idx] = 1.0
+        # Build an edge schedule: (step, user_idx, root_idx) sorted by step
+        edge_schedule: list[tuple[int, float]] = []
+        seen: set[str] = set()
 
-            G_o = _row_normalize(accumulated.copy())
-            snapshots.append(NetworkSnapshot(
-                G_s=accumulated.copy(),
-                G_o=G_o,
-                communities={0: list(range(N))},
-            ))
+        for ix in case.interactions:
+            if ix.user_id not in seen:
+                seen.add(ix.user_id)
+                user_idx = index.user_to_idx[ix.user_id]
+                ix_step = grid.step_of(ix.timestamp)
+                edge_schedule.append((ix_step, user_idx, root_idx))
+
+        # Already sorted by step because interactions are sorted by timestamp
+        # But ensure determinism
+        edge_schedule.sort(key=lambda e: e[0])
+
+        return CumulativeProvider(
+            n=N,
+            edges=edge_schedule,  # [(step, dst_idx, src_idx), ...]
+            communities={0: list(range(N))},
+        )
 
     elif mode == ReplayNetworkMode.ORACLE_STATIC:
-        # All root→user edges from step 0
         full = np.zeros((N, N), dtype=np.float64)
         seen = {case.root.user_id}
         for ix in case.interactions:
@@ -169,9 +229,7 @@ def build_network_provider(
             G_o=G_o,
             communities={0: list(range(N))},
         )
-        snapshots = [snap] * (T + 1)
+        return OracleStaticProvider(snap)
 
     else:
         raise ValueError(f"Unknown network mode: {mode}")
-
-    return TemporalNetworkProvider(snapshots)
