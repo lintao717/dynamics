@@ -41,6 +41,43 @@ class CalibrationResult:
     base_params_version: str = "v1.1"
     seed_tuple: tuple[int, ...] = ()
 
+    # ── Experiment metadata (for reproducibility) ──
+    train_fraction: float = 0.7
+    train_end_step: int = 0
+    last_data_step: int = 0
+    final_step: int = 0
+    tail_steps: int = 4
+    step_hours: float = 1.0
+    network_mode: str = "broadcast"
+    git_sha: str = "unknown"
+    source_revision: str = "unknown"
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert to JSON-serializable dict."""
+        return {
+            "case_id": self.case_id,
+            "best_vector": self.best_vector,
+            "best_loss": self.best_loss,
+            "train_loss": self.train_loss,
+            "val_loss": self.val_loss,
+            "success": self.success,
+            "message": self.message,
+            "n_iterations": self.n_iterations,
+            "optimizer_settings": self.optimizer_settings,
+            "parameter_specs": self.parameter_specs,
+            "base_params_version": self.base_params_version,
+            "seed_tuple": list(self.seed_tuple),
+            "train_fraction": self.train_fraction,
+            "train_end_step": self.train_end_step,
+            "last_data_step": self.last_data_step,
+            "final_step": self.final_step,
+            "tail_steps": self.tail_steps,
+            "step_hours": self.step_hours,
+            "network_mode": self.network_mode,
+            "git_sha": self.git_sha,
+            "source_revision": self.source_revision,
+        }
+
 
 def fit_stage1(
     case: EventCase,
@@ -92,6 +129,17 @@ def fit_stage1(
         split = TemporalSplit.by_fraction(
             total_steps=T, train_fraction=train_fraction,
         )
+    else:
+        # Explicit split must not include artificial tail steps.
+        # Tail steps are NOT real data and must not influence
+        # train_end_step, the 70/30 ratio, or the effective data
+        # points available for calibration.
+        if split.total_steps > grid.last_data_step:
+            raise ValueError(
+                f"Explicit split.total_steps={split.total_steps} exceeds "
+                f"last_data_step={grid.last_data_step}. Split includes "
+                "artificial tail steps that are not real observations."
+            )
 
     # Pre-build observation dict and masks (only active_count is in simulated_mean)
     obs_dict = {
@@ -156,6 +204,17 @@ def fit_stage1(
             train_loss = float("inf")
             val_loss = float("inf")
 
+        # Resolve git sha for provenance
+        import subprocess
+        git_sha = "unknown"
+        try:
+            git_sha = subprocess.check_output(
+                ["git", "rev-parse", "HEAD"],
+                text=True, stderr=subprocess.DEVNULL,
+            ).strip()
+        except (OSError, subprocess.SubprocessError):
+            pass
+
         return CalibrationResult(
             case_id=case.case_id,
             best_vector=best,
@@ -178,6 +237,14 @@ def fit_stage1(
                 for s in specs
             ],
             seed_tuple=replay_config.seeds,
+            train_fraction=train_fraction,
+            train_end_step=split.train_end_step,
+            last_data_step=grid.last_data_step,
+            final_step=grid.final_step,
+            tail_steps=replay_config.tail_steps,
+            step_hours=replay_config.step_hours,
+            network_mode=replay_config.network_mode.value,
+            git_sha=git_sha,
         )
 
     except ImportError:

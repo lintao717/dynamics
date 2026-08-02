@@ -52,19 +52,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
 
-    d = {
-        "case_id": result.case_id,
-        "best_vector": result.best_vector,
-        "best_loss": result.best_loss,
-        "train_loss": result.train_loss,
-        "val_loss": result.val_loss,
-        "success": result.success,
-        "message": result.message,
-        "n_iterations": result.n_iterations,
-        "optimizer_settings": result.optimizer_settings,
-        "parameter_specs": result.parameter_specs,
-        "seed_tuple": list(result.seed_tuple),
-    }
+    d = result.to_dict()
 
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)

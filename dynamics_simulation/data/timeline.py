@@ -40,21 +40,45 @@ class BroadcastExposureConfig:
     novelty_half_life_steps: float = 6.0
     staleness_tau_steps: float = 12.0
 
+    def __post_init__(self):
+        if not (0.0 <= self.amplitude <= 1.0):
+            raise ValueError(
+                f"amplitude={self.amplitude} must be in [0, 1]"
+            )
+        if not (0.0 <= self.novelty_at_root <= 1.0):
+            raise ValueError(
+                f"novelty_at_root={self.novelty_at_root} must be in [0, 1]"
+            )
+        if self.exposure_half_life_steps <= 0:
+            raise ValueError(
+                f"exposure_half_life_steps={self.exposure_half_life_steps} "
+                "must be > 0"
+            )
+        if self.novelty_half_life_steps <= 0:
+            raise ValueError(
+                f"novelty_half_life_steps={self.novelty_half_life_steps} "
+                "must be > 0"
+            )
+        if self.staleness_tau_steps <= 0:
+            raise ValueError(
+                f"staleness_tau_steps={self.staleness_tau_steps} must be > 0"
+            )
+
     def exposure_at(self, step: int) -> float:
         """Compute exposure intensity at *step*."""
-        return self.amplitude * (0.5 ** (step / max(self.exposure_half_life_steps, 1.0)))
+        return self.amplitude * (0.5 ** (step / self.exposure_half_life_steps))
 
     def novelty_at(self, step: int) -> float:
         """Compute novelty at *step* using fixed half-life."""
         return float(np.clip(
-            self.novelty_at_root * (0.5 ** (step / max(self.novelty_half_life_steps, 1.0))),
+            self.novelty_at_root * (0.5 ** (step / self.novelty_half_life_steps)),
             0.0, 1.0,
         ))
 
     def staleness_at(self, step: int) -> float:
         """Compute staleness at *step* using fixed tau (no total_steps)."""
         return float(np.clip(
-            1.0 - np.exp(-step / max(self.staleness_tau_steps, 1.0)),
+            1.0 - np.exp(-step / self.staleness_tau_steps),
             0.0, 1.0,
         ))
 

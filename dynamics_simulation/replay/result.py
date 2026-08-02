@@ -55,7 +55,7 @@ class ReplayResult:
     simulated_p95: Optional[dict[str, np.ndarray]] = None
 
     # Metadata
-    model_version: str = "v1.2"
+    model_version: str = "v1.2.1"
     assumption_flags: dict[str, bool] = field(default_factory=dict)
     git_sha: str = "unknown"
 

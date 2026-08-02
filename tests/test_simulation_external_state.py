@@ -93,9 +93,10 @@ def test_network_provider_is_called():
     )
     runner = SimulationRunner(cfg)
     runner.run()
-    # Provider called twice for step 0: once before initial snapshot
-    # (to record t=0 metrics with real networks), once in main loop.
-    assert call_log == [0, 0, 1, 2, 3, 4]
+    # Provider called once for t=0 (during initialization, before
+    # initial snapshot), then for t=1, 2, 3, 4 in the main loop.
+    # The main loop skips t=0 since the provider was already called.
+    assert call_log == [0, 1, 2, 3, 4]
 
 
 def test_step_observer_is_called():

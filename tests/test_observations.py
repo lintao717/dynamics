@@ -144,3 +144,93 @@ def test_node_index_deterministic():
     i2 = NodeIndex.from_case(case)
     assert i1.user_to_idx == i2.user_to_idx
     assert i1.idx_to_user == i2.idx_to_user
+
+
+def test_tail_steps_are_unobserved():
+    """Steps beyond last_data_step must be masked as False."""
+    case = _make_case()
+    index = NodeIndex.from_case(case)
+    grid = TimeGrid.from_case(case, step_hours=1.0, tail_steps=3)
+    traj = build_observed_trajectory(case, index, grid)
+
+    # last interaction is at step 2 (9:30), so last_data_step=2
+    assert grid.last_data_step == 2
+    assert grid.final_step == 5  # 2 + 3tail
+    assert grid.n_trajectory_points == 6
+
+    # Steps 3, 4, 5 are tail — must be unobserved
+    for key in ["active_count", "comment_count", "repost_count",
+                "interaction_count"]:
+        mask = traj.observation_masks[key]
+        assert np.all(mask[:grid.last_data_step + 1])  # data steps: True
+        assert not np.any(mask[grid.last_data_step + 1:])  # tail: False
+
+
+def _make_large_case():
+    """Case with enough interactions for temporal split (>=4 data steps)."""
+    root = RootPost(
+        post_id="ev2", user_id="root",
+        timestamp=datetime(2020, 1, 1, 8, 0, tzinfo=timezone.utc),
+        text="root", label="fake", expert_analysis=None,
+    )
+    interactions = tuple(
+        InteractionRecord(
+            interaction_id=f"c{i}", root_post_id="ev2",
+            user_id=f"u{i}",
+            timestamp=datetime(2020, 1, 1, 8 + i, 0, tzinfo=timezone.utc),
+            kind="comment", text=f"c{i}",
+        )
+        for i in range(1, 6)  # 5 users, 5 data steps
+    )
+    return EventCase(
+        case_id="ev2", source_dataset="CHECKED",
+        root=root, interactions=interactions,
+    )
+
+
+def test_tail_steps_excluded_from_loss():
+    """Tail-zero observations must not influence calibration loss."""
+    from dynamics_simulation.calibration.objective import (
+        compute_replay_loss, LossWeights,
+    )
+    from dynamics_simulation.calibration.split import TemporalSplit
+
+    case = _make_large_case()
+    index = NodeIndex.from_case(case)
+    # 5 interactions at t+1h through t+5h, step_hours=1 → last_data_step=5
+    grid = TimeGrid.from_case(case, step_hours=1.0, tail_steps=3)
+    traj = build_observed_trajectory(case, index, grid)
+
+    # last_data_step=5, final_step=8 (5+3), n_trajectory_points=9
+    assert grid.last_data_step == 5  # enough for split (>=4)
+
+    # Build a dummy simulated dict that matches observed exactly
+    sim = {
+        "active_count": traj.active_count.copy().astype(np.float64),
+    }
+    # Split on data-only steps
+    split = TemporalSplit.by_fraction(
+        total_steps=grid.last_data_step,
+        train_fraction=0.7,
+    )
+    weights = LossWeights(active_count=1.0)
+    masks = {"active_count": traj.observation_masks["active_count"]}
+
+    loss = compute_replay_loss(
+        {"active_count": traj.active_count.astype(np.float64)},
+        sim, split, weights, masks,
+    )
+    # Perfect match → zero loss
+    assert loss.train_total == 0.0
+    assert loss.val_total == 0.0
+
+    # Now perturb the tail (steps beyond last_data_step)
+    sim["active_count"] = sim["active_count"].copy()
+    sim["active_count"][grid.last_data_step + 1:] = 999.0
+    loss2 = compute_replay_loss(
+        {"active_count": traj.active_count.astype(np.float64)},
+        sim, split, weights, masks,
+    )
+    # Tail perturbation must not change loss (masked out)
+    assert loss2.train_total == 0.0
+    assert loss2.val_total == 0.0

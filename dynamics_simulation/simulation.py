@@ -192,8 +192,10 @@ class SimulationRunner:
         # ── Main loop ──
         V_current = 0.0  # Track viral intensity across steps
         for t in range(cfg.T):
-            # Dynamic network provider overrides static networks each step
-            if cfg.network_provider is not None:
+            # Dynamic network provider overrides static networks each step.
+            # Skip t=0 — provider was already called during initialization
+            # to set up the initial snapshot with real networks.
+            if cfg.network_provider is not None and t > 0:
                 net_G_s, net_G_o, net_comms = cfg.network_provider(t)
                 self.G_s = np.asarray(net_G_s, dtype=np.float64)
                 self.G_o = np.asarray(net_G_o, dtype=np.float64)

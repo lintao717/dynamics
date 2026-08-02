@@ -1,5 +1,7 @@
 """Tests for chronological split and masked replay loss."""
 
+from datetime import datetime, timezone
+
 import numpy as np
 import pytest
 from dynamics_simulation.calibration.split import TemporalSplit
@@ -194,3 +196,49 @@ def test_final_size_uses_train_segment_only():
     assert loss.train_final_size == pytest.approx(0.0, abs=0.01)
     # val final = obs[-1] vs sim[-1] — different (obs continues, sim flat)
     assert loss.val_final_size > 0.0
+
+
+def test_explicit_split_rejects_tail_steps():
+    """fit_stage1 must reject an explicit split that includes tail steps."""
+    from dynamics_simulation.data.schema import (
+        EventCase, RootPost, InteractionRecord,
+    )
+    from dynamics_simulation.data.networks import ReplayNetworkMode
+    from dynamics_simulation.replay.config import ReplayConfig
+    from dynamics_simulation.calibration.estimator import fit_stage1
+    from dynamics_simulation.calibration.split import TemporalSplit
+    from dynamics_simulation.config import default_params
+
+    root = RootPost(
+        post_id="s1", user_id="root",
+        timestamp=datetime.now(timezone.utc),
+        text="test", label="fake", expert_analysis=None,
+    )
+    interactions = tuple(
+        InteractionRecord(
+            interaction_id=f"c{i}", root_post_id="s1",
+            user_id=f"u{i}",
+            timestamp=datetime.now(timezone.utc),
+            kind="comment", text=f"c{i}",
+        )
+        for i in range(1, 8)  # enough steps for split
+    )
+    case = EventCase(
+        case_id="s1", source_dataset="CHECKED",
+        root=root, interactions=interactions,
+    )
+
+    # Explicit split using final_step (which includes tail) must be rejected
+    from dynamics_simulation.data.timegrid import TimeGrid
+    grid = TimeGrid.from_case(case, step_hours=0.01, tail_steps=4)
+    # last_data_step covers the interactions, final_step adds 4 tail
+    bad_split = TemporalSplit.by_fraction(
+        total_steps=grid.final_step, train_fraction=0.7,
+    )
+    config = ReplayConfig(
+        step_hours=0.01, tail_steps=4,
+        network_mode=ReplayNetworkMode.BROADCAST,
+        seeds=(42,),
+    )
+    with pytest.raises(ValueError, match="tail"):
+        fit_stage1(case, default_params(), config, split=bad_split)
