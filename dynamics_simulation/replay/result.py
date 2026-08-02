@@ -37,6 +37,8 @@ class ReplayResult:
     seeds: tuple[int, ...]
     node_count: int
     interaction_count: int
+    tail_steps: int = 4
+    last_data_step: int = 0
     truncation_count: int = 0
 
     # Observed trajectory (from real data)
@@ -53,7 +55,7 @@ class ReplayResult:
     simulated_p95: Optional[dict[str, np.ndarray]] = None
 
     # Metadata
-    model_version: str = "v1.2"
+    model_version: str = "v1.2.1"
     assumption_flags: dict[str, bool] = field(default_factory=dict)
     git_sha: str = "unknown"
 
@@ -67,6 +69,8 @@ class ReplayResult:
             "source_dataset": self.source_dataset,
             "network_mode": self.network_mode,
             "step_hours": self.step_hours,
+            "tail_steps": self.tail_steps,
+            "last_data_step": self.last_data_step,
             "seeds": list(self.seeds),
             "node_count": self.node_count,
             "interaction_count": self.interaction_count,

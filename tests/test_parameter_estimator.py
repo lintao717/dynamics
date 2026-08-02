@@ -121,13 +121,17 @@ def test_synthetic_recovery_loss_lower_than_default():
 
     # Run with default params
     result_default = run_replay(case, default_params(), config)
+    # Use last_data_step (real data only), NOT final_step (includes tail)
     split = TemporalSplit.by_fraction(
-        total_steps=len(result_default.observed.steps) - 1,
+        total_steps=result_default.last_data_step,
         train_fraction=0.7,
     )
-    # Build masks from observed — only active_count is in simulated_mean
+    # Use actual observation masks — tail steps are unobserved
     masks = {
-        "active_count": np.ones_like(result_default.observed.active_count, dtype=bool),
+        "active_count": result_default.observed.observation_masks.get(
+            "active_count",
+            np.ones_like(result_default.observed.active_count, dtype=bool),
+        ),
     }
     obs_dict = {
         "active_count": result_default.observed.active_count,

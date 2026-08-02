@@ -20,6 +20,7 @@ import hashlib
 import json
 from datetime import datetime, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from dynamics_simulation.data.schema import (
     EventCase,
@@ -28,8 +29,14 @@ from dynamics_simulation.data.schema import (
 )
 
 
+# CED timestamps: Unix epochs are interpreted in UTC; naive strings are
+# assumed to be Asia/Shanghai (Weibo platform local time), matching the
+# CHECKED adapter convention.
+CED_TZ = ZoneInfo("Asia/Shanghai")
+
+
 def _parse_timestamp(raw) -> datetime:
-    """Parse a CED timestamp: Unix epoch (int/float) or date string → UTC."""
+    """Parse a CED timestamp: Unix epoch → UTC, date string → Asia/Shanghai → UTC."""
     if isinstance(raw, (int, float)):
         return datetime.fromtimestamp(float(raw), tz=timezone.utc)
     raw_str = str(raw).strip()
@@ -42,7 +49,8 @@ def _parse_timestamp(raw) -> datetime:
     for fmt in formats:
         try:
             dt_naive = datetime.strptime(raw_str, fmt)
-            return dt_naive.replace(tzinfo=timezone.utc)
+            dt_local = dt_naive.replace(tzinfo=CED_TZ)
+            return dt_local.astimezone(timezone.utc)
         except ValueError:
             continue
     raise ValueError(f"Cannot parse CED timestamp: {raw!r}")

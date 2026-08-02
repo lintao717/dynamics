@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -27,12 +28,17 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--train-fraction", type=float, default=0.7)
     p.add_argument("--output", type=Path, default=None,
                    help="Output JSON path.")
+    p.add_argument("--source-revision", type=str, default="unknown",
+                   help="Dataset repository commit, tag, or release version.")
     args = p.parse_args(argv)
 
     case_path = Path(args.case)
     if not case_path.is_file():
         print(f"ERROR: {case_path} not found", file=sys.stderr)
         return 1
+
+    # Compute case file SHA-256 for provenance
+    case_sha256 = hashlib.sha256(case_path.read_bytes()).hexdigest()
 
     mode = ReplayNetworkMode(args.mode)
     case = load_checked_case(case_path)
@@ -43,24 +49,18 @@ def main(argv: list[str] | None = None) -> int:
         seeds=(11, 23, 37, 53, 71),
     )
 
-    result = fit_stage1(
-        case, default_params(), replay_cfg,
-        train_fraction=args.train_fraction,
-    )
+    try:
+        result = fit_stage1(
+            case, default_params(), replay_cfg,
+            train_fraction=args.train_fraction,
+            source_revision=args.source_revision,
+            case_file_sha256=case_sha256,
+        )
+    except (ValueError, RuntimeError) as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
 
-    d = {
-        "case_id": result.case_id,
-        "best_vector": result.best_vector,
-        "best_loss": result.best_loss,
-        "train_loss": result.train_loss,
-        "val_loss": result.val_loss,
-        "success": result.success,
-        "message": result.message,
-        "n_iterations": result.n_iterations,
-        "optimizer_settings": result.optimizer_settings,
-        "parameter_specs": result.parameter_specs,
-        "seed_tuple": list(result.seed_tuple),
-    }
+    d = result.to_dict()
 
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)

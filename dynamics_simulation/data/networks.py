@@ -5,6 +5,9 @@ Three modes with explicit no-leak guarantees:
 
   broadcast (PRIMARY):
     G_s = 0 everywhere; exposure enters through media_exposure.
+    G_o = 0 everywhere; opinion influence via observed interaction
+    graph is not modelled in broadcast mode. (A future extension may
+    derive G_o from comment relationships for opinion dynamics.)
     Single shared snapshot — no per-step allocation.
 
   cumulative_interaction:
@@ -91,8 +94,11 @@ def _row_normalize(adj: np.ndarray, eps: float = 1e-8) -> np.ndarray:
 
 
 class BroadcastProvider(TemporalNetworkProvider):
-    """Broadcast mode: G_s = 0 always. Single shared snapshot.
+    """Broadcast mode: G_s = 0, G_o = 0 always. Single shared snapshot.
 
+    G_o is kept at zero because the observed interaction graph
+    (comments/reposts) is not used for opinion influence in broadcast
+    mode. A future extension may derive G_o from comment relationships.
     Memory: O(N²) — one snapshot, regardless of T.
     """
 

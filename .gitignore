@@ -35,3 +35,6 @@ data/results/
 data/MediaCrawler/
 data/sim_results/
 **/papers_pdf/
+
+# Local Claude Code config (not shared)
+.claude/settings.local.json
