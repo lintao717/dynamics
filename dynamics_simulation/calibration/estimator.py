@@ -42,7 +42,8 @@ class CalibrationResult:
     seed_tuple: tuple[int, ...] = ()
 
     # ── Experiment metadata (for reproducibility) ──
-    train_fraction: float = 0.7
+    requested_train_fraction: float | None = None
+    effective_train_fraction: float = 0.0
     train_end_step: int = 0
     last_data_step: int = 0
     final_step: int = 0
@@ -51,6 +52,11 @@ class CalibrationResult:
     network_mode: str = "broadcast"
     git_sha: str = "unknown"
     source_revision: str = "unknown"
+    case_file_sha256: str = ""
+
+    # ── Full parameter snapshots ──
+    base_params_dict: dict[str, Any] = field(default_factory=dict)
+    best_params_dict: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to JSON-serializable dict."""
@@ -67,7 +73,8 @@ class CalibrationResult:
             "parameter_specs": self.parameter_specs,
             "base_params_version": self.base_params_version,
             "seed_tuple": list(self.seed_tuple),
-            "train_fraction": self.train_fraction,
+            "requested_train_fraction": self.requested_train_fraction,
+            "effective_train_fraction": self.effective_train_fraction,
             "train_end_step": self.train_end_step,
             "last_data_step": self.last_data_step,
             "final_step": self.final_step,
@@ -76,6 +83,9 @@ class CalibrationResult:
             "network_mode": self.network_mode,
             "git_sha": self.git_sha,
             "source_revision": self.source_revision,
+            "case_file_sha256": self.case_file_sha256,
+            "base_params": self.base_params_dict,
+            "best_params": self.best_params_dict,
         }
 
 
@@ -85,6 +95,8 @@ def fit_stage1(
     replay_config: ReplayConfig | None = None,
     split: TemporalSplit | None = None,
     train_fraction: float = 0.7,
+    source_revision: str = "unknown",
+    case_file_sha256: str = "",
 ) -> CalibrationResult:
     """Fit stage-1 parameters (4 params) to a single event case.
 
@@ -99,9 +111,12 @@ def fit_stage1(
         split: TemporalSplit (default: computed from train_fraction).
         train_fraction: Fraction of steps for training (default 0.7).
             Ignored when *split* is explicitly provided.
+        source_revision: Dataset repository version identifier.
+        case_file_sha256: SHA-256 of the case JSON file.
 
     Returns:
-        CalibrationResult with best vector, losses, and provenance.
+        CalibrationResult with best vector, losses, full parameter
+        snapshots, and provenance metadata.
     """
     if base_params is None:
         base_params = default_params()
@@ -125,21 +140,22 @@ def fit_stage1(
     # Run one replay to obtain observed trajectory for loss computation
     result_ref = run_replay(case, base_params, replay_config)
 
+    # Track whether the fraction was explicit or computed
     if split is None:
+        req_fraction = train_fraction
         split = TemporalSplit.by_fraction(
             total_steps=T, train_fraction=train_fraction,
         )
     else:
-        # Explicit split must not include artificial tail steps.
-        # Tail steps are NOT real data and must not influence
-        # train_end_step, the 70/30 ratio, or the effective data
-        # points available for calibration.
+        req_fraction = None  # explicit split; requested fraction N/A
         if split.total_steps > grid.last_data_step:
             raise ValueError(
                 f"Explicit split.total_steps={split.total_steps} exceeds "
                 f"last_data_step={grid.last_data_step}. Split includes "
                 "artificial tail steps that are not real observations."
             )
+
+    eff_fraction = split.train_end_step / max(T, 1)
 
     # Pre-build observation dict and masks (only active_count is in simulated_mean)
     obs_dict = {
@@ -176,6 +192,7 @@ def fit_stage1(
 
     try:
         from scipy.optimize import differential_evolution
+        from dataclasses import asdict
 
         opt_result = differential_evolution(
             objective,
@@ -237,7 +254,8 @@ def fit_stage1(
                 for s in specs
             ],
             seed_tuple=replay_config.seeds,
-            train_fraction=train_fraction,
+            requested_train_fraction=req_fraction,
+            effective_train_fraction=eff_fraction,
             train_end_step=split.train_end_step,
             last_data_step=grid.last_data_step,
             final_step=grid.final_step,
@@ -245,6 +263,10 @@ def fit_stage1(
             step_hours=replay_config.step_hours,
             network_mode=replay_config.network_mode.value,
             git_sha=git_sha,
+            source_revision=source_revision,
+            case_file_sha256=case_file_sha256,
+            base_params_dict=asdict(base_params),
+            best_params_dict=asdict(best_params),
         )
 
     except ImportError:

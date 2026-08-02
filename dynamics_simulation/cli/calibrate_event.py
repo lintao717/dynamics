@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -34,6 +35,9 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ERROR: {case_path} not found", file=sys.stderr)
         return 1
 
+    # Compute case file SHA-256 for provenance
+    case_sha256 = hashlib.sha256(case_path.read_bytes()).hexdigest()
+
     mode = ReplayNetworkMode(args.mode)
     case = load_checked_case(case_path)
 
@@ -47,6 +51,8 @@ def main(argv: list[str] | None = None) -> int:
         result = fit_stage1(
             case, default_params(), replay_cfg,
             train_fraction=args.train_fraction,
+            source_revision="CHECKED",  # dataset name as revision tag
+            case_file_sha256=case_sha256,
         )
     except (ValueError, RuntimeError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)

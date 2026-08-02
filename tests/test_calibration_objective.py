@@ -200,6 +200,7 @@ def test_final_size_uses_train_segment_only():
 
 def test_explicit_split_rejects_tail_steps():
     """fit_stage1 must reject an explicit split that includes tail steps."""
+    from datetime import timedelta
     from dynamics_simulation.data.schema import (
         EventCase, RootPost, InteractionRecord,
     )
@@ -209,19 +210,20 @@ def test_explicit_split_rejects_tail_steps():
     from dynamics_simulation.calibration.split import TemporalSplit
     from dynamics_simulation.config import default_params
 
+    root_time = datetime(2020, 1, 1, 8, 0, tzinfo=timezone.utc)
     root = RootPost(
         post_id="s1", user_id="root",
-        timestamp=datetime.now(timezone.utc),
+        timestamp=root_time,
         text="test", label="fake", expert_analysis=None,
     )
     interactions = tuple(
         InteractionRecord(
             interaction_id=f"c{i}", root_post_id="s1",
             user_id=f"u{i}",
-            timestamp=datetime.now(timezone.utc),
+            timestamp=root_time + timedelta(hours=i * 2),
             kind="comment", text=f"c{i}",
         )
-        for i in range(1, 8)  # enough steps for split
+        for i in range(1, 8)  # 7 interactions, last at t+14h
     )
     case = EventCase(
         case_id="s1", source_dataset="CHECKED",
