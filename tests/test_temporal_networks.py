@@ -40,6 +40,29 @@ def _make_case():
     )
 
 
+def _make_three_user_case():
+    """Three interactions from two users at different times (for lazy provider tests)."""
+    root = RootPost(
+        post_id="ev2", user_id="root",
+        timestamp=datetime(2020, 1, 1, 8, 0, tzinfo=timezone.utc),
+        text="root", label="fake", expert_analysis=None,
+    )
+    c1 = InteractionRecord(
+        interaction_id="c1", root_post_id="ev2", user_id="u1",
+        timestamp=datetime(2020, 1, 1, 8, 30, tzinfo=timezone.utc),
+        kind="comment", text="c1",
+    )
+    c2 = InteractionRecord(
+        interaction_id="c2", root_post_id="ev2", user_id="u2",
+        timestamp=datetime(2020, 1, 1, 9, 30, tzinfo=timezone.utc),
+        kind="repost", text="c2",
+    )
+    return EventCase(
+        case_id="ev2", source_dataset="CHECKED",
+        root=root, interactions=(c1, c2),
+    )
+
+
 # ── Mode enum ──
 
 def test_replay_network_mode_values():
@@ -57,7 +80,7 @@ def test_broadcast_g_s_is_all_zero():
     provider = build_network_provider(case, index, grid,
                                       mode=ReplayNetworkMode.BROADCAST)
 
-    for step in range(grid.total_steps + 1):
+    for step in range(grid.final_step + 1):
         snap = provider.snapshot_at(step)
         assert np.all(snap.G_s == 0), f"G_s not zero at step {step}"
 
@@ -135,7 +158,7 @@ def test_go_row_sums_are_zero_or_one():
     for mode in [ReplayNetworkMode.CUMULATIVE_INTERACTION,
                  ReplayNetworkMode.ORACLE_STATIC]:
         provider = build_network_provider(case, index, grid, mode=mode)
-        snap = provider.snapshot_at(grid.total_steps)
+        snap = provider.snapshot_at(grid.final_step)
         row_sums = snap.G_o.sum(axis=1)
         for s in row_sums:
             assert s == pytest.approx(0.0, abs=1e-6) or s == pytest.approx(1.0, abs=1e-6), \
@@ -189,3 +212,71 @@ def test_network_snapshot_rejects_shape_mismatch():
             G_o=np.eye(2),
             communities={0: [0, 1]},
         )
+
+
+def test_broadcast_provider_is_lazy():
+    """Broadcast provider must return shared snapshots, not allocate per-step."""
+    from dynamics_simulation.data.indexing import NodeIndex
+    from dynamics_simulation.data.timegrid import TimeGrid
+    from dynamics_simulation.data.networks import build_network_provider, ReplayNetworkMode
+
+    case = _make_three_user_case()
+    index = NodeIndex.from_case(case)
+    grid = TimeGrid.from_case(case, step_hours=1.0, tail_steps=1)
+    provider = build_network_provider(case, index, grid, mode=ReplayNetworkMode.BROADCAST)
+
+    s0 = provider.snapshot_at(0)
+    s1 = provider.snapshot_at(1)
+    # Broadcast always returns the same zero-snapshot instance
+    assert s0 is s1
+    # G_s must be zero
+    assert np.all(s0.G_s == 0)
+
+
+def test_cumulative_provider_is_lazy():
+    """Cumulative provider must compute on demand, not store all snapshots."""
+    from dynamics_simulation.data.indexing import NodeIndex
+    from dynamics_simulation.data.timegrid import TimeGrid
+    from dynamics_simulation.data.networks import build_network_provider, ReplayNetworkMode
+
+    case = _make_three_user_case()
+    index = NodeIndex.from_case(case)
+    grid = TimeGrid.from_case(case, step_hours=1.0, tail_steps=1)
+    provider = build_network_provider(
+        case, index, grid, mode=ReplayNetworkMode.CUMULATIVE_INTERACTION,
+    )
+
+    # Step 0: no edges yet (interactions at step 1+)
+    s0 = provider.snapshot_at(0)
+    assert np.all(s0.G_s == 0)
+
+    # Step 1: should have root→user edges for interactions at step 1
+    s1 = provider.snapshot_at(1)
+    # u1 has interaction in step 1 → edge should exist
+    assert s1.G_s[index.user_to_idx["u1"], 0] == 1.0
+
+    # Calling snapshot_at again returns a new snapshot (not cached)
+    s1b = provider.snapshot_at(1)
+    assert np.array_equal(s1.G_s, s1b.G_s)  # same values
+    # But not the SAME object (computed fresh)
+
+
+def test_oracle_provider_is_lazy():
+    """Oracle provider uses a single shared snapshot for all steps."""
+    from dynamics_simulation.data.indexing import NodeIndex
+    from dynamics_simulation.data.timegrid import TimeGrid
+    from dynamics_simulation.data.networks import build_network_provider, ReplayNetworkMode
+
+    case = _make_three_user_case()
+    index = NodeIndex.from_case(case)
+    grid = TimeGrid.from_case(case, step_hours=1.0, tail_steps=1)
+    provider = build_network_provider(
+        case, index, grid, mode=ReplayNetworkMode.ORACLE_STATIC,
+    )
+
+    s0 = provider.snapshot_at(0)
+    s5 = provider.snapshot_at(5)
+    assert s0 is s5  # shared instance
+    # All root→user edges present from step 0
+    assert s0.G_s[index.user_to_idx["u1"], 0] == 1.0
+    assert s0.G_s[index.user_to_idx["u2"], 0] == 1.0

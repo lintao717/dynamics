@@ -19,7 +19,7 @@ from dynamics_simulation.data.timegrid import TimeGrid
 class ObservedTrajectory:
     """Aggregate observed quantities per simulation step.
 
-    All arrays have shape (T+1,) where T = grid.total_steps.
+    All arrays have shape (T+1,) where T = grid.final_step.
     active_mask has shape (T+1, N). Missing values are NaN.
     """
 
@@ -51,7 +51,7 @@ def build_observed_trajectory(
       - Missing stance/arousal is NaN with mask=False.
     """
     N = len(index)
-    T = grid.total_steps
+    T = grid.final_step
     Tp1 = T + 1
 
     steps = np.arange(Tp1, dtype=np.int32)

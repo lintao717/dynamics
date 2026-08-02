@@ -9,15 +9,26 @@ import numpy as np
 
 @dataclass(frozen=True)
 class LossWeights:
-    """Per-target loss weights. Stance and arousal default to 0
-    because CHECKED does not provide labeled stance/arousal data.
+    """Per-target loss weights.
+
+    Only ``active_count`` is non-zero by default. The current
+    simulator does not produce ``cumulative_users`` or
+    ``interaction_count`` in ``simulated_mean``, so those default to 0.
+
+    ``peak_time`` and ``final_size`` are per-segment scalars (train
+    peak computed from the training window only; val peak from the
+    validation window only). They default to 0 because they are
+    secondary diagnostics — not primary calibration targets.
+
+    ``stance`` and ``arousal`` default to 0 because CHECKED has no
+    labeled stance/arousal data.
     """
 
     active_count: float = 1.0
-    cumulative_users: float = 0.5
-    interaction_count: float = 0.25
-    peak_time: float = 0.25
-    final_size: float = 0.25
+    cumulative_users: float = 0.0
+    interaction_count: float = 0.0
+    peak_time: float = 0.0
+    final_size: float = 0.0
     stance: float = 0.0
     arousal: float = 0.0
 
@@ -149,20 +160,43 @@ def compute_replay_loss(
         "interaction_count", weights.interaction_count,
     )
 
-    # Peak time: special case — use argmax
+    # Peak time: per-segment — train peak from train window,
+    # val peak from val window. No cross-segment leakage.
     if weights.peak_time > 0:
-        obs_peak = _peak_step(observed.get("active_count", np.zeros(1)))
-        sim_peak = _peak_step(simulated.get("active_count", np.zeros(1)))
-        peak_err = abs(obs_peak - sim_peak) / max(T, 1)
-        loss.train_peak_time = float(peak_err * weights.peak_time)
+        obs_arr = np.asarray(observed.get("active_count", np.zeros(1)), dtype=np.float64)
+        sim_arr = np.asarray(simulated.get("active_count", np.zeros(1)), dtype=np.float64)
 
-    # Final size
+        # Train peak: computed from the training segment only
+        train_obs_peak = _peak_step(obs_arr[train_idx])
+        train_sim_peak = _peak_step(sim_arr[train_idx])
+        train_peak_err = abs(train_obs_peak - train_sim_peak) / max(T, 1)
+        loss.train_peak_time = float(train_peak_err * weights.peak_time)
+
+        # Val peak: computed from the validation segment only
+        val_obs_peak = _peak_step(obs_arr[val_idx])
+        val_sim_peak = _peak_step(sim_arr[val_idx])
+        val_peak_err = abs(val_obs_peak - val_sim_peak) / max(len(obs_arr[val_idx]), 1)
+        loss.val_peak_time = float(val_peak_err * weights.peak_time)
+
+    # Final size: per-segment — train final = last train-step value,
+    # val final = last val-step value.
     if weights.final_size > 0:
-        obs_final = _final_value(observed.get("active_count", np.zeros(1)))
-        sim_final = _final_value(simulated.get("active_count", np.zeros(1)))
-        final_range = max(abs(obs_final), abs(sim_final), 1.0)
-        final_err = abs(obs_final - sim_final) / final_range
-        loss.train_final_size = float(final_err * weights.final_size)
+        obs_arr = np.asarray(observed.get("active_count", np.zeros(1)), dtype=np.float64)
+        sim_arr = np.asarray(simulated.get("active_count", np.zeros(1)), dtype=np.float64)
+
+        # Train final: last value in training segment
+        train_obs_final = _final_value(obs_arr[train_idx])
+        train_sim_final = _final_value(sim_arr[train_idx])
+        train_final_range = max(abs(train_obs_final), abs(train_sim_final), 1.0)
+        train_final_err = abs(train_obs_final - train_sim_final) / train_final_range
+        loss.train_final_size = float(train_final_err * weights.final_size)
+
+        # Val final: last value in validation segment
+        val_obs_final = _final_value(obs_arr[val_idx])
+        val_sim_final = _final_value(sim_arr[val_idx])
+        val_final_range = max(abs(val_obs_final), abs(val_sim_final), 1.0)
+        val_final_err = abs(val_obs_final - val_sim_final) / val_final_range
+        loss.val_final_size = float(val_final_err * weights.final_size)
 
     loss.train_total = (
         loss.train_active_count + loss.train_cumulative_users +

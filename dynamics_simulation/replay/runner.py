@@ -63,7 +63,7 @@ def _run_one_seed(
     # Configure and run simulation
     sim_cfg = SimulationConfig(
         n_agents=len(index),
-        T=grid.total_steps,
+        T=grid.final_step,
         seed=seed,
         params=params,
         initial_state=state,
@@ -168,20 +168,39 @@ def run_replay(
     # Aggregate
     agg = _aggregate_seeds(per_seed)
 
-    # Build params dict
-    params_dict = {
-        "propagation.beta": params.propagation.beta,
-        "propagation.beta_M": params.propagation.beta_M,
-        "activation.alpha_0": params.activation.alpha_0,
-        "activation.alpha_1": params.activation.alpha_1,
-        "decay.gamma_0": params.decay.gamma_0,
-        "viral.beta_V": params.viral.beta_V,
-    }
+    # Build full params dict (all fields, not just 6)
+    from dataclasses import asdict
+    params_dict = asdict(params)
+
+    # Resolve git commit at replay time
+    import subprocess
+    git_sha = "unknown"
+    try:
+        git_sha = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"],
+            text=True, stderr=subprocess.DEVNULL,
+        ).strip()
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+        pass
 
     assumption_flags = {
-        "broadcast_primary": config.network_mode == ReplayNetworkMode.BROADCAST,
-        "no_future_leakage": config.network_mode != ReplayNetworkMode.ORACLE_STATIC,
-        "oracle_is_upper_bound": config.network_mode == ReplayNetworkMode.ORACLE_STATIC,
+        # ── Network-level guarantees ──
+        "no_future_edge_leakage": (
+            config.network_mode != ReplayNetworkMode.ORACLE_STATIC
+        ),
+        # ── Participant cohort — NodeIndex is built from all event
+        #     participants, so the model knows the final cohort at t=0.
+        "future_participant_cohort_known": True,
+        "cohort_conditioned_replay": True,
+        "causal_forecast": False,
+        # ── Mode metadata ──
+        "broadcast_primary": (
+            config.network_mode == ReplayNetworkMode.BROADCAST
+        ),
+        "oracle_is_upper_bound": (
+            config.network_mode == ReplayNetworkMode.ORACLE_STATIC
+        ),
+        # ── Latent variables ──
         "latent_E": True,
         "latent_private_opinion": True,
     }
@@ -204,4 +223,5 @@ def run_replay(
         simulated_p95=agg.get("p95", {}),
         params_dict=params_dict,
         assumption_flags=assumption_flags,
+        git_sha=git_sha,
     )

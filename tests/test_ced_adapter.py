@@ -1,12 +1,16 @@
 """Tests for CED (Chinese Rumor Dataset) compatibility adapter."""
 
 from pathlib import Path
+import hashlib
 import pytest
 from dynamics_simulation.data.ced import load_ced_case
 
 
 ORIG = Path(__file__).parent / "fixtures" / "ced_original.json"
 INTER = Path(__file__).parent / "fixtures" / "ced_interactions.json"
+
+# Expected hashed root user ID (SHA-256 of "CED:root-user")
+_HASHED_ROOT = hashlib.sha256(b"CED:root-user").hexdigest()[:16]
 
 
 def test_load_ced_case_kind_is_interaction():
@@ -17,10 +21,21 @@ def test_load_ced_case_kind_is_interaction():
 
 
 def test_load_ced_case_root_first_user_order():
-    """Root author must be first in user_ids."""
+    """Root author must be first in user_ids, with namespace-hashed ID."""
     case = load_ced_case(ORIG, INTER, label="fake")
-    assert case.user_ids[0] == "root-user"
+    assert case.user_ids[0] == _HASHED_ROOT
     assert len(case.user_ids) == 3  # root + 2 unique interaction users
+
+
+def test_load_ced_case_user_ids_are_hashed():
+    """All CED user IDs must be namespace-hashed with 'CED:' prefix."""
+    case = load_ced_case(ORIG, INTER, label="fake")
+    # Every user ID should be a 16-char hex string
+    for uid in case.user_ids:
+        assert len(uid) == 16
+        assert all(c in "0123456789abcdef" for c in uid)
+    # Root user_id on the root post must also be hashed
+    assert case.root.user_id == _HASHED_ROOT
 
 
 def test_load_ced_case_deterministic_case_id():

@@ -42,12 +42,17 @@ def test_split_train_val_separation():
 
 
 def test_loss_weights_defaults():
+    """Default LossWeights: only active_count is non-zero.
+    cumulative_users, interaction_count, stance, arousal are not
+    produced by the current simulator and default to 0.
+    peak_time and final_size are per-segment scalars; default to 0.
+    """
     w = LossWeights()
     assert w.active_count == 1.0
-    assert w.cumulative_users == 0.5
-    assert w.interaction_count == 0.25
-    assert w.peak_time == 0.25
-    assert w.final_size == 0.25
+    assert w.cumulative_users == 0.0
+    assert w.interaction_count == 0.0
+    assert w.peak_time == 0.0
+    assert w.final_size == 0.0
     assert w.stance == 0.0
     assert w.arousal == 0.0
 
@@ -65,29 +70,23 @@ def test_compute_replay_loss_train_val_separate():
     sim_active = obs_active.copy()
     sim_active[split.train_end_step + 1:] = 0.0  # diverge after train
 
-    observed = {
-        "active_count": obs_active,
-        "cumulative_users": obs_active,
-        "interaction_count": obs_active,
-    }
-    simulated = {
-        "active_count": sim_active,
-        "cumulative_users": sim_active,
-        "interaction_count": sim_active,
-    }
-    masks = {
-        "active_count": obs_mask,
-        "cumulative_users": obs_mask,
-        "interaction_count": obs_mask,
-    }
+    observed = {"active_count": obs_active}
+    simulated = {"active_count": sim_active}
+    masks = {"active_count": obs_mask}
 
-    weights = LossWeights(stance=0.0, arousal=0.0)
+    weights = LossWeights(
+        active_count=1.0, cumulative_users=0.0,
+        interaction_count=0.0, peak_time=0.0, final_size=0.0,
+        stance=0.0, arousal=0.0,
+    )
     loss = compute_replay_loss(observed, simulated, split, weights, masks)
 
-    # Train-on-curve loss: active_count/ cumulative_users/interaction are NRMSE-zero
-    # (exact match). peak_time and final_size are scalar — they look at full array,
-    # so train_total > 0 even with perfect curve fit.
+    # Train active_count NRMSE = 0 (exact match on train segment)
     assert loss.train_active_count == pytest.approx(0.0, abs=1e-6)
+    # Validation active_count NRMSE > 0
+    assert loss.val_active_count > 0.0
+    # Total train loss = 0 (only active_count has non-zero weight)
+    assert loss.train_total == pytest.approx(0.0, abs=1e-6)
     assert loss.val_total > 0.0
 
 
@@ -130,3 +129,68 @@ def test_replay_loss_components():
     assert loss.train_active_count > 0.0
     # cumulative_users has weight 0 → no contribution
     assert loss.train_total == pytest.approx(loss.train_active_count)
+
+
+def test_peak_time_uses_train_segment_only():
+    """Peak time must be computed from the training segment only,
+    not from the full array (which would leak validation data)."""
+    T = 20
+    split = TemporalSplit.by_fraction(total_steps=T, train_fraction=0.5)
+    train_end = split.train_end_step  # = 10
+
+    # Observed: peak at step 8 (in train) on train, step 18 on val
+    obs_active = np.zeros(T + 1)
+    obs_active[8] = 10.0   # train peak
+    obs_active[18] = 100.0  # val peak (much bigger but NOT visible in train)
+
+    # Simulated: peak at step 5 (in train)
+    sim_active = np.zeros(T + 1)
+    sim_active[5] = 10.0
+
+    weights = LossWeights(
+        active_count=0.0, cumulative_users=0.0,
+        interaction_count=0.0, peak_time=1.0, final_size=0.0,
+        stance=0.0, arousal=0.0,
+    )
+    loss = compute_replay_loss(
+        {"active_count": obs_active},
+        {"active_count": sim_active},
+        split, weights,
+        {"active_count": np.ones(T + 1, dtype=bool)},
+    )
+
+    # train peak: obs=8, sim=5 → error |8-5|/20 = 0.15
+    assert loss.train_peak_time == pytest.approx(0.15, abs=0.01)
+    # val peak: still uses per-segment logic (val segment has peak at 18)
+    # but since sim is all flat in val, this is a big error
+    assert loss.val_peak_time > 0.0
+
+
+def test_final_size_uses_train_segment_only():
+    """Final size must be computed per segment, not from the last step
+    of the full trajectory."""
+    T = 20
+    split = TemporalSplit.by_fraction(total_steps=T, train_fraction=0.5)
+    train_end = split.train_end_step  # = 10
+
+    obs_active = np.arange(T + 1, dtype=np.float64)
+    sim_active = obs_active.copy()
+    # Perfect match on train, diverge on val
+    sim_active[train_end + 1:] = sim_active[train_end]  # flat after train
+
+    weights = LossWeights(
+        active_count=0.0, cumulative_users=0.0,
+        interaction_count=0.0, peak_time=0.0, final_size=1.0,
+        stance=0.0, arousal=0.0,
+    )
+    loss = compute_replay_loss(
+        {"active_count": obs_active},
+        {"active_count": sim_active},
+        split, weights,
+        {"active_count": np.ones(T + 1, dtype=bool)},
+    )
+
+    # train final = obs[train_end] vs sim[train_end] — identical
+    assert loss.train_final_size == pytest.approx(0.0, abs=0.01)
+    # val final = obs[-1] vs sim[-1] — different (obs continues, sim flat)
+    assert loss.val_final_size > 0.0

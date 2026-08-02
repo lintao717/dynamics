@@ -43,7 +43,10 @@ def main(argv: list[str] | None = None) -> int:
         seeds=(11, 23, 37, 53, 71),
     )
 
-    result = fit_stage1(case, default_params(), replay_cfg)
+    result = fit_stage1(
+        case, default_params(), replay_cfg,
+        train_fraction=args.train_fraction,
+    )
 
     d = {
         "case_id": result.case_id,

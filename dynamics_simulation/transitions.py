@@ -118,6 +118,9 @@ class ExternalInputs:
                 raise ValueError(
                     f"{name} values outside [{low}, {high}]"
                 )
+            # Persist the converted array so the return dict
+            # does not fall back to the original Python list.
+            setattr(self, name, arr)
 
         return {
             "media_exposure": self.media_exposure,

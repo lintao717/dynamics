@@ -116,3 +116,36 @@ def test_replay_config_defaults():
     assert cfg.network_mode == ReplayNetworkMode.BROADCAST
     assert cfg.seeds == (11, 23, 37, 53, 71)
     assert cfg.max_nodes == 1000
+
+
+def test_assumption_flags_broadcast_is_cohort_conditioned():
+    """Broadcast replay must declare: no future edge leak, cohort known,
+    cohort-conditioned, NOT causal forecast."""
+    from dynamics_simulation.config import default_params
+    case = _make_case()
+    params = default_params()
+    config = ReplayConfig(network_mode=ReplayNetworkMode.BROADCAST, seeds=(42,))
+    result = run_replay(case, params, config)
+    flags = result.assumption_flags
+
+    assert flags["no_future_edge_leakage"] is True
+    assert flags["future_participant_cohort_known"] is True
+    assert flags["cohort_conditioned_replay"] is True
+    assert flags["causal_forecast"] is False
+    assert "no_future_leakage" not in flags  # removed — was misleading
+
+
+def test_assumption_flags_oracle_explicitly_non_causal():
+    """Oracle static mode must be marked as upper bound, NOT causal."""
+    from dynamics_simulation.config import default_params
+    case = _make_case()
+    params = default_params()
+    config = ReplayConfig(
+        network_mode=ReplayNetworkMode.ORACLE_STATIC, seeds=(42,),
+    )
+    result = run_replay(case, params, config)
+    flags = result.assumption_flags
+
+    assert flags["oracle_is_upper_bound"] is True
+    assert flags["no_future_edge_leakage"] is False  # oracle leaks edges
+    assert flags["causal_forecast"] is False

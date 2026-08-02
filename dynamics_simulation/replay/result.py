@@ -55,6 +55,7 @@ class ReplayResult:
     # Metadata
     model_version: str = "v1.2"
     assumption_flags: dict[str, bool] = field(default_factory=dict)
+    git_sha: str = "unknown"
 
     # Parameter version
     params_dict: dict[str, Any] = field(default_factory=dict)
@@ -71,6 +72,7 @@ class ReplayResult:
             "interaction_count": self.interaction_count,
             "truncation_count": self.truncation_count,
             "model_version": self.model_version,
+            "git_sha": self.git_sha,
             "assumption_flags": self.assumption_flags,
             "params": self.params_dict,
         }
