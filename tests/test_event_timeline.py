@@ -59,13 +59,46 @@ def test_external_inputs_scalar_range_validation():
 # ── Broadcast exposure ──
 
 def test_broadcast_exposure_decays():
-    cfg = BroadcastExposureConfig(amplitude=1.0, half_life_steps=4.0)
+    cfg = BroadcastExposureConfig(
+        amplitude=1.0, exposure_half_life_steps=4.0,
+    )
     v0 = cfg.exposure_at(0)  # step 0: amplitude
     v4 = cfg.exposure_at(4)  # should be halved
     v8 = cfg.exposure_at(8)  # should be quartered
     assert v0 == pytest.approx(1.0)
     assert v4 == pytest.approx(0.5)
     assert v8 == pytest.approx(0.25)
+
+
+def test_broadcast_novelty_decays():
+    cfg = BroadcastExposureConfig(
+        novelty_at_root=1.0, novelty_half_life_steps=6.0,
+    )
+    v0 = cfg.novelty_at(0)
+    v6 = cfg.novelty_at(6)
+    v12 = cfg.novelty_at(12)
+    assert v0 == pytest.approx(1.0)
+    assert v6 == pytest.approx(0.5)
+    assert v12 == pytest.approx(0.25)
+
+
+def test_broadcast_staleness_saturates():
+    cfg = BroadcastExposureConfig(staleness_tau_steps=12.0)
+    s0 = cfg.staleness_at(0)
+    s12 = cfg.staleness_at(12)
+    s48 = cfg.staleness_at(48)
+    assert s0 == pytest.approx(0.0)  # no staleness at t=0
+    assert s12 == pytest.approx(1.0 - np.exp(-1.0), rel=1e-3)  # at tau
+    assert s48 > 0.98  # nearly saturated
+
+
+def test_broadcast_staleness_independent_of_total_steps():
+    """Staleness depends only on step and fixed tau, NOT on event duration."""
+    cfg = BroadcastExposureConfig(staleness_tau_steps=10.0)
+    # Same step, different hypothetical durations — must give same staleness
+    s1 = cfg.staleness_at(5)
+    s2 = cfg.staleness_at(5)  # no total_steps argument
+    assert s1 == s2
 
 
 # ── EventInputTimeline ──
@@ -94,7 +127,7 @@ def test_timeline_root_exposure_is_zero():
     timeline = EventInputTimeline(case, index, grid)
     root_idx = index.user_to_idx["root"]
 
-    inputs = timeline.inputs_at(index.n, 0, grid.final_step)
+    inputs = timeline.inputs_at(index.n, 0)
     resolved = inputs.resolve(index.n)
     assert resolved["media_exposure"][root_idx] == 0.0
 
@@ -106,7 +139,7 @@ def test_timeline_non_root_gets_exposure():
     timeline = EventInputTimeline(case, index, grid)
     u1_idx = index.user_to_idx["u1"]
 
-    inputs = timeline.inputs_at(index.n, 0, grid.final_step)
+    inputs = timeline.inputs_at(index.n, 0)
     resolved = inputs.resolve(index.n)
     assert resolved["media_exposure"][u1_idx] > 0.0
 
@@ -120,8 +153,8 @@ def test_timeline_is_deterministic():
     t2 = EventInputTimeline(case, index, grid)
 
     for step in range(3):
-        i1 = t1.inputs_at(index.n, step, grid.final_step)
-        i2 = t2.inputs_at(index.n, step, grid.final_step)
+        i1 = t1.inputs_at(index.n, step)
+        i2 = t2.inputs_at(index.n, step)
         assert np.allclose(
             i1.resolve(index.n)["media_exposure"],
             i2.resolve(index.n)["media_exposure"],
@@ -151,8 +184,8 @@ def test_timeline_no_interaction_dependency():
     tl_empty = EventInputTimeline(case_empty, index, grid_empty)
 
     for step in range(3):
-        i1 = tl.inputs_at(index.n, step, grid.final_step)
-        i2 = tl_empty.inputs_at(index.n, step, grid_empty.final_step)
+        i1 = tl.inputs_at(index.n, step)
+        i2 = tl_empty.inputs_at(index.n, step)
         assert np.allclose(
             i1.resolve(index.n)["media_exposure"],
             i2.resolve(index.n)["media_exposure"],

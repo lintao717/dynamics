@@ -98,11 +98,18 @@ def build_observed_trajectory(
     stance_mean = np.full(Tp1, np.nan, dtype=np.float64)
     arousal_mean = np.full(Tp1, np.nan, dtype=np.float64)
 
+    # Tail steps (beyond last_data_step) are NOT real observations.
+    # Mark them as unobserved so they don't contribute to fitting or
+    # validation loss — only real data steps can participate in loss.
+    is_data_step = np.zeros(Tp1, dtype=bool)
+    is_data_step[:grid.last_data_step + 1] = True
+
     observation_masks: dict[str, np.ndarray] = {
-        "active_count": active_count >= 0,  # always True (all observed)
-        "comment_count": np.ones(Tp1, dtype=bool),
-        "repost_count": np.ones(Tp1, dtype=bool),
-        "interaction_count": np.ones(Tp1, dtype=bool),
+        "active_count": is_data_step.copy(),
+        "comment_count": is_data_step.copy(),
+        "repost_count": is_data_step.copy(),
+        "interaction_count": is_data_step.copy(),
+        "cumulative_users": is_data_step.copy(),
         "stance": np.zeros(Tp1, dtype=bool),   # never observed
         "arousal": np.zeros(Tp1, dtype=bool),  # never observed
     }

@@ -58,7 +58,9 @@ def _run_one_seed(
     timeline = EventInputTimeline(case, index, grid)
 
     def input_fn(n: int, t: int, T: int):
-        return timeline.inputs_at(n, t, T)
+        # T is unused — timeline uses fixed time constants, not
+        # the event's total duration (no future-data dependency).
+        return timeline.inputs_at(n, t)
 
     # Configure and run simulation
     sim_cfg = SimulationConfig(
@@ -210,6 +212,8 @@ def run_replay(
         source_dataset=case.source_dataset,
         network_mode=config.network_mode.value,
         step_hours=config.step_hours,
+        tail_steps=config.tail_steps,
+        last_data_step=grid.last_data_step,
         seeds=config.seeds,
         node_count=len(index),
         interaction_count=len(case.interactions),

@@ -125,7 +125,19 @@ class SimulationRunner:
                   f"net={cfg.network_type}, seed={cfg.seed} ===")
 
         # ── Generate or use external networks ──
-        if cfg.G_s is not None and cfg.G_o is not None:
+        # Priority: (1) dynamic network_provider, (2) static G_s/G_o,
+        # (3) random generation. The provider MUST be called before the
+        # t=0 snapshot so that initial metrics reflect the real networks,
+        # not random ones.
+        if cfg.network_provider is not None:
+            net_G_s, net_G_o, net_comms = cfg.network_provider(0)
+            self.G_s = np.asarray(net_G_s, dtype=np.float64)
+            self.G_o = np.asarray(net_G_o, dtype=np.float64)
+            self.communities = net_comms or {0: list(range(cfg.n_agents))}
+            if cfg.verbose:
+                n_edges = int((self.G_s > 0).sum())
+                print(f"Using dynamic network provider (t=0): {n_edges} edges")
+        elif cfg.G_s is not None and cfg.G_o is not None:
             self.G_s = cfg.G_s
             self.G_o = cfg.G_o
             self.communities = cfg.communities or {0: list(range(cfg.n_agents))}

@@ -519,7 +519,7 @@ def test_identifiability(seed: int = 42) -> TestResult:
         interpretation=(
             f"beta: {beta_true}->{best_beta} (err={beta_err:.1%}), "
             f"alpha_1: {alpha1_true}->{best_alpha1} (err={alpha1_err:.1%}) — "
-            + ("identifiable" if passed else "NOT identifiable — needs more data or constraints")
+            + ("recoverable in synth test" if passed else "NOT recoverable — needs more data or constraints")
         ),
     )
 

@@ -32,7 +32,14 @@ class ParameterSpec:
 
 
 class Stage1ParameterSet:
-    """Restricted 4-parameter set for CHECKED broadcast calibration."""
+    """Restricted 4-parameter candidate set for CHECKED broadcast calibration.
+
+    These are CANDIDATE calibration parameters — NOT proven to be identifiable
+    from CHECKED alone. Currently fitted against active_count A(t) only; the
+    other loss targets (cumulative_users, interaction_count, peak_time, final_size)
+    are zero-weighted. True identifiability requires multi-target recovery
+    experiments with known θ* and checkpointed parameter recovery tests.
+    """
 
     @staticmethod
     def to_specs() -> tuple[ParameterSpec, ...]:

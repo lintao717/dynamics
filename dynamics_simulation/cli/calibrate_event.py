@@ -43,10 +43,14 @@ def main(argv: list[str] | None = None) -> int:
         seeds=(11, 23, 37, 53, 71),
     )
 
-    result = fit_stage1(
-        case, default_params(), replay_cfg,
-        train_fraction=args.train_fraction,
-    )
+    try:
+        result = fit_stage1(
+            case, default_params(), replay_cfg,
+            train_fraction=args.train_fraction,
+        )
+    except (ValueError, RuntimeError) as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
 
     d = {
         "case_id": result.case_id,

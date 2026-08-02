@@ -75,9 +75,18 @@ def fit_stage1(
     specs = Stage1ParameterSet.to_specs()
     bounds = Stage1ParameterSet.bounds()
 
-    # Run one replay to determine total steps for split
+    # Use last_data_step (real data only) for the split — NOT final_step
+    # which includes artificial tail steps that must not enter the loss.
+    from dynamics_simulation.data.timegrid import TimeGrid
+    grid = TimeGrid.from_case(
+        case,
+        step_hours=replay_config.step_hours,
+        tail_steps=replay_config.tail_steps,
+    )
+    T = grid.last_data_step
+
+    # Run one replay to obtain observed trajectory for loss computation
     result_ref = run_replay(case, base_params, replay_config)
-    T = len(result_ref.observed.steps) - 1
 
     if split is None:
         split = TemporalSplit.by_fraction(

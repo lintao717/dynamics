@@ -29,10 +29,43 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     if args.dataset == "checked":
-        cases = list(iter_checked_cases(root, label=args.label))
+        result = iter_checked_cases(root, label=args.label, report=True)
+        if isinstance(result, tuple):
+            cases_iter, report = result
+        else:
+            cases_iter = result
+            report = None  # shouldn't happen with report=True
+        cases = list(cases_iter)
     else:
         print("CED inspection not yet implemented", file=sys.stderr)
         return 1
+
+    # ── Print audit summary first ──
+    if report is not None:
+        print("=" * 60)
+        print("  DATASET AUDIT REPORT")
+        print("=" * 60)
+        print(f"  Scanned files:        {report.scanned_files:>6d}")
+        print(f"  Loaded cases:         {report.loaded_cases:>6d}")
+        print(f"  Failed files:         {report.failed_files:>6d}")
+        if report.empty_text_comments:
+            print(f"  Empty-text comments:  {report.empty_text_comments:>6d}")
+        if report.empty_text_reposts:
+            print(f"  Empty-text reposts:   {report.empty_text_reposts:>6d}")
+        if report.timestamp_errors:
+            print(f"  Timestamp errors:     {report.timestamp_errors:>6d}")
+        if report.field_missing_errors:
+            print(f"  Field-missing errors: {report.field_missing_errors:>6d}")
+        if report.failures:
+            print(f"\n  First {min(len(report.failures), 10)} failures:")
+            for f in report.failures[:10]:
+                print(f"    [{f.error_type}] {f.file_name}: {f.reason[:100]}")
+        print("-" * 60)
+        print()
+
+    if not cases:
+        print("No cases matched the filter.", file=sys.stderr)
+        return 0
 
     print(f"{'case_id':30s} {'label':6s} {'root_time':20s} "
           f"{'users':>6s} {'comments':>8s} {'reposts':>7s} "

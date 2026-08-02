@@ -3,7 +3,10 @@ Event input timeline: converts EventCase → per-step ExternalInputs.
 
 Broadcast exposure follows exponential decay: exposure(step) = A * 0.5^(step/h)
 Root author receives zero exposure. Non-root users receive equal exposure.
-No future-data dependency: exposure depends only on step index and root time.
+
+IMPORTANT: All time-dependent signals use FIXED time constants, NOT the event's
+total duration. This guarantees no future-data dependency — step t input depends
+only on t and the preset BroadcastExposureConfig, never on when the event ends.
 """
 
 from __future__ import annotations
@@ -22,23 +25,46 @@ from dynamics_simulation.transitions import ExternalInputs
 class BroadcastExposureConfig:
     """Parameters for the broadcast media exposure signal.
 
-    exposure(step) = amplitude * 0.5^(step / half_life_steps)
+    All time constants are in simulation steps and are independent of
+    event duration — step-t input depends only on step index and these
+    preset constants, never on when the event ends.
+
+    exposure(step) = amplitude * 0.5^(step / exposure_half_life_steps)
+    novelty(step)  = novelty_at_root * 0.5^(step / novelty_half_life_steps)
+    staleness(step) = 1 - exp(-step / staleness_tau_steps)
     """
 
     amplitude: float = 1.0
-    half_life_steps: float = 4.0
+    exposure_half_life_steps: float = 4.0
     novelty_at_root: float = 1.0
+    novelty_half_life_steps: float = 6.0
+    staleness_tau_steps: float = 12.0
 
     def exposure_at(self, step: int) -> float:
         """Compute exposure intensity at *step*."""
-        return self.amplitude * (0.5 ** (step / self.half_life_steps))
+        return self.amplitude * (0.5 ** (step / max(self.exposure_half_life_steps, 1.0)))
+
+    def novelty_at(self, step: int) -> float:
+        """Compute novelty at *step* using fixed half-life."""
+        return float(np.clip(
+            self.novelty_at_root * (0.5 ** (step / max(self.novelty_half_life_steps, 1.0))),
+            0.0, 1.0,
+        ))
+
+    def staleness_at(self, step: int) -> float:
+        """Compute staleness at *step* using fixed tau (no total_steps)."""
+        return float(np.clip(
+            1.0 - np.exp(-step / max(self.staleness_tau_steps, 1.0)),
+            0.0, 1.0,
+        ))
 
 
 class EventInputTimeline:
     """Produces ExternalInputs for each simulation step.
 
     Deterministic; depends only on case, index, grid, and config.
-    No future-data dependency: interactions do not affect exposure.
+    No future-data dependency: staleness and novelty use FIXED time
+    constants, not the event's total duration.
     """
 
     def __init__(
@@ -55,16 +81,18 @@ class EventInputTimeline:
         self._bcast = broadcast_cfg or BroadcastExposureConfig()
         self._root_idx = index.user_to_idx[case.root.user_id]
 
-    def inputs_at(self, n: int, step: int, total_steps: int) -> ExternalInputs:
+    def inputs_at(self, n: int, step: int) -> ExternalInputs:
         """Build ExternalInputs for *step*.
+
+        All time-dependent signals use FIXED time constants — no
+        future-data dependency on when the event ends.
 
         Args:
             n: Number of agents.
             step: Current simulation step (0-indexed).
-            total_steps: Total simulation steps.
 
         Returns:
-            ExternalInputs with media_exposure and staleness set.
+            ExternalInputs with media_exposure, staleness, and novelty.
         """
         # Broadcast media exposure: root gets 0, all others get decay
         media = np.zeros(n, dtype=np.float64)
@@ -73,14 +101,11 @@ class EventInputTimeline:
             if i != self._root_idx:
                 media[i] = exposure_val
 
-        # Staleness increases linearly with time
-        staleness = float(np.clip(step / max(total_steps, 1), 0.0, 1.0))
+        # Staleness: saturating exponential with fixed tau
+        staleness = self._bcast.staleness_at(step)
 
-        # Novelty: high at root, decays
-        novelty = float(np.clip(
-            self._bcast.novelty_at_root * (0.5 ** (step / max(total_steps, 1))),
-            0.0, 1.0,
-        ))
+        # Novelty: exponential decay with fixed half-life
+        novelty = self._bcast.novelty_at(step)
 
         return ExternalInputs(
             media_exposure=media,

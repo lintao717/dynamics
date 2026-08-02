@@ -26,13 +26,34 @@ class TimeGrid:
 
     Step 0 is the root post time. Subsequent steps are contiguous
     windows of length *step_hours*.
+
+    Attributes:
+        start_time: Wall-clock time of step 0.
+        step_hours: Duration of each simulation step in hours.
+        last_data_step: Last step index that contains real-world data
+            (the highest step with any observed interaction).
+        final_step: Last simulation step index = last_data_step + tail_steps.
+            SimulationConfig(T=final_step) runs final_step updates,
+            producing final_step + 1 trajectory points.
     """
 
     start_time: datetime
     step_hours: float
+    last_data_step: int
     final_step: int
-    """Last simulation step index. SimulationConfig(T=final_step)
-    runs final_step updates, producing final_step + 1 trajectory points."""
+
+    def __post_init__(self):
+        if self.step_hours <= 0:
+            raise ValueError(f"step_hours must be > 0, got {self.step_hours}")
+        if self.last_data_step < 0:
+            raise ValueError(
+                f"last_data_step must be >= 0, got {self.last_data_step}"
+            )
+        if self.final_step < self.last_data_step:
+            raise ValueError(
+                f"final_step={self.final_step} must be >= "
+                f"last_data_step={self.last_data_step}"
+            )
 
     @classmethod
     def from_case(
@@ -47,7 +68,15 @@ class TimeGrid:
             case: Validated EventCase.
             step_hours: Duration of each simulation step in hours.
             tail_steps: Extra steps appended after the last data step.
+
+        Raises:
+            ValueError: If step_hours <= 0 or tail_steps < 0.
         """
+        if step_hours <= 0:
+            raise ValueError(f"step_hours must be > 0, got {step_hours}")
+        if tail_steps < 0:
+            raise ValueError(f"tail_steps must be >= 0, got {tail_steps}")
+
         case.validate()
         start = case.root.timestamp
 
@@ -67,8 +96,12 @@ class TimeGrid:
         # (No spurious +1 — final_step is an index, not a count.)
         final = last_data_step + int(tail_steps)
 
-        return cls(start_time=start, step_hours=float(step_hours),
-                   final_step=int(final))
+        return cls(
+            start_time=start,
+            step_hours=float(step_hours),
+            last_data_step=int(last_data_step),
+            final_step=int(final),
+        )
 
     def step_of(self, timestamp: datetime) -> int:
         """Return the integer step index for *timestamp*.
@@ -106,11 +139,7 @@ class TimeGrid:
     def n_data_steps(self) -> int:
         """Number of steps that contain real-world observations.
 
-        This is final_step - tail_steps + 1 (since step 0 is the root
-        post, which is real data). Conservatively returns
-        n_trajectory_points — the tail steps are a config-time
-        parameter not stored in the grid itself.
-
-        For precise computation use TimeGrid.from_case() tail_steps.
+        = last_data_step + 1 (step 0 is the root post, which is real data).
+        Tail simulation steps beyond last_data_step are NOT real data.
         """
-        return self.n_trajectory_points
+        return self.last_data_step + 1

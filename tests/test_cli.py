@@ -58,13 +58,17 @@ def test_calibrate_event_missing_file(capsys):
     assert ret == 1
 
 
-def test_calibrate_event_invalid_train_fraction(capsys):
-    """Invalid fraction passes argparse but fails in TemporalSplit."""
-    # The CLI parses float fine; the error occurs downstream.
-    # This test verifies the CLI doesn't crash on bad input for parsing.
+def test_calibrate_event_invalid_train_fraction():
+    """CLI must exit non-zero for invalid --train-fraction (via ValueError)."""
     from dynamics_simulation.cli.calibrate_event import main
-    # 1.5 is >1.0, will cause ValueError in TemporalSplit internally
-    # but CLI should handle gracefully (we test parsing, not the full run)
-    # Actually just verify that the argparse entry point doesn't raise
-    # on parse — the downstream error is tested in test_calibration_objective
-    pass  # argparse accepts any float; range checked by TemporalSplit
+    fixture = Path(__file__).parent / "fixtures" / "checked_case.json"
+    if not fixture.exists():
+        pytest.skip("checked_case.json fixture not available")
+    # 0.5 is valid range but may fail due to too few steps in test fixture.
+    # Either way, CLI should not crash — it should return non-zero or 0
+    # depending on whether the fixture has enough steps.
+    ret = main([
+        "--case", str(fixture),
+        "--train-fraction", "1.5",  # out of range (0, 1)
+    ])
+    assert ret != 0  # must fail for invalid fraction
