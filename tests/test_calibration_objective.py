@@ -1,6 +1,7 @@
 """Tests for chronological split and masked replay loss."""
 
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -244,3 +245,81 @@ def test_explicit_split_rejects_tail_steps():
     )
     with pytest.raises(ValueError, match="tail"):
         fit_stage1(case, default_params(), config, split=bad_split)
+
+
+def test_effective_train_fraction_inclusive_steps():
+    """effective_train_fraction must count steps inclusively,
+    matching the actual number of data points in each segment."""
+    from dynamics_simulation.calibration.estimator import fit_stage1
+    from dynamics_simulation.data.schema import (
+        EventCase, RootPost, InteractionRecord,
+    )
+    from dynamics_simulation.data.networks import ReplayNetworkMode
+    from dynamics_simulation.replay.config import ReplayConfig
+    from dynamics_simulation.config import default_params
+
+    root_time = datetime(2020, 1, 1, 8, 0, tzinfo=timezone.utc)
+    root = RootPost(
+        post_id="s2", user_id="root",
+        timestamp=root_time,
+        text="test", label="fake", expert_analysis=None,
+    )
+    interactions = tuple(
+        InteractionRecord(
+            interaction_id=f"c{i}", root_post_id="s2",
+            user_id=f"u{i}",
+            timestamp=root_time + timedelta(hours=i),
+            kind="comment", text=f"c{i}",
+        )
+        for i in range(1, 8)  # 7 interactions, last at t+7h
+    )
+    case = EventCase(
+        case_id="s2", source_dataset="CHECKED",
+        root=root, interactions=interactions,
+    )
+    config = ReplayConfig(
+        step_hours=1.0, tail_steps=2,
+        network_mode=ReplayNetworkMode.BROADCAST,
+        seeds=(42,),
+    )
+    # train_fraction=0.7 on last_data_step=7 → train_end_step=4
+    result = fit_stage1(case, default_params(), config, train_fraction=0.7)
+    assert result.requested_train_fraction == 0.7
+    # effective: (4+1) / (7+1) = 5/8 = 0.625
+    assert result.effective_train_fraction == pytest.approx(5 / 8)
+
+
+def test_cli_source_revision_flag():
+    """CLI --source-revision must propagate to calibration result."""
+    from dynamics_simulation.cli.calibrate_event import main
+    import json, tempfile, hashlib
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        # Build a synthetic case with enough interactions for a valid split
+        import json as _json
+        case = {
+            "label": "fake",
+            "id": "synth-case-1",
+            "date": "2020-01-01 08:00",
+            "user_id": "root",
+            "text": "test root",
+            "comments": [
+                {"id": f"c{i}", "date": f"2020-01-01 {8+i:02d}:00",
+                 "user_id": f"u{i}", "text": f"comment {i}"}
+                for i in range(1, 9)  # 8 comments, enough for split
+            ],
+            "reposts": [],
+        }
+        case_path = Path(tmpdir) / "case.json"
+        case_path.write_text(_json.dumps(case), encoding="utf-8")
+
+        out = Path(tmpdir) / "result.json"
+        ret = main([
+            "--case", str(case_path),
+            "--source-revision", "abc123def",
+            "--output", str(out),
+        ])
+        assert ret == 0
+        data = json.loads(out.read_text(encoding="utf-8"))
+        assert data["source_revision"] == "abc123def"
+        assert len(data["case_file_sha256"]) == 64  # full SHA-256 hex

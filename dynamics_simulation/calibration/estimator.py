@@ -155,7 +155,9 @@ def fit_stage1(
                 "artificial tail steps that are not real observations."
             )
 
-    eff_fraction = split.train_end_step / max(T, 1)
+    eff_fraction = (
+        (split.train_end_step + 1) / (split.total_steps + 1)
+    )
 
     # Pre-build observation dict and masks (only active_count is in simulated_mean)
     obs_dict = {

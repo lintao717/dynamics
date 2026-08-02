@@ -28,6 +28,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--train-fraction", type=float, default=0.7)
     p.add_argument("--output", type=Path, default=None,
                    help="Output JSON path.")
+    p.add_argument("--source-revision", type=str, default="unknown",
+                   help="Dataset repository commit, tag, or release version.")
     args = p.parse_args(argv)
 
     case_path = Path(args.case)
@@ -51,7 +53,7 @@ def main(argv: list[str] | None = None) -> int:
         result = fit_stage1(
             case, default_params(), replay_cfg,
             train_fraction=args.train_fraction,
-            source_revision="CHECKED",  # dataset name as revision tag
+            source_revision=args.source_revision,
             case_file_sha256=case_sha256,
         )
     except (ValueError, RuntimeError) as exc:
