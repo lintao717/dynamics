@@ -1,0 +1,132 @@
+experiment_id: checked-pilot-v1
+selection_seed: 20260803
+step_hours: 24.0
+source_revision: CHECKED (unknown commit — dataset release)
+selection_method: matched_pairs_log_euclidean
+matching_features:
+- log(1 + n_users)
+- log(1 + n_interactions)
+- log(1 + duration_hours)
+- comment_share
+hard_filters:
+  min_interactions: 100
+  min_users: 100
+  max_users: 1000
+  min_duration_hours: 96.0
+  min_comments: 20
+  min_reposts: 20
+  max_user_share: 0.5
+  min_data_steps: 4
+  step_hours: 24.0
+primary_pairs:
+- pair_id: pair_01
+  fake:
+    case_id: 641681287f58602c0b5adf5f515e2820
+    file_sha256: 5c28696f9a849d7ad53703e07849a1d74cffa3e13bb7135b39f011bb42866553
+    users: 655
+    interactions: 686
+    duration_hours: 167.5
+    d95_hours: 17.5
+    comment_share: 0.453
+    peak_24h: 681
+    quality_score: 0.804
+  real:
+    case_id: d5d942e27373bb01f0636b41e0e779e8
+    file_sha256: be31a14cb1173fccd07a405d0dad9ec3b531c66c7f60f945e813899a5b9e6549
+    users: 711
+    interactions: 1229
+    duration_hours: 190.6
+    d95_hours: 8.7
+    comment_share: 0.579
+    peak_24h: 1213
+    quality_score: 0.527
+  matching_distance: 0.1524
+- pair_id: pair_02
+  fake:
+    case_id: 331d9bfeda2419d13b8a96138bcbb0d5
+    file_sha256: 4a1ba0c0b9252719416dbd2bfe594e39746c7adf580b979dcbc3fe210325fcb1
+    users: 158
+    interactions: 170
+    duration_hours: 310.3
+    d95_hours: 32.1
+    comment_share: 0.606
+    peak_24h: 149
+    quality_score: 0.803
+  real:
+    case_id: b304db1aca0256140d5730d0086bd0e9
+    file_sha256: ae384ca7447ccbf89e7d9ff0175e4cabd95c0259d98dd8ae3522f90a29aeef74
+    users: 284
+    interactions: 438
+    duration_hours: 394.7
+    d95_hours: 6.0
+    comment_share: 0.621
+    peak_24h: 433
+    quality_score: 0.63
+  matching_distance: 0.2308
+- pair_id: pair_03
+  fake:
+    case_id: 8e1b7dea21aa59d8b4201ecb6a2f6b97
+    file_sha256: 015252904f82d989b47cf6d06c4d0b0e81637b9256d4cffe7acb0a9929473c0d
+    users: 227
+    interactions: 234
+    duration_hours: 333.2
+    d95_hours: 32.5
+    comment_share: 0.902
+    peak_24h: 218
+    quality_score: 0.797
+  real:
+    case_id: 445d673a0bcb9d2b2854d050df131b35
+    file_sha256: 351021068b3b8ebb967bb33046fde9d244dd8e7a64fe9cb67f0bb119e36ed1f3
+    users: 362
+    interactions: 618
+    duration_hours: 287.8
+    d95_hours: 11.7
+    comment_share: 0.723
+    peak_24h: 606
+    quality_score: 0.741
+  matching_distance: 0.5202
+- pair_id: pair_04
+  fake:
+    case_id: eef574943986ee901160a69c8c95ce80
+    file_sha256: 900acd547c66c2df93d2aca9c94f67dd87c38ea81ae2fb7d360c90d8c89c3890
+    users: 350
+    interactions: 406
+    duration_hours: 915.0
+    d95_hours: 72.2
+    comment_share: 0.212
+    peak_24h: 162
+    quality_score: 0.779
+  real:
+    case_id: 0152be0b7fa69179124fd09e7cf4e5f8
+    file_sha256: 0a48fa3279de93f783fcfca2dd351c6f851671f00ec30506318a00291ec78525
+    users: 443
+    interactions: 844
+    duration_hours: 1017.3
+    d95_hours: 14.6
+    comment_share: 0.514
+    peak_24h: 814
+    quality_score: 0.136
+  matching_distance: 0.328
+- pair_id: pair_05
+  fake:
+    case_id: ca4f13d74b1328c1f2369fd7f3e8821a
+    file_sha256: 4a7fe67aee764b1b89df2a1edebc6e06f0c2f27be2df6b0213571cb62886554f
+    users: 139
+    interactions: 251
+    duration_hours: 545.5
+    d95_hours: 42.0
+    comment_share: 0.378
+    peak_24h: 223
+    quality_score: 0.777
+  real:
+    case_id: 45deea0ecf49aa52155dbec4b60ea7ea
+    file_sha256: 25eca4d34b547886ff1b5608b419b3f34e8ff81a2fffd93e8c55fe85e82f7250
+    users: 265
+    interactions: 485
+    duration_hours: 711.8
+    d95_hours: 15.8
+    comment_share: 0.546
+    peak_24h: 467
+    quality_score: 0.243
+  matching_distance: 0.4624
+backup_pairs: []

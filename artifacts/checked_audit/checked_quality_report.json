@@ -1,0 +1,36 @@
+{
+  "selection_seed": 20260803,
+  "step_hours": 24.0,
+  "total_scanned": 2103,
+  "total_passed_filter": 586,
+  "fake_passed": 25,
+  "real_passed": 561,
+  "primary_pairs": 10,
+  "backup_pairs": 5,
+  "hard_filters": {
+    "min_interactions": 100,
+    "min_users": 100,
+    "max_users": 1000,
+    "min_duration_hours": 96.0,
+    "min_comments": 20,
+    "min_reposts": 20,
+    "max_user_share": 0.5,
+    "min_data_steps": 4
+  },
+  "exclusion_counts": {
+    "too_few_interactions": 304,
+    "too_few_users": 400,
+    "too_many_users": 291,
+    "too_short": 439,
+    "too_few_comments": 35,
+    "too_few_reposts": 28,
+    "user_concentration": 964,
+    "insufficient_data_steps": 355
+  },
+  "supplementary_stats": {
+    "d95_available": true,
+    "peak_24h_available": true,
+    "first_24h_share_available": true,
+    "max_user_share_available": true
+  }
+}
