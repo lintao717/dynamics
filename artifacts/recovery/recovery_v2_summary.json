@@ -1,0 +1,72 @@
+{
+  "protocol": "v2_corrected",
+  "truth_seeds": [
+    101,
+    103,
+    107,
+    109,
+    113
+  ],
+  "fit_seeds": [
+    11,
+    23,
+    37,
+    53,
+    71
+  ],
+  "holdout_seeds": [
+    211,
+    223,
+    227,
+    229,
+    233
+  ],
+  "optimisation_runs": 26,
+  "parameter_estimates": 50,
+  "by_type": {
+    "single": {
+      "n_runs": 12,
+      "n_estimates": 12,
+      "good_recovery": 9,
+      "boundary_hits": 0
+    },
+    "dual": {
+      "n_runs": 9,
+      "n_estimates": 18,
+      "good_recovery": 7,
+      "boundary_hits": 0
+    },
+    "quad": {
+      "n_runs": 5,
+      "n_estimates": 20,
+      "good_recovery": 14,
+      "boundary_hits": 0
+    }
+  },
+  "by_parameter": {
+    "propagation.beta_M": {
+      "median_range_norm_error": 0.08668359040567891,
+      "p90_range_norm_error": 0.24710919047113442,
+      "boundary_rate": 0.0,
+      "convergence_rate": 0.0
+    },
+    "activation.alpha_0": {
+      "median_range_norm_error": 0.07828065741050333,
+      "p90_range_norm_error": 0.17017017674900675,
+      "boundary_rate": 0.0,
+      "convergence_rate": 0.2857142857142857
+    },
+    "decay.gamma_0": {
+      "median_range_norm_error": 0.04492260446254918,
+      "p90_range_norm_error": 0.1709084501108209,
+      "boundary_rate": 0.0,
+      "convergence_rate": 0.2727272727272727
+    },
+    "viral.beta_V": {
+      "median_range_norm_error": 0.06017937131380324,
+      "p90_range_norm_error": 0.38540679682205925,
+      "boundary_rate": 0.0,
+      "convergence_rate": 0.18181818181818182
+    }
+  }
+}
