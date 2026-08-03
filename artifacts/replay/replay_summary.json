@@ -1,0 +1,42 @@
+{
+  "observation_model": "observed_actor_count_as_proxy_for_latent_A",
+  "direct_state_observation": false,
+  "n_cases": 40,
+  "modes": [
+    "broadcast",
+    "cumulative"
+  ],
+  "metrics_computed": [
+    "pair_id",
+    "label",
+    "mode",
+    "case_id",
+    "n_users",
+    "n_interactions",
+    "elapsed_s",
+    "n_data_steps",
+    "obs_peak",
+    "sim_peak",
+    "peak_ratio",
+    "obs_peak_step",
+    "sim_peak_step",
+    "peak_step_error",
+    "train_nrmse",
+    "val_nrmse",
+    "mae",
+    "obs_auc",
+    "sim_auc",
+    "auc_ratio",
+    "baseline_persistence_nrmse",
+    "baseline_exp_decay_nrmse",
+    "baseline_pulse_decay_nrmse",
+    "seed_peak_cv",
+    "sim_mean_peak",
+    "sim_std_peak"
+  ],
+  "baselines": [
+    "persistence",
+    "exponential_decay",
+    "pulse_decay"
+  ]
+}
