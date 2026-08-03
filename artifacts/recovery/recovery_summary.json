@@ -1,0 +1,28 @@
+{
+  "total_experiments": 30,
+  "good_recovery": 25,
+  "boundary_hits": 0,
+  "high_error": 5,
+  "by_parameter": {
+    "propagation.beta_M": {
+      "median_relative_error": 0.04396970935620402,
+      "boundary_rate": 0.0,
+      "n_experiments": 9
+    },
+    "activation.alpha_0": {
+      "median_relative_error": 0.025550787424643496,
+      "boundary_rate": 0.0,
+      "n_experiments": 9
+    },
+    "decay.gamma_0": {
+      "median_relative_error": 0.13670110732865737,
+      "boundary_rate": 0.0,
+      "n_experiments": 6
+    },
+    "viral.beta_V": {
+      "median_relative_error": 0.22787394683777987,
+      "boundary_rate": 0.0,
+      "n_experiments": 6
+    }
+  }
+}
