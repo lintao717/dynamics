@@ -35,6 +35,10 @@ class ReplayConfig:
     micro_steps: int = 1
     """V1.3: Sub-steps per 24h macro-step (1 = no micro-stepping, V1.2.1 default)."""
 
+    reactivation_mode: str = "full"
+    """V1.5.2: Reactivation mode (full/no_delayed_first/no_true_reactivation/one_shot).
+    Controls D0->A and D1->A behaviour via explicit branching in TransitionEngine."""
+
     broadcast_exposure_config: object | None = None
     """Optional BroadcastExposureConfig override. If None, uses default.
     Allows experiments to inject root_shock or custom exposure profiles

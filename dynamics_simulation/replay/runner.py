@@ -73,7 +73,8 @@ def _run_one_seed(
     sim_cfg = SimulationConfig(
         n_agents=len(index),
         T=grid.final_step,
-        micro_steps=config.micro_steps,  # V1.3: configurable micro-stepping
+        micro_steps=config.micro_steps,
+        reactivation_mode=config.reactivation_mode,  # V1.5.2
         seed=seed,
         params=params,
         initial_state=state,

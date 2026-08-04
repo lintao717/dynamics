@@ -29,8 +29,8 @@ class ReactivationMode(Enum):
     NO_TRUE_REACTIVATION = "no_true_reactivation"
     ONE_SHOT = "one_shot"
 
-    def __str__(self):
-        return self.value, replace
+    def __str__(self) -> str:
+        return str(self.value), replace
 from typing import Tuple
 
 

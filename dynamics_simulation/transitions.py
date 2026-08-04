@@ -162,9 +162,11 @@ class TransitionEngine:
         self,
         params: ModelParams,
         rng: Optional[Generator] = None,
+        reactivation_mode: str = "full",
     ):
         self.p = params
         self.rng = rng if rng is not None else np.random.default_rng()
+        self._reactivation_mode = reactivation_mode
 
     # ── Step 1: Information Exposure ──────────────────────────
 
@@ -492,21 +494,53 @@ class TransitionEngine:
         # Only agents that were D BEFORE Step 5 (not newly dormant)
         d_mask = (state.z == D) & ~e_mask_before_step5
         if d_mask.any():
-            m_vals = state.m[d_mask]
-            # Select params based on m_i: m=0 -> delayed, m=1 -> true reactivation
-            r0_vec = np.where(m_vals == 0, rp.r_0_0, rp.r_0_1)
-            r1_vec = np.where(m_vals == 0, rp.r_1_0, rp.r_1_1)
-
-            logit_react = (
-                r0_vec
-                + r1_vec * shock
-                + rp.r_2 * novelty
-                + rp.r_3 * h_new[d_mask]
-            )
-            p_react = 1.0 / (1.0 + np.exp(-logit_react))
-            react = self.rng.random(d_mask.sum()) < p_react
-            react_indices = np.where(d_mask)[0][react]
-            z_new[react_indices] = A
+            mode = self._reactivation_mode
+            # V1.5.2: explicit branching instead of extreme-parameter hack
+            if mode == "one_shot":
+                # Both D0->A and D1->A disabled
+                pass  # no reactivation at all
+            elif mode == "no_delayed_first":
+                # Only D1->A (true reactivation) allowed
+                m_vals = state.m[d_mask]
+                d1_only = m_vals == 1
+                if d1_only.any():
+                    d1_indices = np.where(d_mask)[0][d1_only]
+                    r0_vec = rp.r_0_1  # use m=1 params
+                    r1_vec = rp.r_1_1
+                    logit_react = (
+                        r0_vec + r1_vec * shock + rp.r_2 * novelty
+                        + rp.r_3 * h_new[d1_indices]
+                    )
+                    p_react = 1.0 / (1.0 + np.exp(-logit_react))
+                    react = self.rng.random(len(d1_indices)) < p_react
+                    z_new[d1_indices[react]] = A
+            elif mode == "no_true_reactivation":
+                # Only D0->A (delayed first activation) allowed
+                m_vals = state.m[d_mask]
+                d0_only = m_vals == 0
+                if d0_only.any():
+                    d0_indices = np.where(d_mask)[0][d0_only]
+                    r0_vec = rp.r_0_0
+                    r1_vec = rp.r_1_0
+                    logit_react = (
+                        r0_vec + r1_vec * shock + rp.r_2 * novelty
+                        + rp.r_3 * h_new[d0_indices]
+                    )
+                    p_react = 1.0 / (1.0 + np.exp(-logit_react))
+                    react = self.rng.random(len(d0_indices)) < p_react
+                    z_new[d0_indices[react]] = A
+            else:  # "full" or default
+                m_vals = state.m[d_mask]
+                r0_vec = np.where(m_vals == 0, rp.r_0_0, rp.r_0_1)
+                r1_vec = np.where(m_vals == 0, rp.r_1_0, rp.r_1_1)
+                logit_react = (
+                    r0_vec + r1_vec * shock + rp.r_2 * novelty
+                    + rp.r_3 * h_new[d_mask]
+                )
+                p_react = 1.0 / (1.0 + np.exp(-logit_react))
+                react = self.rng.random(d_mask.sum()) < p_react
+                react_indices = np.where(d_mask)[0][react]
+                z_new[react_indices] = A
 
         return z_new
 

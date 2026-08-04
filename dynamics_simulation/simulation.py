@@ -55,6 +55,9 @@ class SimulationConfig:
     delta_t_hours: float = 24.0  # Hours per macro step
     micro_steps: int = 1       # Sub-steps per macro-step (1 = no micro-stepping)
 
+    # ── V1.5.2: Reactivation control ──
+    reactivation_mode: str = "full"
+
     # ── Model parameters ──
     params: ModelParams = field(default_factory=default_params)
 
@@ -108,7 +111,8 @@ class SimulationRunner:
             self.rng.integers(0, 2**31 - 1)
         )
 
-        self.engine = TransitionEngine(config.params, self.rng)
+        self.engine = TransitionEngine(config.params, self.rng,
+                                      reactivation_mode=config.reactivation_mode)
         self.metrics = MetricsCollector()
 
         # These are set in run()
