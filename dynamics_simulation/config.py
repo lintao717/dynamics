@@ -23,11 +23,14 @@ class ReactivationMode(Enum):
     NO_DELAYED_FIRST: D0->A disabled (E->D agents cannot keep retrying).
     NO_TRUE_REACTIVATION: D1->A disabled (previously-active agents cannot return).
     ONE_SHOT: Both D0->A and D1->A disabled (U->E->A/D, then A->D, no returns).
+    EVENT_GATED: D0->A permanently disabled; D1->A only when shock signal > 0.
+        (V1.6: gated reactivation — secondary waves triggered by new information.)
     """
     FULL = "full"
     NO_DELAYED_FIRST = "no_delayed_first"
     NO_TRUE_REACTIVATION = "no_true_reactivation"
     ONE_SHOT = "one_shot"
+    EVENT_GATED = "event_gated"
 
     def __str__(self) -> str:
         return str(self.value), replace

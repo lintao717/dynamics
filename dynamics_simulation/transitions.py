@@ -499,6 +499,21 @@ class TransitionEngine:
             if mode == "one_shot":
                 # Both D0->A and D1->A disabled
                 pass  # no reactivation at all
+            elif mode == "event_gated":
+                # V1.6: D0->A permanently disabled; D1->A gated by shock signal
+                if shock > 0:
+                    m_vals = state.m[d_mask]
+                    d1_only = m_vals == 1  # only previously-active agents
+                    if d1_only.any():
+                        d1_indices = np.where(d_mask)[0][d1_only]
+                        logit_react = (
+                            rp.r_0_1 + rp.r_1_1 * shock + rp.r_2 * novelty
+                            + rp.r_3 * h_new[d1_indices]
+                        )
+                        p_react = 1.0 / (1.0 + np.exp(-logit_react))
+                        react = self.rng.random(len(d1_indices)) < p_react
+                        z_new[d1_indices[react]] = A
+                # D0->A never happens in event_gated mode
             elif mode == "no_delayed_first":
                 # Only D1->A (true reactivation) allowed
                 m_vals = state.m[d_mask]
