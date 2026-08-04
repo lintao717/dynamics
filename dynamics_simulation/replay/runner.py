@@ -84,23 +84,37 @@ def _run_one_seed(
     runner = SimulationRunner(sim_cfg)
     metrics = runner.run()
 
+    # Helper: safe property access (fails loudly, not silently)
+    def _g(name):
+        val = getattr(metrics, name, None)
+        if val is None:
+            raise AttributeError(
+                f"SimulationMetrics missing required field '{name}'. "
+                f"Available: {[k for k in dir(metrics) if k.endswith('_ts')]}"
+            )
+        return np.asarray(val).copy()
+
     return ReplayRun(
         seed=seed,
         steps=metrics.steps.copy(),
         active_count=metrics.n_A_ts.copy(),
         cumulative_users=np.array([]),
-        n_A_ts=metrics.n_A_ts.copy(),
-        n_E_ts=metrics.n_E_ts.copy(),
-        n_D_ts=metrics.n_D_ts.copy(),
-        o_mean_ts=metrics.o_mean_ts.copy(),
-        h_mean_ts=metrics.h_mean_ts.copy(),
-        # V1.3: flow metrics
-        actor_flow_ts=getattr(metrics, 'actor_flow_ts',
-                              np.zeros_like(metrics.n_A_ts)).copy(),
-        new_activation_ts=getattr(metrics, 'new_activation_ts',
-                                  np.zeros_like(metrics.n_A_ts)).copy(),
-        reactivation_ts=getattr(metrics, 'reactivation_ts',
-                                np.zeros_like(metrics.n_A_ts)).copy(),
+        n_U_ts=_g("n_U_ts"),
+        n_A_ts=_g("n_A_ts"),
+        n_E_ts=_g("n_E_ts"),
+        n_D_ts=_g("n_D_ts"),
+        o_mean_ts=_g("o_mean_ts"),
+        h_mean_ts=_g("h_mean_ts"),
+        # V1.5.1: full transition flow time series
+        U_to_E_ts=_g("U_to_E_ts"),
+        E_to_A_ts=_g("E_to_A_ts"),
+        E_to_D_ts=_g("E_to_D_ts"),
+        A_to_D_ts=_g("A_to_D_ts"),
+        D0_to_A_ts=_g("D0_to_A_ts"),
+        D1_to_A_ts=_g("D1_to_A_ts"),
+        actor_flow_ts=_g("actor_flow_ts"),
+        new_activation_ts=_g("new_activation_ts"),
+        reactivation_ts=_g("reactivation_ts"),
     )
 
 
@@ -111,9 +125,11 @@ def _aggregate_seeds(runs: list[ReplayRun]) -> dict[str, dict[str, np.ndarray]]:
 
     # Collect per-seed trajectories for each metric
     metric_names = [
-        "active_count", "n_A_ts", "n_E_ts", "n_D_ts",
+        "active_count", "n_U_ts", "n_A_ts", "n_E_ts", "n_D_ts",
         "o_mean_ts", "h_mean_ts",
-        # V1.3: flow metrics
+        # V1.5.1: full transition flow
+        "U_to_E_ts", "E_to_A_ts", "E_to_D_ts",
+        "A_to_D_ts", "D0_to_A_ts", "D1_to_A_ts",
         "actor_flow_ts", "new_activation_ts", "reactivation_ts",
     ]
 
