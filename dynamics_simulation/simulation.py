@@ -51,8 +51,9 @@ class SimulationConfig:
     })
 
     # ── Time ──
-    T: int = 100               # Number of time steps
-    delta_t_hours: float = 24.0  # Hours per step
+    T: int = 100               # Number of macro time steps
+    delta_t_hours: float = 24.0  # Hours per macro step
+    micro_steps: int = 1       # Sub-steps per macro-step (1 = no micro-stepping)
 
     # ── Model parameters ──
     params: ModelParams = field(default_factory=default_params)
@@ -190,7 +191,9 @@ class SimulationRunner:
                   f"o_mean={state.o.mean():.3f}  h_mean={state.h.mean():.3f}")
 
         # ── Main loop ──
-        V_current = 0.0  # Track viral intensity across steps
+        V_current = 0.0  # Track viral intensity across macro-steps
+        M = max(cfg.micro_steps, 1)
+
         for t in range(cfg.T):
             # Dynamic network provider overrides static networks each step.
             # Skip t=0 — provider was already called during initialization
@@ -203,28 +206,53 @@ class SimulationRunner:
                 if net_comms:
                     self.communities = net_comms
 
-            inputs = input_fn(cfg.n_agents, t, cfg.T)
-            inputs.V = V_current  # Feed V into this step
+            # ── Per-macro-step event accumulation ──
+            macro_events = None
+            macro_activations = 0
+            macro_reactivations = 0
+            macro_exposures = 0
 
-            state, V_next, events = self.engine.step(
-                state=state,
-                G_s=self.G_s,
-                G_o=self.G_o,
-                G_h=self.G_h,
-                inputs=inputs,
-                o_initial=o_initial,
-                t=t,
-            )
-            V_current = V_next  # Carry forward to next step
+            for m in range(M):
+                # Micro-step input: passes macro-step t, T, micro-index m, total M
+                try:
+                    inputs = input_fn(cfg.n_agents, t, cfg.T, m, M)
+                except TypeError:
+                    # Backward-compatible: old 3-arg signature
+                    inputs = input_fn(cfg.n_agents, t, cfg.T)
+                inputs.V = V_current
 
-            # Step observer (called after each step with t+1)
+                state, V_next, events = self.engine.step(
+                    state=state,
+                    G_s=self.G_s,
+                    G_o=self.G_o,
+                    G_h=self.G_h,
+                    inputs=inputs,
+                    o_initial=o_initial,
+                    t=t * M + m,
+                )
+
+                # Accumulate transition event counts across micro-steps
+                if macro_events is None:
+                    macro_events = events
+                else:
+                    macro_events.U_to_E += events.U_to_E
+                    macro_events.E_to_A += events.E_to_A
+                    macro_events.E_to_D += events.E_to_D
+                    macro_events.A_to_D += events.A_to_D
+                    macro_events.D0_to_A += events.D0_to_A
+                    macro_events.D1_to_A += events.D1_to_A
+                    macro_events.new_posts += events.new_posts
+
+            V_current = V_next  # Carry forward to next macro-step
+
+            # Step observer (called after macro-step completes)
             if cfg.step_observer is not None:
-                cfg.step_observer(t + 1, state.copy(), events)
+                cfg.step_observer(t + 1, state.copy(), macro_events)
 
-            # Accumulate transition events EVERY step
+            # Record snapshot at MACRO-step boundary
             self.metrics.record(
                 state, communities=self.communities,
-                G_s=self.G_s, G_o=self.G_o, events=events, t=t + 1,
+                G_s=self.G_s, G_o=self.G_o, events=macro_events, t=t + 1,
                 snapshot=((t + 1) % cfg.snapshot_interval == 0 or t == cfg.T - 1),
             )
 

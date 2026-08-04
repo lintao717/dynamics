@@ -21,6 +21,10 @@ class ReplayRun:
     n_D_ts: np.ndarray
     o_mean_ts: np.ndarray
     h_mean_ts: np.ndarray
+    # V1.3: flow metrics
+    actor_flow_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    new_activation_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    reactivation_ts: np.ndarray = field(default_factory=lambda: np.array([]))
 
 
 @dataclass
@@ -122,4 +126,6 @@ def _trajectory_to_dict(obs) -> dict[str, Any]:
         "comment_count": obs.comment_count.tolist(),
         "repost_count": obs.repost_count.tolist(),
         "interaction_count": obs.interaction_count.tolist(),
+        # V1.3: observed actor count is the flow proxy
+        "observed_actor_flow": obs.active_count.tolist(),
     }

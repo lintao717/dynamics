@@ -31,3 +31,6 @@ class ReplayConfig:
 
     truncate_policy: str = "earliest_interactions"
     """Policy for truncation: 'earliest_interactions' keeps earliest users."""
+
+    micro_steps: int = 4
+    """V1.3: Sub-steps per 24h macro-step (1 = no micro-stepping)."""

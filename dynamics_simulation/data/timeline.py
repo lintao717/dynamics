@@ -40,6 +40,14 @@ class BroadcastExposureConfig:
     novelty_half_life_steps: float = 6.0
     staleness_tau_steps: float = 12.0
 
+    # ── Root-post shock (V1.3) ──
+    root_shock: bool = False
+    """Apply an initial fast-decaying exposure pulse at macro-step 0."""
+    shock_amplitude: float = 1.0
+    """Peak shock intensity (normalised [0,1], scaled by amplitude)."""
+    shock_half_life_micro: float = 2.0
+    """Micro-steps until shock halves."""
+
     def __post_init__(self):
         if not (0.0 <= self.amplitude <= 1.0):
             raise ValueError(
@@ -49,20 +57,34 @@ class BroadcastExposureConfig:
             raise ValueError(
                 f"novelty_at_root={self.novelty_at_root} must be in [0, 1]"
             )
+        if not (0.0 <= self.shock_amplitude <= 1.0):
+            raise ValueError(
+                f"shock_amplitude={self.shock_amplitude} must be in [0, 1]"
+            )
         if self.exposure_half_life_steps <= 0:
             raise ValueError(
-                f"exposure_half_life_steps={self.exposure_half_life_steps} "
-                "must be > 0"
+                f"exposure_half_life_steps={self.exposure_half_life_steps} must be > 0"
             )
         if self.novelty_half_life_steps <= 0:
             raise ValueError(
-                f"novelty_half_life_steps={self.novelty_half_life_steps} "
-                "must be > 0"
+                f"novelty_half_life_steps={self.novelty_half_life_steps} must be > 0"
             )
         if self.staleness_tau_steps <= 0:
             raise ValueError(
                 f"staleness_tau_steps={self.staleness_tau_steps} must be > 0"
             )
+        if self.shock_half_life_micro <= 0:
+            raise ValueError(
+                f"shock_half_life_micro={self.shock_half_life_micro} must be > 0"
+            )
+
+    def shock_at(self, micro_step: int) -> float:
+        """Root-shock intensity at micro-step index within macro-step 0."""
+        if not self.root_shock:
+            return 0.0
+        return self.amplitude * self.shock_amplitude * (
+            0.5 ** (micro_step / self.shock_half_life_micro)
+        )
 
     def exposure_at(self, step: int) -> float:
         """Compute exposure intensity at *step*."""
@@ -105,15 +127,21 @@ class EventInputTimeline:
         self._bcast = broadcast_cfg or BroadcastExposureConfig()
         self._root_idx = index.user_to_idx[case.root.user_id]
 
-    def inputs_at(self, n: int, step: int) -> ExternalInputs:
-        """Build ExternalInputs for *step*.
+    def inputs_at(self, n: int, step: int,
+                  micro_step: int = 0, micro_total: int = 1) -> ExternalInputs:
+        """Build ExternalInputs for *step* (macro) and *micro_step* (sub-step).
 
         All time-dependent signals use FIXED time constants — no
         future-data dependency on when the event ends.
 
+        Root shock (if enabled) applies on macro-step 0 only,
+        decaying across micro-steps within that day.
+
         Args:
             n: Number of agents.
-            step: Current simulation step (0-indexed).
+            step: Current macro simulation step (0-indexed).
+            micro_step: Sub-step index within the macro-step (0-indexed).
+            micro_total: Total sub-steps per macro-step.
 
         Returns:
             ExternalInputs with media_exposure, staleness, and novelty.
@@ -121,9 +149,17 @@ class EventInputTimeline:
         # Broadcast media exposure: root gets 0, all others get decay
         media = np.zeros(n, dtype=np.float64)
         exposure_val = self._bcast.exposure_at(step)
+
+        # Root shock: additive fast decay on macro-step 0 only
+        shock_val = self._bcast.shock_at(micro_step) if step == 0 else 0.0
+
         for i in range(n):
             if i != self._root_idx:
-                media[i] = exposure_val
+                media[i] = exposure_val + shock_val
+
+        # Global macro-step index for staleness/novelty
+        global_step = step * micro_total + micro_step
+        global_total = self._grid.final_step * micro_total if self._grid else micro_total
 
         # Staleness: saturating exponential with fixed tau
         staleness = self._bcast.staleness_at(step)

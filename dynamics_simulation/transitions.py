@@ -131,7 +131,8 @@ class ExternalInputs:
         }
 
 
-def default_inputs(n: int, t: int, T: int) -> ExternalInputs:
+def default_inputs(n: int, t: int, T: int,
+                  micro_step: int = 0, micro_total: int = 1) -> ExternalInputs:
     """Generate default external inputs for synthetic experiments.
 
     A shock pulse can be injected at a specific time for reactivation tests.
@@ -140,7 +141,7 @@ def default_inputs(n: int, t: int, T: int) -> ExternalInputs:
     return ExternalInputs(
         shock=0.0,
         novelty=0.0,
-        staleness=t / max(T, 1),
+        staleness=(t * micro_total + micro_step) / max(T * micro_total, 1),
     )
 
 

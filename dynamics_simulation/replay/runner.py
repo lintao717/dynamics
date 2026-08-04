@@ -57,15 +57,16 @@ def _run_one_seed(
     # Build input timeline
     timeline = EventInputTimeline(case, index, grid)
 
-    def input_fn(n: int, t: int, T: int):
-        # T is unused — timeline uses fixed time constants, not
-        # the event's total duration (no future-data dependency).
-        return timeline.inputs_at(n, t)
+    def input_fn(n: int, t: int, T: int, micro_step: int = 0, micro_total: int = 1):
+        # timeline uses fixed time constants — no future-data dependency.
+        # root_shock is applied at micro-step level within macro-step 0.
+        return timeline.inputs_at(n, t, micro_step, micro_total)
 
     # Configure and run simulation
     sim_cfg = SimulationConfig(
         n_agents=len(index),
         T=grid.final_step,
+        micro_steps=config.micro_steps,  # V1.3: configurable micro-stepping
         seed=seed,
         params=params,
         initial_state=state,
@@ -80,12 +81,19 @@ def _run_one_seed(
         seed=seed,
         steps=metrics.steps.copy(),
         active_count=metrics.n_A_ts.copy(),
-        cumulative_users=np.array([]),  # not tracked in existing metrics
+        cumulative_users=np.array([]),
         n_A_ts=metrics.n_A_ts.copy(),
         n_E_ts=metrics.n_E_ts.copy(),
         n_D_ts=metrics.n_D_ts.copy(),
         o_mean_ts=metrics.o_mean_ts.copy(),
         h_mean_ts=metrics.h_mean_ts.copy(),
+        # V1.3: flow metrics
+        actor_flow_ts=getattr(metrics, 'actor_flow_ts',
+                              np.zeros_like(metrics.n_A_ts)).copy(),
+        new_activation_ts=getattr(metrics, 'new_activation_ts',
+                                  np.zeros_like(metrics.n_A_ts)).copy(),
+        reactivation_ts=getattr(metrics, 'reactivation_ts',
+                                np.zeros_like(metrics.n_A_ts)).copy(),
     )
 
 
@@ -98,6 +106,8 @@ def _aggregate_seeds(runs: list[ReplayRun]) -> dict[str, dict[str, np.ndarray]]:
     metric_names = [
         "active_count", "n_A_ts", "n_E_ts", "n_D_ts",
         "o_mean_ts", "h_mean_ts",
+        # V1.3: flow metrics
+        "actor_flow_ts", "new_activation_ts", "reactivation_ts",
     ]
 
     result: dict[str, dict[str, np.ndarray]] = {
