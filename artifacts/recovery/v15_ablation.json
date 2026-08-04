@@ -1,0 +1,709 @@
+{
+  "results": [
+    {
+      "config": "A",
+      "effective_config": {
+        "micro_steps": 1,
+        "root_shock": false,
+        "compare_field": "active_count",
+        "desc": "V1.2.1 baseline"
+      },
+      "pid": "pair_05",
+      "label": "fake",
+      "bl_val": 0.40018871127994154,
+      "best_raw": 1.6365497336291863,
+      "best_val": 0.48083732196194895,
+      "reachable": false,
+      "top3": [
+        {
+          "v5": 1.6140839845628543,
+          "pr5": 0.9496598639455782,
+          "params": {
+            "propagation.beta_M": 0.7820476076248205,
+            "activation.alpha_0": 1.9535427604875686,
+            "decay.gamma_0": 5.753496885660928
+          }
+        },
+        {
+          "v5": 1.7936157825971824,
+          "pr5": 0.9210884353741497,
+          "params": {
+            "propagation.beta_M": 0.7788590219619528,
+            "activation.alpha_0": 1.7129081489412412,
+            "decay.gamma_0": 2.885620921649714
+          }
+        },
+        {
+          "v5": 1.769191478306913,
+          "pr5": 0.85578231292517,
+          "params": {
+            "propagation.beta_M": 0.8105827970540151,
+            "activation.alpha_0": 1.0839284445571673,
+            "decay.gamma_0": 4.984676657461092
+          }
+        }
+      ]
+    },
+    {
+      "config": "A",
+      "effective_config": {
+        "micro_steps": 1,
+        "root_shock": false,
+        "compare_field": "active_count",
+        "desc": "V1.2.1 baseline"
+      },
+      "pid": "pair_05",
+      "label": "real",
+      "bl_val": 0.34657359027967966,
+      "best_raw": 1.9665968359203176,
+      "best_val": 0.5327661712943506,
+      "reachable": false,
+      "top3": [
+        {
+          "v5": 0.7368946359143306,
+          "pr5": 0.006230529595015576,
+          "params": {
+            "propagation.beta_M": 0.0065129576097548965,
+            "activation.alpha_0": -2.890312453804489,
+            "decay.gamma_0": -0.8009560633973738
+          }
+        },
+        {
+          "v5": 1.7281416360288078,
+          "pr5": 0.02118380062305296,
+          "params": {
+            "propagation.beta_M": 0.024935735687866504,
+            "activation.alpha_0": -5.870676451621288,
+            "decay.gamma_0": -1.3287340312157854
+          }
+        },
+        {
+          "v5": 1.5110513721029555,
+          "pr5": 0.0161993769470405,
+          "params": {
+            "propagation.beta_M": 0.011995925340446715,
+            "activation.alpha_0": -0.7390362399644124,
+            "decay.gamma_0": -0.7486527733036175
+          }
+        }
+      ]
+    },
+    {
+      "config": "A",
+      "effective_config": {
+        "micro_steps": 1,
+        "root_shock": false,
+        "compare_field": "active_count",
+        "desc": "V1.2.1 baseline"
+      },
+      "pid": "pair_07",
+      "label": "fake",
+      "bl_val": 0.5659523019813808,
+      "best_raw": 1.8994723308369033,
+      "best_val": 1.395425533194953,
+      "reachable": false,
+      "top3": [
+        {
+          "v5": 1.7928294473696016,
+          "pr5": 0.040754716981132075,
+          "params": {
+            "propagation.beta_M": 0.08070437093071801,
+            "activation.alpha_0": -1.495773295310757,
+            "decay.gamma_0": 2.6279279772281363
+          }
+        },
+        {
+          "v5": 2.1076924844311145,
+          "pr5": 1.0060377358490566,
+          "params": {
+            "propagation.beta_M": 0.9819115810032827,
+            "activation.alpha_0": 1.4148819084895061,
+            "decay.gamma_0": 2.2221108149446245
+          }
+        },
+        {
+          "v5": 1.7638158137387574,
+          "pr5": 0.04226415094339622,
+          "params": {
+            "propagation.beta_M": 0.07245916680897102,
+            "activation.alpha_0": -1.0165237964836553,
+            "decay.gamma_0": 1.7441881218314332
+          }
+        }
+      ]
+    },
+    {
+      "config": "A",
+      "effective_config": {
+        "micro_steps": 1,
+        "root_shock": false,
+        "compare_field": "active_count",
+        "desc": "V1.2.1 baseline"
+      },
+      "pid": "pair_07",
+      "label": "real",
+      "bl_val": 0.7278734650488774,
+      "best_raw": 1.244621086628705,
+      "best_val": 2.2245930219197234,
+      "reachable": false,
+      "top3": [
+        {
+          "v5": 2.339021529352321,
+          "pr5": 0.8650918635170605,
+          "params": {
+            "propagation.beta_M": 0.9406898550128748,
+            "activation.alpha_0": 1.2546454648649021,
+            "decay.gamma_0": 3.6862819618697955
+          }
+        },
+        {
+          "v5": 2.2269416970673777,
+          "pr5": 0.9763779527559056,
+          "params": {
+            "propagation.beta_M": 0.9853227690969867,
+            "activation.alpha_0": 1.6881771038426105,
+            "decay.gamma_0": 3.0298672109625677
+          }
+        },
+        {
+          "v5": 2.312529827216073,
+          "pr5": 0.7291338582677166,
+          "params": {
+            "propagation.beta_M": 0.8105827970540151,
+            "activation.alpha_0": 1.0839284445571673,
+            "decay.gamma_0": 4.984676657461092
+          }
+        }
+      ]
+    },
+    {
+      "config": "B",
+      "effective_config": {
+        "micro_steps": 4,
+        "root_shock": false,
+        "compare_field": "active_count",
+        "desc": "micro-steps only"
+      },
+      "pid": "pair_05",
+      "label": "fake",
+      "bl_val": 0.40018871127994154,
+      "best_raw": 1.6703060579338769,
+      "best_val": 1.6328240680574495,
+      "reachable": false,
+      "top3": [
+        {
+          "v5": 1.634237969293717,
+          "pr5": 0.1687074829931973,
+          "params": {
+            "propagation.beta_M": 0.2299155771143891,
+            "activation.alpha_0": 1.5199757993060272,
+            "decay.gamma_0": 3.2389227325825622
+          }
+        },
+        {
+          "v5": 1.7607169952051678,
+          "pr5": 0.10340136054421768,
+          "params": {
+            "propagation.beta_M": 0.4127528293498112,
+            "activation.alpha_0": -4.678638791948037,
+            "decay.gamma_0": 5.201951929808057
+          }
+        },
+        {
+          "v5": 1.7284901149826013,
+          "pr5": 0.12108843537414966,
+          "params": {
+            "propagation.beta_M": 0.45811727933349033,
+            "activation.alpha_0": -3.119522156419925,
+            "decay.gamma_0": 5.3023137509085885
+          }
+        }
+      ]
+    },
+    {
+      "config": "B",
+      "effective_config": {
+        "micro_steps": 4,
+        "root_shock": false,
+        "compare_field": "active_count",
+        "desc": "micro-steps only"
+      },
+      "pid": "pair_05",
+      "label": "real",
+      "bl_val": 0.34657359027967966,
+      "best_raw": 1.8351082190735333,
+      "best_val": 1.0053096719106587,
+      "reachable": false,
+      "top3": [
+        {
+          "v5": 1.0053096719106587,
+          "pr5": 0.00809968847352025,
+          "params": {
+            "propagation.beta_M": 0.001340306247855808,
+            "activation.alpha_0": 0.961372209368947,
+            "decay.gamma_0": 3.2789116847967623
+          }
+        },
+        {
+          "v5": 1.106640000887033,
+          "pr5": 0.009345794392523364,
+          "params": {
+            "propagation.beta_M": 0.0037940588338505944,
+            "activation.alpha_0": -0.9938127143738509,
+            "decay.gamma_0": 4.122704619333051
+          }
+        },
+        {
+          "v5": 1.7382278502817956,
+          "pr5": 0.02118380062305296,
+          "params": {
+            "propagation.beta_M": 0.008839825925590747,
+            "activation.alpha_0": 1.6516932445473067,
+            "decay.gamma_0": 5.438139761268808
+          }
+        }
+      ]
+    },
+    {
+      "config": "B",
+      "effective_config": {
+        "micro_steps": 4,
+        "root_shock": false,
+        "compare_field": "active_count",
+        "desc": "micro-steps only"
+      },
+      "pid": "pair_07",
+      "label": "fake",
+      "bl_val": 0.5659523019813808,
+      "best_raw": 1.9569748050443416,
+      "best_val": 1.8440808561566453,
+      "reachable": false,
+      "top3": [
+        {
+          "v5": 1.8440808561566453,
+          "pr5": 0.09811320754716982,
+          "params": {
+            "propagation.beta_M": 0.737462586391178,
+            "activation.alpha_0": 0.502737454938762,
+            "decay.gamma_0": 5.3149473008320385
+          }
+        },
+        {
+          "v5": 2.0815948514818823,
+          "pr5": 0.13358490566037734,
+          "params": {
+            "propagation.beta_M": 0.8597618548474064,
+            "activation.alpha_0": -3.319401271684645,
+            "decay.gamma_0": 2.913610375632338
+          }
+        },
+        {
+          "v5": 1.985789105558005,
+          "pr5": 0.11169811320754718,
+          "params": {
+            "propagation.beta_M": 0.669623091738724,
+            "activation.alpha_0": -3.591276882029287,
+            "decay.gamma_0": 5.099559675076005
+          }
+        }
+      ]
+    },
+    {
+      "config": "B",
+      "effective_config": {
+        "micro_steps": 4,
+        "root_shock": false,
+        "compare_field": "active_count",
+        "desc": "micro-steps only"
+      },
+      "pid": "pair_07",
+      "label": "real",
+      "bl_val": 0.7278734650488774,
+      "best_raw": 1.4168363440284644,
+      "best_val": 2.2258177714675145,
+      "reachable": false,
+      "top3": [
+        {
+          "v5": 2.369741464616938,
+          "pr5": 0.13070866141732282,
+          "params": {
+            "propagation.beta_M": 0.28990977439406385,
+            "activation.alpha_0": 0.7398597918394474,
+            "decay.gamma_0": 2.740138817565752
+          }
+        },
+        {
+          "v5": 2.32846409999527,
+          "pr5": 0.11601049868766405,
+          "params": {
+            "propagation.beta_M": 0.38305571495788077,
+            "activation.alpha_0": 0.05122327838476437,
+            "decay.gamma_0": 3.178809110237573
+          }
+        },
+        {
+          "v5": 2.4320106280078724,
+          "pr5": 0.11863517060367455,
+          "params": {
+            "propagation.beta_M": 0.3531255821625919,
+            "activation.alpha_0": 1.8056366448517744,
+            "decay.gamma_0": 5.721684655197844
+          }
+        }
+      ]
+    },
+    {
+      "config": "C",
+      "effective_config": {
+        "micro_steps": 4,
+        "root_shock": false,
+        "compare_field": "actor_flow_ts",
+        "desc": "micro-steps + actor_flow"
+      },
+      "pid": "pair_05",
+      "label": "fake",
+      "bl_val": 0.40018871127994154,
+      "best_raw": 1.3220629294456774,
+      "best_val": 0.652321793876038,
+      "reachable": false,
+      "top3": [
+        {
+          "v5": 1.3538404059367697,
+          "pr5": 1.1428571428571428,
+          "params": {
+            "propagation.beta_M": 0.49505503794508166,
+            "activation.alpha_0": 1.9018530774208644,
+            "decay.gamma_0": -5.7145913427726445
+          }
+        },
+        {
+          "v5": 1.4249717287528654,
+          "pr5": 1.0149659863945577,
+          "params": {
+            "propagation.beta_M": 0.4225901343558304,
+            "activation.alpha_0": 1.3060546845884762,
+            "decay.gamma_0": -5.941111583580603
+          }
+        },
+        {
+          "v5": 1.7388462576696115,
+          "pr5": 0.7646258503401361,
+          "params": {
+            "propagation.beta_M": 0.22381511563355524,
+            "activation.alpha_0": 1.6168511729583441,
+            "decay.gamma_0": -5.345355116058514
+          }
+        }
+      ]
+    },
+    {
+      "config": "C",
+      "effective_config": {
+        "micro_steps": 4,
+        "root_shock": false,
+        "compare_field": "actor_flow_ts",
+        "desc": "micro-steps + actor_flow"
+      },
+      "pid": "pair_05",
+      "label": "real",
+      "bl_val": 0.34657359027967966,
+      "best_raw": 1.936747964204701,
+      "best_val": 2.0158117424732365,
+      "reachable": false,
+      "top3": [
+        {
+          "v5": 2.1619256084648706,
+          "pr5": 0.9052959501557634,
+          "params": {
+            "propagation.beta_M": 0.49505503794508166,
+            "activation.alpha_0": 1.9018530774208644,
+            "decay.gamma_0": -5.7145913427726445
+          }
+        },
+        {
+          "v5": 2.0158117424732365,
+          "pr5": 0.8,
+          "params": {
+            "propagation.beta_M": 0.4225901343558304,
+            "activation.alpha_0": 1.3060546845884762,
+            "decay.gamma_0": -5.941111583580603
+          }
+        },
+        {
+          "v5": 2.05764246815207,
+          "pr5": 0.9376947040498442,
+          "params": {
+            "propagation.beta_M": 0.8556131302972915,
+            "activation.alpha_0": 1.5535625747232729,
+            "decay.gamma_0": -5.814391100164021
+          }
+        }
+      ]
+    },
+    {
+      "config": "C",
+      "effective_config": {
+        "micro_steps": 4,
+        "root_shock": false,
+        "compare_field": "actor_flow_ts",
+        "desc": "micro-steps + actor_flow"
+      },
+      "pid": "pair_07",
+      "label": "fake",
+      "bl_val": 0.5659523019813808,
+      "best_raw": 1.602429976380829,
+      "best_val": 1.482163857646239,
+      "reachable": false,
+      "top3": [
+        {
+          "v5": 1.5684298206779492,
+          "pr5": 1.0558490566037737,
+          "params": {
+            "propagation.beta_M": 0.49505503794508166,
+            "activation.alpha_0": 1.9018530774208644,
+            "decay.gamma_0": -5.7145913427726445
+          }
+        },
+        {
+          "v5": 1.6134704988957094,
+          "pr5": 0.9366037735849057,
+          "params": {
+            "propagation.beta_M": 0.4225901343558304,
+            "activation.alpha_0": 1.3060546845884762,
+            "decay.gamma_0": -5.941111583580603
+          }
+        },
+        {
+          "v5": 1.482163857646239,
+          "pr5": 1.1162264150943397,
+          "params": {
+            "propagation.beta_M": 0.8556131302972915,
+            "activation.alpha_0": 1.5535625747232729,
+            "decay.gamma_0": -5.814391100164021
+          }
+        }
+      ]
+    },
+    {
+      "config": "C",
+      "effective_config": {
+        "micro_steps": 4,
+        "root_shock": false,
+        "compare_field": "actor_flow_ts",
+        "desc": "micro-steps + actor_flow"
+      },
+      "pid": "pair_07",
+      "label": "real",
+      "bl_val": 0.7278734650488774,
+      "best_raw": 1.240265874964634,
+      "best_val": 1.8881537778175608,
+      "reachable": false,
+      "top3": [
+        {
+          "v5": 2.0150693713017986,
+          "pr5": 0.979002624671916,
+          "params": {
+            "propagation.beta_M": 0.49505503794508166,
+            "activation.alpha_0": 1.9018530774208644,
+            "decay.gamma_0": -5.7145913427726445
+          }
+        },
+        {
+          "v5": 1.8881537778175608,
+          "pr5": 1.0152230971128609,
+          "params": {
+            "propagation.beta_M": 0.8556131302972915,
+            "activation.alpha_0": 1.5535625747232729,
+            "decay.gamma_0": -5.814391100164021
+          }
+        },
+        {
+          "v5": 1.9404714172265547,
+          "pr5": 0.8551181102362205,
+          "params": {
+            "propagation.beta_M": 0.4225901343558304,
+            "activation.alpha_0": 1.3060546845884762,
+            "decay.gamma_0": -5.941111583580603
+          }
+        }
+      ]
+    },
+    {
+      "config": "D",
+      "effective_config": {
+        "micro_steps": 4,
+        "root_shock": true,
+        "compare_field": "actor_flow_ts",
+        "desc": "micro-steps + actor_flow + root_shock"
+      },
+      "pid": "pair_05",
+      "label": "fake",
+      "bl_val": 0.40018871127994154,
+      "best_raw": 1.3220629294456774,
+      "best_val": 0.652321793876038,
+      "reachable": false,
+      "top3": [
+        {
+          "v5": 1.3538404059367697,
+          "pr5": 1.1428571428571428,
+          "params": {
+            "propagation.beta_M": 0.49505503794508166,
+            "activation.alpha_0": 1.9018530774208644,
+            "decay.gamma_0": -5.7145913427726445
+          }
+        },
+        {
+          "v5": 1.4249717287528654,
+          "pr5": 1.0149659863945577,
+          "params": {
+            "propagation.beta_M": 0.4225901343558304,
+            "activation.alpha_0": 1.3060546845884762,
+            "decay.gamma_0": -5.941111583580603
+          }
+        },
+        {
+          "v5": 1.7388462576696115,
+          "pr5": 0.7646258503401361,
+          "params": {
+            "propagation.beta_M": 0.22381511563355524,
+            "activation.alpha_0": 1.6168511729583441,
+            "decay.gamma_0": -5.345355116058514
+          }
+        }
+      ]
+    },
+    {
+      "config": "D",
+      "effective_config": {
+        "micro_steps": 4,
+        "root_shock": true,
+        "compare_field": "actor_flow_ts",
+        "desc": "micro-steps + actor_flow + root_shock"
+      },
+      "pid": "pair_05",
+      "label": "real",
+      "bl_val": 0.34657359027967966,
+      "best_raw": 1.936747964204701,
+      "best_val": 2.0158117424732365,
+      "reachable": false,
+      "top3": [
+        {
+          "v5": 2.1619256084648706,
+          "pr5": 0.9052959501557634,
+          "params": {
+            "propagation.beta_M": 0.49505503794508166,
+            "activation.alpha_0": 1.9018530774208644,
+            "decay.gamma_0": -5.7145913427726445
+          }
+        },
+        {
+          "v5": 2.0158117424732365,
+          "pr5": 0.8,
+          "params": {
+            "propagation.beta_M": 0.4225901343558304,
+            "activation.alpha_0": 1.3060546845884762,
+            "decay.gamma_0": -5.941111583580603
+          }
+        },
+        {
+          "v5": 2.05764246815207,
+          "pr5": 0.9376947040498442,
+          "params": {
+            "propagation.beta_M": 0.8556131302972915,
+            "activation.alpha_0": 1.5535625747232729,
+            "decay.gamma_0": -5.814391100164021
+          }
+        }
+      ]
+    },
+    {
+      "config": "D",
+      "effective_config": {
+        "micro_steps": 4,
+        "root_shock": true,
+        "compare_field": "actor_flow_ts",
+        "desc": "micro-steps + actor_flow + root_shock"
+      },
+      "pid": "pair_07",
+      "label": "fake",
+      "bl_val": 0.5659523019813808,
+      "best_raw": 1.602429976380829,
+      "best_val": 1.482163857646239,
+      "reachable": false,
+      "top3": [
+        {
+          "v5": 1.5684298206779492,
+          "pr5": 1.0558490566037737,
+          "params": {
+            "propagation.beta_M": 0.49505503794508166,
+            "activation.alpha_0": 1.9018530774208644,
+            "decay.gamma_0": -5.7145913427726445
+          }
+        },
+        {
+          "v5": 1.6134704988957094,
+          "pr5": 0.9366037735849057,
+          "params": {
+            "propagation.beta_M": 0.4225901343558304,
+            "activation.alpha_0": 1.3060546845884762,
+            "decay.gamma_0": -5.941111583580603
+          }
+        },
+        {
+          "v5": 1.482163857646239,
+          "pr5": 1.1162264150943397,
+          "params": {
+            "propagation.beta_M": 0.8556131302972915,
+            "activation.alpha_0": 1.5535625747232729,
+            "decay.gamma_0": -5.814391100164021
+          }
+        }
+      ]
+    },
+    {
+      "config": "D",
+      "effective_config": {
+        "micro_steps": 4,
+        "root_shock": true,
+        "compare_field": "actor_flow_ts",
+        "desc": "micro-steps + actor_flow + root_shock"
+      },
+      "pid": "pair_07",
+      "label": "real",
+      "bl_val": 0.7278734650488774,
+      "best_raw": 1.240265874964634,
+      "best_val": 1.8881537778175608,
+      "reachable": false,
+      "top3": [
+        {
+          "v5": 2.0150693713017986,
+          "pr5": 0.979002624671916,
+          "params": {
+            "propagation.beta_M": 0.49505503794508166,
+            "activation.alpha_0": 1.9018530774208644,
+            "decay.gamma_0": -5.7145913427726445
+          }
+        },
+        {
+          "v5": 1.8881537778175608,
+          "pr5": 1.0152230971128609,
+          "params": {
+            "propagation.beta_M": 0.8556131302972915,
+            "activation.alpha_0": 1.5535625747232729,
+            "decay.gamma_0": -5.814391100164021
+          }
+        },
+        {
+          "v5": 1.9404714172265547,
+          "pr5": 0.8551181102362205,
+          "params": {
+            "propagation.beta_M": 0.4225901343558304,
+            "activation.alpha_0": 1.3060546845884762,
+            "decay.gamma_0": -5.941111583580603
+          }
+        }
+      ]
+    }
+  ],
+  "note": "V1.5 CORRECTED ablation \u2014 V1.3 results were invalid due to config wiring bug"
+}

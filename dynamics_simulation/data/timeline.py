@@ -150,12 +150,14 @@ class EventInputTimeline:
         media = np.zeros(n, dtype=np.float64)
         exposure_val = self._bcast.exposure_at(step)
 
-        # Root shock: additive fast decay on macro-step 0 only
+        # Root shock: bounded combination with base exposure
+        # M_combined = 1 - (1-M_base)(1-M_shock), then clamped to [0,1]
         shock_val = self._bcast.shock_at(micro_step) if step == 0 else 0.0
 
         for i in range(n):
             if i != self._root_idx:
-                media[i] = exposure_val + shock_val
+                combined = 1.0 - (1.0 - exposure_val) * (1.0 - shock_val)
+                media[i] = float(np.clip(combined, 0.0, 1.0))
 
         # Global macro-step index for staleness/novelty
         global_step = step * micro_total + micro_step

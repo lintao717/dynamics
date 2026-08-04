@@ -32,5 +32,10 @@ class ReplayConfig:
     truncate_policy: str = "earliest_interactions"
     """Policy for truncation: 'earliest_interactions' keeps earliest users."""
 
-    micro_steps: int = 4
-    """V1.3: Sub-steps per 24h macro-step (1 = no micro-stepping)."""
+    micro_steps: int = 1
+    """V1.3: Sub-steps per 24h macro-step (1 = no micro-stepping, V1.2.1 default)."""
+
+    broadcast_exposure_config: object | None = None
+    """Optional BroadcastExposureConfig override. If None, uses default.
+    Allows experiments to inject root_shock or custom exposure profiles
+    without modifying the core replay runner."""

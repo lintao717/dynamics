@@ -54,8 +54,15 @@ def _run_one_seed(
         snap = net_provider.snapshot_at(step)
         return snap.G_s, snap.G_o, snap.communities
 
-    # Build input timeline
-    timeline = EventInputTimeline(case, index, grid)
+    # Build input timeline — use custom BroadcastExposureConfig if provided
+    timeline_cfg = getattr(config, 'broadcast_exposure_config', None)
+    if timeline_cfg is not None:
+        from dynamics_simulation.data.timeline import BroadcastExposureConfig
+        if isinstance(timeline_cfg, dict):
+            timeline_cfg = BroadcastExposureConfig(**timeline_cfg)
+        timeline = EventInputTimeline(case, index, grid, timeline_cfg)
+    else:
+        timeline = EventInputTimeline(case, index, grid)
 
     def input_fn(n: int, t: int, T: int, micro_step: int = 0, micro_total: int = 1):
         # timeline uses fixed time constants — no future-data dependency.
