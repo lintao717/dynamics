@@ -13,6 +13,24 @@ Usage:
 
 from __future__ import annotations
 from dataclasses import dataclass, replace
+from enum import Enum
+
+
+class ReactivationMode(Enum):
+    """Controls D-state reactivation behaviour.
+
+    FULL: All mechanisms active (V1.1 default).
+    NO_DELAYED_FIRST: D0->A disabled (E->D agents cannot keep retrying).
+    NO_TRUE_REACTIVATION: D1->A disabled (previously-active agents cannot return).
+    ONE_SHOT: Both D0->A and D1->A disabled (U->E->A/D, then A->D, no returns).
+    """
+    FULL = "full"
+    NO_DELAYED_FIRST = "no_delayed_first"
+    NO_TRUE_REACTIVATION = "no_true_reactivation"
+    ONE_SHOT = "one_shot"
+
+    def __str__(self):
+        return self.value, replace
 from typing import Tuple
 
 

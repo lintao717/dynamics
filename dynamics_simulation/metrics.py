@@ -83,11 +83,17 @@ class SimulationMetrics:
     h_mean_ts: np.ndarray = field(default_factory=lambda: np.array([]))
     f_mean_ts: np.ndarray = field(default_factory=lambda: np.array([]))
     public_bias_ts: np.ndarray = field(default_factory=lambda: np.array([]))
-    # V1.3: per-macro-step flow time series
+    # V1.5.1: per-macro-step transition flow time series
+    n_U_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    U_to_E_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    E_to_A_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    E_to_D_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    A_to_D_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    D0_to_A_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    D1_to_A_ts: np.ndarray = field(default_factory=lambda: np.array([]))
     actor_flow_ts: np.ndarray = field(default_factory=lambda: np.array([]))
     new_activation_ts: np.ndarray = field(default_factory=lambda: np.array([]))
     reactivation_ts: np.ndarray = field(default_factory=lambda: np.array([]))
-    exposure_flow_ts: np.ndarray = field(default_factory=lambda: np.array([]))
 
     # Summary statistics
     peak_A: int = 0
@@ -133,10 +139,15 @@ class SimulationMetrics:
                 "h_mean": self.h_mean_ts.tolist(),
                 "f_mean": self.f_mean_ts.tolist(),
                 "public_bias": self.public_bias_ts.tolist(),
+                "U_to_E": self.U_to_E_ts.tolist(),
+                "E_to_A": self.E_to_A_ts.tolist(),
+                "E_to_D": self.E_to_D_ts.tolist(),
+                "A_to_D": self.A_to_D_ts.tolist(),
+                "D0_to_A": self.D0_to_A_ts.tolist(),
+                "D1_to_A": self.D1_to_A_ts.tolist(),
                 "actor_flow": self.actor_flow_ts.tolist(),
                 "new_activation": self.new_activation_ts.tolist(),
                 "reactivation": self.reactivation_ts.tolist(),
-                "exposure_flow": self.exposure_flow_ts.tolist(),
             },
         }
 
@@ -154,10 +165,13 @@ class MetricsCollector:
         self._total_A_to_D: int = 0
         self._total_D0_to_A: int = 0
         self._total_D1_to_A: int = 0
-        # V1.3: per-macro-step flow time series
-        self._new_activation_per_step: list[int] = []
-        self._reactivation_per_step: list[int] = []
-        self._exposure_per_step: list[int] = []
+        # V1.5.1: per-macro-step flow time series (all 6 transition types)
+        self._U_to_E_ts: list[int] = []
+        self._E_to_A_ts: list[int] = []
+        self._E_to_D_ts: list[int] = []
+        self._A_to_D_ts: list[int] = []
+        self._D0_to_A_ts: list[int] = []
+        self._D1_to_A_ts: list[int] = []
 
     def record(
         self,
@@ -189,14 +203,14 @@ class MetricsCollector:
             self._total_D0_to_A += events.D0_to_A
             self._total_D1_to_A += events.D1_to_A
 
-        # V1.3: record per-step flow (only when snapshot=True)
+        # V1.5.1: record per-step flow for ALL transition types
         if snapshot and events is not None:
-            new_act = events.E_to_A  # new activations this macro-step
-            react = events.D0_to_A + events.D1_to_A  # reactivations
-            exposed = events.U_to_E
-            self._new_activation_per_step.append(new_act)
-            self._reactivation_per_step.append(react)
-            self._exposure_per_step.append(exposed)
+            self._U_to_E_ts.append(events.U_to_E)
+            self._E_to_A_ts.append(events.E_to_A)
+            self._E_to_D_ts.append(events.E_to_D)
+            self._A_to_D_ts.append(events.A_to_D)
+            self._D0_to_A_ts.append(events.D0_to_A)
+            self._D1_to_A_ts.append(events.D1_to_A)
 
         if not snapshot:
             self._prev_z = state.z.copy()
@@ -302,20 +316,25 @@ class MetricsCollector:
         metrics.f_mean_ts = np.array([s["f_mean"] for s in self._snapshots])
         metrics.public_bias_ts = np.array([s["public_bias"] for s in self._snapshots])
 
-        # ── V1.3: flow time series ──
-        # Pad with zeros if shorter (initial non-snapshot calls)
-        n_snaps = len(self._snapshots)
+        # ── V1.5.1: transition flow time series ──
         def _pad(arr_list, target_len):
-            if len(arr_list) < target_len:
-                return np.array([0] * (target_len - len(arr_list)) + arr_list,
-                               dtype=np.int32)
-            return np.array(arr_list, dtype=np.int32)
-        metrics.actor_flow_ts = _pad(
-            [a + r for a, r in zip(self._new_activation_per_step,
-                                    self._reactivation_per_step)], n_snaps)
-        metrics.new_activation_ts = _pad(self._new_activation_per_step, n_snaps)
-        metrics.reactivation_ts = _pad(self._reactivation_per_step, n_snaps)
-        metrics.exposure_flow_ts = _pad(self._exposure_per_step, n_snaps)
+            n = len(arr_list)
+            if n == 0: return np.zeros(target_len, dtype=np.int32)
+            if n < target_len:
+                return np.array([0]*(target_len-n) + arr_list, dtype=np.int32)
+            return np.array(arr_list[:target_len], dtype=np.int32)
+
+        n_snaps = len(self._snapshots)
+        metrics.n_U_ts = metrics.n_U_ts  # already populated above
+        metrics.U_to_E_ts = _pad(self._U_to_E_ts, n_snaps)
+        metrics.E_to_A_ts = _pad(self._E_to_A_ts, n_snaps)
+        metrics.E_to_D_ts = _pad(self._E_to_D_ts, n_snaps)
+        metrics.A_to_D_ts = _pad(self._A_to_D_ts, n_snaps)
+        metrics.D0_to_A_ts = _pad(self._D0_to_A_ts, n_snaps)
+        metrics.D1_to_A_ts = _pad(self._D1_to_A_ts, n_snaps)
+        metrics.actor_flow_ts = metrics.E_to_A_ts + metrics.D1_to_A_ts
+        metrics.new_activation_ts = metrics.E_to_A_ts.copy()
+        metrics.reactivation_ts = metrics.D1_to_A_ts.copy()
 
         # ── Summary statistics ──
         metrics.peak_A = int(metrics.n_A_ts.max())

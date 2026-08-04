@@ -16,12 +16,19 @@ class ReplayRun:
     steps: np.ndarray
     active_count: np.ndarray
     cumulative_users: np.ndarray
-    n_A_ts: np.ndarray
-    n_E_ts: np.ndarray
-    n_D_ts: np.ndarray
-    o_mean_ts: np.ndarray
-    h_mean_ts: np.ndarray
-    # V1.3: flow metrics
+    n_U_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    n_A_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    n_E_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    n_D_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    o_mean_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    h_mean_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    # V1.5.1: transition flow time series
+    U_to_E_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    E_to_A_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    E_to_D_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    A_to_D_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    D0_to_A_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    D1_to_A_ts: np.ndarray = field(default_factory=lambda: np.array([]))
     actor_flow_ts: np.ndarray = field(default_factory=lambda: np.array([]))
     new_activation_ts: np.ndarray = field(default_factory=lambda: np.array([]))
     reactivation_ts: np.ndarray = field(default_factory=lambda: np.array([]))
