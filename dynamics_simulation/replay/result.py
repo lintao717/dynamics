@@ -21,6 +21,11 @@ class ReplayRun:
     n_E_ts: np.ndarray = field(default_factory=lambda: np.array([]))
     n_D_ts: np.ndarray = field(default_factory=lambda: np.array([]))
     o_mean_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    o_std_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    o_polarization_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    o_hat_mean_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    o_hat_std_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    public_bias_ts: np.ndarray = field(default_factory=lambda: np.array([]))
     h_mean_ts: np.ndarray = field(default_factory=lambda: np.array([]))
     # V1.5.1: transition flow time series
     U_to_E_ts: np.ndarray = field(default_factory=lambda: np.array([]))

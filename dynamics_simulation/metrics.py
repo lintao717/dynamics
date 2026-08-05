@@ -80,6 +80,8 @@ class SimulationMetrics:
     o_mean_ts: np.ndarray = field(default_factory=lambda: np.array([]))
     o_std_ts: np.ndarray = field(default_factory=lambda: np.array([]))
     o_polarization_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    o_hat_mean_ts: np.ndarray = field(default_factory=lambda: np.array([]))
+    o_hat_std_ts: np.ndarray = field(default_factory=lambda: np.array([]))
     h_mean_ts: np.ndarray = field(default_factory=lambda: np.array([]))
     f_mean_ts: np.ndarray = field(default_factory=lambda: np.array([]))
     public_bias_ts: np.ndarray = field(default_factory=lambda: np.array([]))
@@ -139,6 +141,8 @@ class SimulationMetrics:
                 "h_mean": self.h_mean_ts.tolist(),
                 "f_mean": self.f_mean_ts.tolist(),
                 "public_bias": self.public_bias_ts.tolist(),
+                "o_hat_mean": self.o_hat_mean_ts.tolist(),
+                "o_hat_std": self.o_hat_std_ts.tolist(),
                 "U_to_E": self.U_to_E_ts.tolist(),
                 "E_to_A": self.E_to_A_ts.tolist(),
                 "E_to_D": self.E_to_D_ts.tolist(),
@@ -315,6 +319,11 @@ class MetricsCollector:
         metrics.h_mean_ts = np.array([s["h_mean"] for s in self._snapshots])
         metrics.f_mean_ts = np.array([s["f_mean"] for s in self._snapshots])
         metrics.public_bias_ts = np.array([s["public_bias"] for s in self._snapshots])
+        # V2.0-C: public expression time series
+        o_hat_vals = [s.get("o_hat_mean", 0.0) for s in self._snapshots]
+        metrics.o_hat_mean_ts = np.array([v if not (isinstance(v, float) and np.isnan(v)) else 0.0 for v in o_hat_vals])
+        o_hat_std_vals = [s.get("o_hat_std", 0.0) for s in self._snapshots]
+        metrics.o_hat_std_ts = np.array([v if not (isinstance(v, float) and np.isnan(v)) else 0.0 for v in o_hat_std_vals])
 
         # ── V1.5.1: transition flow time series ──
         def _pad(arr_list, target_len):
