@@ -1,0 +1,36 @@
+# Propagation Baseline v1 — Frozen 2026-08-05
+# DO NOT tune further parameters. Bug fixes only.
+
+model_version: propagation-baseline-v1
+reactivation_mode: one_shot
+population_mode: oracle_cohort
+step_hours: 24.0
+micro_steps: 1
+
+# Parameter ranges from V1.7R.3 wide-grid search
+# These are search bounds, NOT final fitted values.
+# Global parameters (from 5-fold CV): alpha_0 ~ 1.0, gamma_0 ~ 6.0
+parameter_grid:
+  beta_M: [0.3, 0.6, 0.9, 1.5, 2.0]
+  alpha_0: [-2.0, 0.0, 1.0, 2.0]
+  gamma_0: [0.0, 3.0, 6.0, 9.0, 12.0]
+
+# Fit configuration
+fit_seeds: [11, 23, 37, 53, 71]
+forecast_seeds: [101, 103, 107, 109, 113, 127, 131, 137, 139, 149,
+                 211, 223, 227, 229, 233, 239, 241, 251, 257, 263]
+
+# Behavioral emission (V1.7R.4)
+emission:
+  active_during_step: was_A_at_start OR became_A_during_step
+  first_actor: prior_m_0 AND now_activated
+  repeat_actor: active_during AND NOT first_actor
+  invariant: active = first + repeat
+
+# Known limitations
+limitations:
+  - Observer still uses snapshot-level approximation
+  - No user-level action event simulation
+  - G_s and G_o unused (broadcast mode)
+  - Opinion dynamics not calibrated
+  - LLM not integrated
