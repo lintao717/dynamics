@@ -5,7 +5,7 @@ Missing stance/arousal is always NaN with mask=False, never 0 with mask=True.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Mapping
 
 import numpy as np
@@ -33,6 +33,11 @@ class ObservedTrajectory:
     stance_mean: np.ndarray    # NaN where unavailable
     arousal_mean: np.ndarray   # NaN where unavailable
     observation_masks: Mapping[str, np.ndarray]
+    # V1.6.1: actor decomposition
+    first_actor_count: np.ndarray = field(default_factory=lambda: np.array([]))
+    """Users whose first-ever interaction occurs in this step."""
+    repeat_actor_count: np.ndarray = field(default_factory=lambda: np.array([]))
+    """Users who already interacted in a previous step and interact again."""
 
 
 def build_observed_trajectory(
@@ -94,6 +99,18 @@ def build_observed_trajectory(
         cum[t] = running
     cumulative_users = cum
 
+    # V1.6.1: first_actor and repeat_actor decomposition
+    first_actor = np.zeros(Tp1, dtype=np.int32)
+    repeat_actor = np.zeros(Tp1, dtype=np.int32)
+    ever_seen = np.zeros(N, dtype=bool)
+    for t in range(Tp1):
+        step_new = active_mask[t] & ~ever_seen
+        step_repeat = active_mask[t] & ever_seen
+        first_actor[t] = int(step_new.sum())
+        repeat_actor[t] = int(step_repeat.sum())
+        ever_seen = ever_seen | active_mask[t]
+    # Invariant: active_count[t] == first_actor[t] + repeat_actor[t]
+
     # Stance and arousal: NaN because no precomputed signals
     stance_mean = np.full(Tp1, np.nan, dtype=np.float64)
     arousal_mean = np.full(Tp1, np.nan, dtype=np.float64)
@@ -110,8 +127,10 @@ def build_observed_trajectory(
         "repost_count": is_data_step.copy(),
         "interaction_count": is_data_step.copy(),
         "cumulative_users": is_data_step.copy(),
-        "stance": np.zeros(Tp1, dtype=bool),   # never observed
-        "arousal": np.zeros(Tp1, dtype=bool),  # never observed
+        "first_actor_count": is_data_step.copy(),
+        "repeat_actor_count": is_data_step.copy(),
+        "stance": np.zeros(Tp1, dtype=bool),
+        "arousal": np.zeros(Tp1, dtype=bool),
     }
 
     return ObservedTrajectory(
@@ -125,4 +144,6 @@ def build_observed_trajectory(
         stance_mean=stance_mean,
         arousal_mean=arousal_mean,
         observation_masks=observation_masks,
+        first_actor_count=first_actor,
+        repeat_actor_count=repeat_actor,
     )
