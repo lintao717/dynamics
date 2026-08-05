@@ -60,6 +60,7 @@ class EventHistory:
             raise ValueError(f"cutoff_step must be >= 0, got {cutoff_step}")
 
         from datetime import timedelta
+        # cutoff_time = end of cutoff window (window [0, cutoff_step] inclusive)
         cutoff_time = case.root.timestamp + timedelta(
             hours=step_hours * (cutoff_step + 1))
 
@@ -166,8 +167,7 @@ class ForecastTarget:
                        dtype=np.int32)
 
         # Users first seen after cutoff
-        pre_cutoff_users = set()
-        seen = {case.root.user_id}
+        pre_cutoff_users = {case.root.user_id}  # root is always known at t=0
         for ix in case.interactions:
             if grid.step_of(ix.timestamp) <= cutoff_step:
                 pre_cutoff_users.add(ix.user_id)

@@ -1,0 +1,738 @@
+[
+  {
+    "pid": "pair_06",
+    "label": "fake",
+    "note": "fake-good-V152",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 1,
+    "horizon_steps": 3,
+    "population_mode": "oracle_cohort",
+    "beta_M": 1.0,
+    "obs_future": [
+      5.0,
+      2.0,
+      1.0
+    ],
+    "fc_active": [
+      79.0,
+      36.0,
+      10.0
+    ],
+    "fc_first": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      78.0,
+      36.0,
+      10.0
+    ],
+    "zero_rmsle": 1.2777,
+    "bl_rmsle": 3.9904,
+    "fc_rmsle": 2.3042,
+    "is_zero": false,
+    "peak_ratio": 15.8,
+    "traces": {
+      "n_U": [
+        9.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_E": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        173.0,
+        79.0,
+        36.0,
+        10.0
+      ],
+      "n_D": [
+        1.0,
+        102.0,
+        147.0,
+        173.0
+      ],
+      "U_to_E": [
+        0.0,
+        9.0,
+        0.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        7.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        95.0,
+        50.0,
+        22.0
+      ],
+      "D0_to_A": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "D1_to_A": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "git_sha": "5881d3d4a56a1ee3e6d8e9331ec3ace2d977511d"
+  },
+  {
+    "pid": "pair_06",
+    "label": "fake",
+    "note": "fake-good-V152",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 2,
+    "horizon_steps": 2,
+    "population_mode": "oracle_cohort",
+    "beta_M": 1.0,
+    "obs_future": [
+      2.0,
+      1.0
+    ],
+    "fc_active": [
+      2.0,
+      1.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      2.0,
+      1.0
+    ],
+    "zero_rmsle": 0.9185,
+    "bl_rmsle": 0.9185,
+    "fc_rmsle": 0.0,
+    "is_zero": false,
+    "peak_ratio": 1.0,
+    "traces": {
+      "n_U": [
+        4.0,
+        2.0,
+        0.0
+      ],
+      "n_E": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        5.0,
+        2.0,
+        1.0
+      ],
+      "n_D": [
+        174.0,
+        179.0,
+        182.0
+      ],
+      "U_to_E": [
+        0.0,
+        2.0,
+        2.0
+      ],
+      "E_to_A": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        2.0,
+        2.0
+      ],
+      "A_to_D": [
+        0.0,
+        3.0,
+        1.0
+      ],
+      "D0_to_A": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "D1_to_A": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "git_sha": "5881d3d4a56a1ee3e6d8e9331ec3ace2d977511d"
+  },
+  {
+    "pid": "pair_09",
+    "label": "fake",
+    "note": "fake-fail-V152",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 1,
+    "horizon_steps": 3,
+    "population_mode": "oracle_cohort",
+    "beta_M": 0.9,
+    "obs_future": [
+      2.0,
+      0.0,
+      0.0
+    ],
+    "fc_active": [
+      67.0,
+      24.0,
+      10.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      67.0,
+      24.0,
+      10.0
+    ],
+    "zero_rmsle": 0.6343,
+    "bl_rmsle": 4.5462,
+    "fc_rmsle": 2.9355,
+    "is_zero": false,
+    "peak_ratio": 33.5,
+    "traces": {
+      "n_U": [
+        4.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "n_E": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        131.0,
+        67.0,
+        24.0,
+        10.0
+      ],
+      "n_D": [
+        1.0,
+        67.0,
+        112.0,
+        126.0
+      ],
+      "U_to_E": [
+        0.0,
+        3.0,
+        1.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        3.0,
+        1.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        64.0,
+        45.0,
+        14.0
+      ],
+      "D0_to_A": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "D1_to_A": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "git_sha": "5881d3d4a56a1ee3e6d8e9331ec3ace2d977511d"
+  },
+  {
+    "pid": "pair_09",
+    "label": "fake",
+    "note": "fake-fail-V152",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 2,
+    "horizon_steps": 2,
+    "population_mode": "oracle_cohort",
+    "beta_M": 0.9,
+    "obs_future": [
+      0.0,
+      0.0
+    ],
+    "fc_active": [
+      1.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      1.0,
+      0.0
+    ],
+    "zero_rmsle": 0.0,
+    "bl_rmsle": 1.7092,
+    "fc_rmsle": 0.4901,
+    "is_zero": false,
+    "peak_ratio": 1.0,
+    "traces": {
+      "n_U": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "n_E": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        2.0,
+        1.0,
+        0.0
+      ],
+      "n_D": [
+        132.0,
+        134.0,
+        136.0
+      ],
+      "U_to_E": [
+        0.0,
+        2.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        2.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        1.0,
+        1.0
+      ],
+      "D0_to_A": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "D1_to_A": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "git_sha": "5881d3d4a56a1ee3e6d8e9331ec3ace2d977511d"
+  },
+  {
+    "pid": "pair_05",
+    "label": "real",
+    "note": "real-rapid-decay",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 1,
+    "horizon_steps": 3,
+    "population_mode": "oracle_cohort",
+    "beta_M": 1.0,
+    "obs_future": [
+      3.0,
+      5.0,
+      0.0
+    ],
+    "fc_active": [
+      146.0,
+      59.0,
+      21.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      144.0,
+      59.0,
+      21.0
+    ],
+    "zero_rmsle": 1.308,
+    "bl_rmsle": 4.7772,
+    "fc_rmsle": 3.0467,
+    "is_zero": false,
+    "peak_ratio": 29.2,
+    "traces": {
+      "n_U": [
+        7.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "n_E": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        321.0,
+        146.0,
+        59.0,
+        21.0
+      ],
+      "n_D": [
+        16.0,
+        197.0,
+        284.0,
+        323.0
+      ],
+      "U_to_E": [
+        0.0,
+        6.0,
+        0.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        6.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        177.0,
+        84.0,
+        38.0
+      ],
+      "D0_to_A": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "D1_to_A": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "git_sha": "5881d3d4a56a1ee3e6d8e9331ec3ace2d977511d"
+  },
+  {
+    "pid": "pair_05",
+    "label": "real",
+    "note": "real-rapid-decay",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 2,
+    "horizon_steps": 2,
+    "population_mode": "oracle_cohort",
+    "beta_M": 0.9,
+    "obs_future": [
+      5.0,
+      0.0
+    ],
+    "fc_active": [
+      2.0,
+      1.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      2.0,
+      1.0
+    ],
+    "zero_rmsle": 1.267,
+    "bl_rmsle": 1.0213,
+    "fc_rmsle": 0.6931,
+    "is_zero": false,
+    "peak_ratio": 0.4,
+    "traces": {
+      "n_U": [
+        4.0,
+        2.0,
+        1.0
+      ],
+      "n_E": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        3.0,
+        2.0,
+        1.0
+      ],
+      "n_D": [
+        337.0,
+        341.0,
+        342.0
+      ],
+      "U_to_E": [
+        0.0,
+        2.0,
+        1.0
+      ],
+      "E_to_A": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        2.0,
+        1.0
+      ],
+      "A_to_D": [
+        0.0,
+        1.0,
+        1.0
+      ],
+      "D0_to_A": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "D1_to_A": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "git_sha": "5881d3d4a56a1ee3e6d8e9331ec3ace2d977511d"
+  },
+  {
+    "pid": "pair_03",
+    "label": "real",
+    "note": "real-long-tail",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 1,
+    "horizon_steps": 3,
+    "population_mode": "oracle_cohort",
+    "beta_M": 1.0,
+    "obs_future": [
+      6.0,
+      7.0,
+      4.0
+    ],
+    "fc_active": [
+      204.0,
+      73.0,
+      24.0
+    ],
+    "fc_first": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      202.0,
+      73.0,
+      24.0
+    ],
+    "zero_rmsle": 1.8886,
+    "bl_rmsle": 4.1619,
+    "fc_rmsle": 2.5129,
+    "is_zero": false,
+    "peak_ratio": 29.1429,
+    "traces": {
+      "n_U": [
+        16.0,
+        3.0,
+        1.0,
+        1.0
+      ],
+      "n_E": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        417.0,
+        204.0,
+        73.0,
+        24.0
+      ],
+      "n_D": [
+        1.0,
+        228.0,
+        360.0,
+        410.0
+      ],
+      "U_to_E": [
+        0.0,
+        13.0,
+        2.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        12.0,
+        2.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        215.0,
+        132.0,
+        47.0
+      ],
+      "D0_to_A": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "D1_to_A": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "git_sha": "5881d3d4a56a1ee3e6d8e9331ec3ace2d977511d"
+  },
+  {
+    "pid": "pair_03",
+    "label": "real",
+    "note": "real-long-tail",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 2,
+    "horizon_steps": 2,
+    "population_mode": "oracle_cohort",
+    "beta_M": 1.0,
+    "obs_future": [
+      7.0,
+      4.0
+    ],
+    "fc_active": [
+      1.0,
+      1.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      1.0,
+      0.0
+    ],
+    "zero_rmsle": 1.8594,
+    "bl_rmsle": 0.256,
+    "fc_rmsle": 1.175,
+    "is_zero": false,
+    "peak_ratio": 0.1429,
+    "traces": {
+      "n_U": [
+        11.0,
+        3.0,
+        1.0
+      ],
+      "n_E": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        6.0,
+        1.0,
+        1.0
+      ],
+      "n_D": [
+        417.0,
+        429.0,
+        432.0
+      ],
+      "U_to_E": [
+        0.0,
+        8.0,
+        3.0
+      ],
+      "E_to_A": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        7.0,
+        2.0
+      ],
+      "A_to_D": [
+        0.0,
+        5.0,
+        1.0
+      ],
+      "D0_to_A": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "D1_to_A": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "git_sha": "5881d3d4a56a1ee3e6d8e9331ec3ace2d977511d"
+  }
+]
