@@ -1,0 +1,402 @@
+[
+  {
+    "pid": "bk_01",
+    "label": "fake",
+    "cutoff_h": 48,
+    "bM": 1.5,
+    "fc_rmsle": 0.75,
+    "bl_best": 0.4002,
+    "win": false,
+    "peak_ratio": 2.0,
+    "is_zero_tail": "False",
+    "obs_fut": [
+      0,
+      1,
+      0
+    ],
+    "fc_fut": [
+      2.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "pid": "bk_01",
+    "label": "fake",
+    "cutoff_h": 72,
+    "bM": 1.5,
+    "fc_rmsle": 0.2867,
+    "bl_best": 0.4901,
+    "win": true,
+    "peak_ratio": 2.0,
+    "is_zero_tail": "False",
+    "obs_fut": [
+      1,
+      0
+    ],
+    "fc_fut": [
+      2.0,
+      0.0
+    ]
+  },
+  {
+    "pid": "bk_01",
+    "label": "real",
+    "cutoff_h": 48,
+    "bM": 1.5,
+    "fc_rmsle": 0.8501,
+    "bl_best": 0.6931,
+    "win": false,
+    "peak_ratio": 5.0,
+    "is_zero_tail": "False",
+    "obs_fut": [
+      1,
+      1,
+      1
+    ],
+    "fc_fut": [
+      5.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "pid": "bk_01",
+    "label": "real",
+    "cutoff_h": 72,
+    "bM": 1.5,
+    "fc_rmsle": 0.9185,
+    "bl_best": 0.0,
+    "win": false,
+    "peak_ratio": 5.0,
+    "is_zero_tail": "False",
+    "obs_fut": [
+      1,
+      1
+    ],
+    "fc_fut": [
+      5.0,
+      0.0
+    ]
+  },
+  {
+    "pid": "bk_02",
+    "label": "fake",
+    "cutoff_h": 48,
+    "bM": 0.9,
+    "fc_rmsle": 0.4636,
+    "bl_best": 0.566,
+    "win": true,
+    "peak_ratio": 2.0,
+    "is_zero_tail": "False",
+    "obs_fut": [
+      1,
+      1,
+      0
+    ],
+    "fc_fut": [
+      2.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "pid": "bk_02",
+    "label": "fake",
+    "cutoff_h": 72,
+    "bM": 0.9,
+    "fc_rmsle": 0.0,
+    "bl_best": 0.4901,
+    "win": true,
+    "peak_ratio": 1.0,
+    "is_zero_tail": "False",
+    "obs_fut": [
+      1,
+      0
+    ],
+    "fc_fut": [
+      1.0,
+      0.0
+    ]
+  },
+  {
+    "pid": "bk_02",
+    "label": "real",
+    "cutoff_h": 48,
+    "bM": 1.5,
+    "fc_rmsle": 0.4002,
+    "bl_best": 0.4002,
+    "win": false,
+    "peak_ratio": 3.0,
+    "is_zero_tail": "False",
+    "obs_fut": [
+      1,
+      0,
+      0
+    ],
+    "fc_fut": [
+      3.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "pid": "bk_02",
+    "label": "real",
+    "cutoff_h": 72,
+    "bM": 1.5,
+    "fc_rmsle": 0.7768,
+    "bl_best": 0.0,
+    "win": false,
+    "peak_ratio": 2.0,
+    "is_zero_tail": "True",
+    "obs_fut": [
+      0,
+      0
+    ],
+    "fc_fut": [
+      2.0,
+      0.0
+    ]
+  },
+  {
+    "pid": "bk_03",
+    "label": "fake",
+    "cutoff_h": 48,
+    "bM": 0.9,
+    "fc_rmsle": 0.566,
+    "bl_best": 0.9292,
+    "win": true,
+    "peak_ratio": 1.0,
+    "is_zero_tail": "False",
+    "obs_fut": [
+      4,
+      0,
+      0
+    ],
+    "fc_fut": [
+      4.0,
+      1.0,
+      1.0
+    ]
+  },
+  {
+    "pid": "bk_03",
+    "label": "fake",
+    "cutoff_h": 72,
+    "bM": 0.9,
+    "fc_rmsle": 0.4901,
+    "bl_best": 0.0,
+    "win": false,
+    "peak_ratio": 1.0,
+    "is_zero_tail": "True",
+    "obs_fut": [
+      0,
+      0
+    ],
+    "fc_fut": [
+      0.0,
+      1.0
+    ]
+  },
+  {
+    "pid": "bk_03",
+    "label": "real",
+    "cutoff_h": 48,
+    "bM": 1.5,
+    "fc_rmsle": 0.8948,
+    "bl_best": 0.7554,
+    "win": false,
+    "peak_ratio": 1.6667,
+    "is_zero_tail": "False",
+    "obs_fut": [
+      2,
+      3,
+      0
+    ],
+    "fc_fut": [
+      5.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "pid": "bk_03",
+    "label": "real",
+    "cutoff_h": 72,
+    "bM": 1.5,
+    "fc_rmsle": 0.0,
+    "bl_best": 0.5286,
+    "win": true,
+    "peak_ratio": 1.0,
+    "is_zero_tail": "False",
+    "obs_fut": [
+      3,
+      0
+    ],
+    "fc_fut": [
+      3.0,
+      0.0
+    ]
+  },
+  {
+    "pid": "bk_04",
+    "label": "fake",
+    "cutoff_h": 48,
+    "bM": 0.6,
+    "fc_rmsle": 0.789,
+    "bl_best": 1.9371,
+    "win": true,
+    "peak_ratio": 0.4568,
+    "is_zero_tail": "False",
+    "obs_fut": [
+      81,
+      9,
+      2
+    ],
+    "fc_fut": [
+      37.0,
+      12.0,
+      8.0
+    ]
+  },
+  {
+    "pid": "bk_04",
+    "label": "fake",
+    "cutoff_h": 72,
+    "bM": 0.6,
+    "fc_rmsle": 0.3612,
+    "bl_best": 0.6069,
+    "win": true,
+    "peak_ratio": 0.5556,
+    "is_zero_tail": "False",
+    "obs_fut": [
+      9,
+      2
+    ],
+    "fc_fut": [
+      5.0,
+      2.0
+    ]
+  },
+  {
+    "pid": "bk_04",
+    "label": "real",
+    "cutoff_h": 48,
+    "bM": 1.5,
+    "fc_rmsle": 1.8655,
+    "bl_best": 0.7319,
+    "win": false,
+    "peak_ratio": 1.4286,
+    "is_zero_tail": "False",
+    "obs_fut": [
+      1,
+      5,
+      7
+    ],
+    "fc_fut": [
+      10.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "pid": "bk_04",
+    "label": "real",
+    "cutoff_h": 72,
+    "bM": 1.5,
+    "fc_rmsle": 0.8153,
+    "bl_best": 1.2508,
+    "win": true,
+    "peak_ratio": 1.4286,
+    "is_zero_tail": "False",
+    "obs_fut": [
+      5,
+      7
+    ],
+    "fc_fut": [
+      10.0,
+      2.0
+    ]
+  },
+  {
+    "pid": "bk_05",
+    "label": "fake",
+    "cutoff_h": 48,
+    "bM": 0.9,
+    "fc_rmsle": 0.5898,
+    "bl_best": 0.4543,
+    "win": false,
+    "peak_ratio": 0.6667,
+    "is_zero_tail": "False",
+    "obs_fut": [
+      3,
+      3,
+      1
+    ],
+    "fc_fut": [
+      2.0,
+      1.0,
+      0.0
+    ]
+  },
+  {
+    "pid": "bk_05",
+    "label": "fake",
+    "cutoff_h": 72,
+    "bM": 0.6,
+    "fc_rmsle": 0.6931,
+    "bl_best": 0.4901,
+    "win": false,
+    "peak_ratio": 0.3333,
+    "is_zero_tail": "False",
+    "obs_fut": [
+      3,
+      1
+    ],
+    "fc_fut": [
+      1.0,
+      0.0
+    ]
+  },
+  {
+    "pid": "bk_05",
+    "label": "real",
+    "cutoff_h": 48,
+    "bM": 1.5,
+    "fc_rmsle": 0.75,
+    "bl_best": 0.897,
+    "win": true,
+    "peak_ratio": 2.5,
+    "is_zero_tail": "False",
+    "obs_fut": [
+      2,
+      2,
+      0
+    ],
+    "fc_fut": [
+      5.0,
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "pid": "bk_05",
+    "label": "real",
+    "cutoff_h": 72,
+    "bM": 0.9,
+    "fc_rmsle": 0.4901,
+    "bl_best": 0.3552,
+    "win": false,
+    "peak_ratio": 1.0,
+    "is_zero_tail": "False",
+    "obs_fut": [
+      2,
+      0
+    ],
+    "fc_fut": [
+      2.0,
+      1.0
+    ]
+  }
+]
