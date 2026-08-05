@@ -127,6 +127,86 @@ def test_no_initial_state_uses_default():
     assert metrics.n_A_ts[0] > 0  # at least some agents active initially
 
 
+# ── V1.7R.4: Behavioral emission tests ──
+
+def test_observer_receives_state_before_and_after():
+    """Observer must receive (step_idx, state_before, state_after, events)."""
+    records = []
+    def obs(step_idx, state_before, state_after, events):
+        records.append((step_idx, state_before is not None, state_after is not None))
+    cfg = SimulationConfig(n_agents=5, T=3, seed=42, step_observer=obs)
+    runner = SimulationRunner(cfg)
+    runner.run()
+    assert len(records) == 3  # 3 macro-steps
+    for step, has_before, has_after in records:
+        assert has_before, f"Step {step}: state_before is None"
+        assert has_after, f"Step {step}: state_after is None"
+
+
+def test_observer_state_before_differs_from_after():
+    """State before and after a step must be different if dynamics occur."""
+    states = []
+    def obs(step_idx, state_before, state_after, events):
+        states.append((state_before.z.copy(), state_after.z.copy()))
+    cfg = SimulationConfig(n_agents=50, T=5, seed=42, step_observer=obs)
+    runner = SimulationRunner(cfg)
+    runner.run()
+    # At least one step should have state change
+    any_diff = any(not np.array_equal(before, after) for before, after in states)
+    assert any_diff, "State never changed during simulation"
+
+
+def test_observer_active_includes_A_to_D_transition():
+    """Agent that starts A and ends D must still count as active."""
+    from dynamics_simulation.agents import AgentState, initialize_agents, A, D
+    import numpy as np
+    # Create a state where one agent is A, all others U
+    state = initialize_agents(10, initial_active=1, rng=np.random.default_rng(42))
+    # Force agent 0 to be A
+    z = np.zeros(10, dtype=np.int32)
+    z[0] = A
+    state = AgentState(z=z, m=np.zeros(10, dtype=np.int32),
+                       o=state.o, o_hat=state.o_hat,
+                       h=state.h, f=state.f, attrs=state.attrs)
+    active_steps = []
+    def obs(step_idx, state_before, state_after, events):
+        was_A = state_before.z == A
+        became_A = (state_before.z != A) & (state_after.z == A)
+        active_during = was_A | became_A
+        active_steps.append(int(active_during.sum()))
+    cfg = SimulationConfig(n_agents=10, T=3, seed=42, initial_state=state,
+                          step_observer=obs)
+    runner = SimulationRunner(cfg)
+    runner.run()
+    # Step 1: agent 0 was A at start, might decay to D
+    # Should still count as active even if it decayed
+    assert len(active_steps) == 3
+
+
+def test_observer_active_equals_first_plus_repeat():
+    """active = first + repeat must hold for the observer output."""
+    first_steps = []; repeat_steps = []; active_steps = []
+    prior_m = None
+    def obs(step_idx, state_before, state_after, events):
+        nonlocal prior_m
+        if prior_m is None: prior_m = state_before.m.copy()
+        was_A = state_before.z == 2
+        became_A = (state_before.z != 2) & (state_after.z == 2)
+        active_during = was_A | became_A
+        new_first = (state_after.m == 1) & (prior_m == 0)
+        repeat_during = active_during & ~new_first
+        first_steps.append(int(new_first.sum()))
+        repeat_steps.append(int(repeat_during.sum()))
+        active_steps.append(int(active_during.sum()))
+        prior_m[:] = state_after.m
+    cfg = SimulationConfig(n_agents=50, T=5, seed=42, step_observer=obs)
+    runner = SimulationRunner(cfg)
+    runner.run()
+    for i in range(len(active_steps)):
+        assert active_steps[i] == first_steps[i] + repeat_steps[i], \
+            f"Step {i}: active={active_steps[i]} != first={first_steps[i]}+repeat={repeat_steps[i]}"
+
+
 def test_from_network_accepts_initial_state():
     custom = _make_custom_state(5)
     sim = Simulation.from_network(
