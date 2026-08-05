@@ -229,7 +229,7 @@ def main():
               f"fc_firstR={r['fc_first_rmsle']:.4f} fc_repeatR={r['fc_repeat_rmsle']:.4f}")
 
     save_path = OUT / "v17r3_sentinel_actor_flow.json"
-    save_path.write_text(json.dumps(all_results, indent=2))
+    save_path.write_text(json.dumps(all_results, indent=2, default=str))
     print(f"\nSaved: {save_path}")
 
 
