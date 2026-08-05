@@ -7,12 +7,12 @@
     "horizon_h": 72,
     "cutoff_step": 2,
     "horizon_steps": 3,
-    "beta_M": 0.9,
+    "beta_M": 1.5,
     "alpha_0": 1.0,
-    "gamma_0": 4.0,
+    "gamma_0": 3.0,
     "bounds": {
-      "bM_at_upper": true,
-      "a0_at_upper": true,
+      "bM_at_upper": false,
+      "a0_at_upper": false,
       "g0_at_upper": false
     },
     "is_zero_tail": "False",
@@ -32,13 +32,13 @@
       0
     ],
     "fc_active": [
-      2.0,
-      1.0,
+      4.0,
+      0.0,
       0.0
     ],
     "fc_first": [
-      2.0,
-      1.0,
+      4.0,
+      0.0,
       0.0
     ],
     "fc_repeat": [
@@ -49,41 +49,41 @@
     "bl_zero": 0.75,
     "bl_best": 0.75,
     "bl_name": "zero",
-    "fc_rmsle": 0.0,
-    "fc_first_rmsle": 0.0,
+    "fc_rmsle": 0.4971,
+    "fc_first_rmsle": 0.4971,
     "fc_repeat_rmsle": 0.0,
     "win": true,
     "win_type": "active_beat_baseline",
-    "peak_ratio": 1.0,
+    "peak_ratio": 2.0,
     "traces": {
       "n_U": [
         4.0,
-        2.0,
+        0.0,
         0.0,
         0.0
       ],
       "n_A": [
         5.0,
-        2.0,
-        1.0,
+        4.0,
+        0.0,
         0.0
       ],
       "n_D": [
         174.0,
         179.0,
-        181.0,
-        182.0
+        183.0,
+        183.0
       ],
       "U_to_E": [
         0.0,
-        2.0,
-        1.0,
+        4.0,
+        0.0,
         0.0
       ],
       "E_to_A": [
         0.0,
-        2.0,
-        1.0,
+        4.0,
+        0.0,
         0.0
       ],
       "E_to_D": [
@@ -95,8 +95,8 @@
       "A_to_D": [
         0.0,
         5.0,
-        2.0,
-        1.0
+        4.0,
+        0.0
       ]
     }
   },
@@ -110,10 +110,10 @@
     "horizon_steps": 2,
     "beta_M": 0.9,
     "alpha_0": 1.0,
-    "gamma_0": 4.0,
+    "gamma_0": 9.0,
     "bounds": {
-      "bM_at_upper": true,
-      "a0_at_upper": true,
+      "bM_at_upper": false,
+      "a0_at_upper": false,
       "g0_at_upper": false
     },
     "is_zero_tail": "False",
@@ -196,13 +196,13 @@
     "horizon_h": 72,
     "cutoff_step": 2,
     "horizon_steps": 3,
-    "beta_M": 0.9,
-    "alpha_0": 0.0,
-    "gamma_0": 5.5,
+    "beta_M": 1.5,
+    "alpha_0": 2.0,
+    "gamma_0": 6.0,
     "bounds": {
-      "bM_at_upper": true,
-      "a0_at_upper": false,
-      "g0_at_upper": true
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
     },
     "is_zero_tail": "True",
     "obs_active": [
@@ -221,12 +221,12 @@
       0
     ],
     "fc_active": [
-      0.0,
+      2.0,
       0.0,
       0.0
     ],
     "fc_first": [
-      0.0,
+      2.0,
       0.0,
       0.0
     ],
@@ -238,40 +238,40 @@
     "bl_zero": 0.0,
     "bl_best": 0.0,
     "bl_name": "zero",
-    "fc_rmsle": 0.0,
-    "fc_first_rmsle": 0.0,
+    "fc_rmsle": 0.6343,
+    "fc_first_rmsle": 0.6343,
     "fc_repeat_rmsle": 0.0,
-    "win": true,
+    "win": false,
     "win_type": "zero_tail_correct",
-    "peak_ratio": 0.0,
+    "peak_ratio": 2.0,
     "traces": {
       "n_U": [
         2.0,
-        1.0,
+        0.0,
         0.0,
         0.0
       ],
       "n_A": [
         2.0,
-        0.0,
+        2.0,
         0.0,
         0.0
       ],
       "n_D": [
         132.0,
         134.0,
-        135.0,
+        136.0,
         136.0
       ],
       "U_to_E": [
         0.0,
-        1.0,
-        1.0,
+        2.0,
+        0.0,
         0.0
       ],
       "E_to_A": [
         0.0,
-        0.0,
+        2.0,
         0.0,
         0.0
       ],
@@ -284,7 +284,7 @@
       "A_to_D": [
         0.0,
         2.0,
-        0.0,
+        2.0,
         0.0
       ]
     }
@@ -297,13 +297,13 @@
     "horizon_h": 48,
     "cutoff_step": 3,
     "horizon_steps": 2,
-    "beta_M": 0.9,
-    "alpha_0": 0.0,
-    "gamma_0": 5.5,
+    "beta_M": 1.5,
+    "alpha_0": 2.0,
+    "gamma_0": 6.0,
     "bounds": {
-      "bM_at_upper": true,
-      "a0_at_upper": false,
-      "g0_at_upper": true
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
     },
     "is_zero_tail": "True",
     "obs_active": [
@@ -319,11 +319,11 @@
       0
     ],
     "fc_active": [
-      0.0,
+      2.0,
       0.0
     ],
     "fc_first": [
-      0.0,
+      2.0,
       0.0
     ],
     "fc_repeat": [
@@ -333,21 +333,21 @@
     "bl_zero": 0.0,
     "bl_best": 0.0,
     "bl_name": "zero",
-    "fc_rmsle": 0.0,
-    "fc_first_rmsle": 0.0,
+    "fc_rmsle": 0.7768,
+    "fc_first_rmsle": 0.7768,
     "fc_repeat_rmsle": 0.0,
-    "win": true,
+    "win": false,
     "win_type": "zero_tail_correct",
-    "peak_ratio": 0.0,
+    "peak_ratio": 2.0,
     "traces": {
       "n_U": [
         2.0,
-        1.0,
+        0.0,
         0.0
       ],
       "n_A": [
         0.0,
-        0.0,
+        2.0,
         0.0
       ],
       "n_D": [
@@ -357,12 +357,12 @@
       ],
       "U_to_E": [
         0.0,
-        1.0,
+        2.0,
         0.0
       ],
       "E_to_A": [
         0.0,
-        0.0,
+        2.0,
         0.0
       ],
       "E_to_D": [
@@ -373,7 +373,7 @@
       "A_to_D": [
         0.0,
         0.0,
-        0.0
+        2.0
       ]
     }
   },
@@ -385,13 +385,13 @@
     "horizon_h": 72,
     "cutoff_step": 2,
     "horizon_steps": 3,
-    "beta_M": 0.9,
-    "alpha_0": 1.0,
-    "gamma_0": 5.5,
+    "beta_M": 1.5,
+    "alpha_0": 2.0,
+    "gamma_0": 6.0,
     "bounds": {
-      "bM_at_upper": true,
+      "bM_at_upper": false,
       "a0_at_upper": true,
-      "g0_at_upper": true
+      "g0_at_upper": false
     },
     "is_zero_tail": "False",
     "obs_active": [
@@ -410,13 +410,13 @@
       0
     ],
     "fc_active": [
-      1.0,
-      1.0,
+      3.0,
+      0.0,
       0.0
     ],
     "fc_first": [
-      1.0,
-      1.0,
+      3.0,
+      0.0,
       0.0
     ],
     "fc_repeat": [
@@ -427,41 +427,41 @@
     "bl_zero": 1.0345,
     "bl_best": 0.6996,
     "bl_name": "exp",
-    "fc_rmsle": 0.75,
-    "fc_first_rmsle": 0.6633,
+    "fc_rmsle": 0.2341,
+    "fc_first_rmsle": 0.1288,
     "fc_repeat_rmsle": 0.4002,
-    "win": false,
-    "win_type": "active_lose",
-    "peak_ratio": 0.2,
+    "win": true,
+    "win_type": "active_beat_baseline",
+    "peak_ratio": 0.6,
     "traces": {
       "n_U": [
         4.0,
-        2.0,
-        1.0,
+        0.0,
+        0.0,
         0.0
       ],
       "n_A": [
         3.0,
-        1.0,
-        1.0,
+        3.0,
+        0.0,
         0.0
       ],
       "n_D": [
         337.0,
         341.0,
-        342.0,
-        343.0
+        344.0,
+        344.0
       ],
       "U_to_E": [
         0.0,
-        2.0,
-        1.0,
+        4.0,
+        0.0,
         0.0
       ],
       "E_to_A": [
         0.0,
-        1.0,
-        1.0,
+        3.0,
+        0.0,
         0.0
       ],
       "E_to_D": [
@@ -473,8 +473,8 @@
       "A_to_D": [
         0.0,
         3.0,
-        1.0,
-        1.0
+        3.0,
+        0.0
       ]
     }
   },
@@ -488,11 +488,11 @@
     "horizon_steps": 2,
     "beta_M": 0.9,
     "alpha_0": 1.0,
-    "gamma_0": 5.5,
+    "gamma_0": 9.0,
     "bounds": {
-      "bM_at_upper": true,
-      "a0_at_upper": true,
-      "g0_at_upper": true
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
     },
     "is_zero_tail": "True",
     "obs_active": [
@@ -576,11 +576,11 @@
     "horizon_steps": 3,
     "beta_M": 0.9,
     "alpha_0": 0.0,
-    "gamma_0": 5.5,
+    "gamma_0": 6.0,
     "bounds": {
-      "bM_at_upper": true,
+      "bM_at_upper": false,
       "a0_at_upper": false,
-      "g0_at_upper": true
+      "g0_at_upper": false
     },
     "is_zero_tail": "False",
     "obs_active": [
@@ -677,11 +677,11 @@
     "horizon_steps": 2,
     "beta_M": 0.9,
     "alpha_0": 1.0,
-    "gamma_0": 5.5,
+    "gamma_0": 9.0,
     "bounds": {
-      "bM_at_upper": true,
-      "a0_at_upper": true,
-      "g0_at_upper": true
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
     },
     "is_zero_tail": "False",
     "obs_active": [

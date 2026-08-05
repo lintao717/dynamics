@@ -37,9 +37,9 @@ SENTINELS = [
     ("pair_03","real","97bdff4a4098a06dc2b2597b514b2df3","real-tail"),
 ]
 
-BETA_GRID = [0.3, 0.5, 0.7, 0.9]
-ALPHA_GRID = [-2.0, 0.0, 1.0]
-GAMMA_GRID = [0.0, 2.0, 4.0, 5.5]
+BETA_GRID = [0.3, 0.6, 0.9, 1.5, 2.0]
+ALPHA_GRID = [-2.0, 0.0, 1.0, 2.0]
+GAMMA_GRID = [0.0, 3.0, 6.0, 9.0, 12.0]
 
 
 def _grid_fit(history, case, base, seeds=FIT_SEEDS):
