@@ -33,8 +33,7 @@ class ReactivationMode(Enum):
     EVENT_GATED = "event_gated"
 
     def __str__(self) -> str:
-        return str(self.value), replace
-from typing import Tuple
+        return self.value
 
 
 @dataclass(frozen=True)
