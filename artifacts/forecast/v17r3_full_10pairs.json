@@ -1,0 +1,3782 @@
+[
+  {
+    "pid": "pair_01",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 0.6,
+    "alpha_0": 0.0,
+    "gamma_0": 0.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      77,
+      93,
+      0
+    ],
+    "obs_first": [
+      77,
+      93,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0,
+      0
+    ],
+    "fc_active": [
+      154.0,
+      98.0,
+      55.0
+    ],
+    "fc_first": [
+      55.0,
+      25.0,
+      14.0
+    ],
+    "fc_repeat": [
+      100.0,
+      71.0,
+      40.0
+    ],
+    "bl_zero": 3.6342,
+    "bl_best": 2.7004,
+    "bl_name": "exp",
+    "fc_rmsle": 2.3578,
+    "fc_first_rmsle": 1.7412,
+    "fc_repeat_rmsle": 4.2182,
+    "win": true,
+    "win_type": "active_beat_baseline",
+    "peak_ratio": 1.6559,
+    "traces": {
+      "n_U": [
+        205.0,
+        123.0,
+        78.0,
+        55.0
+      ],
+      "n_A": [
+        201.0,
+        154.0,
+        98.0,
+        55.0
+      ],
+      "n_D": [
+        236.0,
+        365.0,
+        470.0,
+        534.0
+      ],
+      "U_to_E": [
+        0.0,
+        82.0,
+        46.0,
+        23.0
+      ],
+      "E_to_A": [
+        0.0,
+        55.0,
+        25.0,
+        14.0
+      ],
+      "E_to_D": [
+        0.0,
+        29.0,
+        18.0,
+        11.0
+      ],
+      "A_to_D": [
+        0.0,
+        101.0,
+        87.0,
+        57.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_01",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 1.5,
+    "alpha_0": 0.0,
+    "gamma_0": 0.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      93,
+      0
+    ],
+    "obs_first": [
+      93,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0
+    ],
+    "fc_active": [
+      105.0,
+      61.0
+    ],
+    "fc_first": [
+      72.0,
+      6.0
+    ],
+    "fc_repeat": [
+      35.0,
+      53.0
+    ],
+    "bl_zero": 3.2126,
+    "bl_best": 2.2886,
+    "bl_name": "exp",
+    "fc_rmsle": 2.9196,
+    "fc_first_rmsle": 1.3875,
+    "fc_repeat_rmsle": 3.7917,
+    "win": false,
+    "win_type": "active_lose",
+    "peak_ratio": 1.129,
+    "traces": {
+      "n_U": [
+        128.0,
+        13.0,
+        4.0
+      ],
+      "n_A": [
+        77.0,
+        105.0,
+        61.0
+      ],
+      "n_D": [
+        437.0,
+        524.0,
+        578.0
+      ],
+      "U_to_E": [
+        0.0,
+        115.0,
+        11.0
+      ],
+      "E_to_A": [
+        0.0,
+        72.0,
+        6.0
+      ],
+      "E_to_D": [
+        0.0,
+        44.0,
+        3.0
+      ],
+      "A_to_D": [
+        0.0,
+        42.0,
+        59.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_01",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 1.5,
+    "alpha_0": 2.0,
+    "gamma_0": 6.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      1,
+      1,
+      0
+    ],
+    "obs_first": [
+      1,
+      1,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0,
+      0
+    ],
+    "fc_active": [
+      4.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      4.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.566,
+    "bl_best": 0.566,
+    "bl_name": "zero",
+    "fc_rmsle": 0.6633,
+    "fc_first_rmsle": 0.6633,
+    "fc_repeat_rmsle": 0.0,
+    "win": false,
+    "win_type": "active_lose",
+    "peak_ratio": 4.0,
+    "traces": {
+      "n_U": [
+        4.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        6.0,
+        4.0,
+        0.0,
+        0.0
+      ],
+      "n_D": [
+        694.0,
+        700.0,
+        704.0,
+        704.0
+      ],
+      "U_to_E": [
+        0.0,
+        4.0,
+        0.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        4.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        6.0,
+        4.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_01",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 1.5,
+    "alpha_0": 2.0,
+    "gamma_0": 6.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      1,
+      0
+    ],
+    "obs_first": [
+      1,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0
+    ],
+    "fc_active": [
+      3.0,
+      0.0
+    ],
+    "fc_first": [
+      3.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.4901,
+    "bl_best": 0.1833,
+    "bl_name": "exp",
+    "fc_rmsle": 0.4901,
+    "fc_first_rmsle": 0.4901,
+    "fc_repeat_rmsle": 0.0,
+    "win": false,
+    "win_type": "active_lose",
+    "peak_ratio": 3.0,
+    "traces": {
+      "n_U": [
+        3.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        1.0,
+        3.0,
+        0.0
+      ],
+      "n_D": [
+        700.0,
+        701.0,
+        704.0
+      ],
+      "U_to_E": [
+        0.0,
+        3.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        3.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        1.0,
+        3.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_02",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 0.6,
+    "alpha_0": 2.0,
+    "gamma_0": 6.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      17,
+      2,
+      3
+    ],
+    "obs_first": [
+      17,
+      2,
+      3
+    ],
+    "obs_repeat": [
+      0,
+      0,
+      0
+    ],
+    "fc_active": [
+      11.0,
+      5.0,
+      1.0
+    ],
+    "fc_first": [
+      11.0,
+      5.0,
+      1.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_zero": 1.9564,
+    "bl_best": 0.9547,
+    "bl_name": "exp",
+    "fc_rmsle": 0.6125,
+    "fc_first_rmsle": 0.6125,
+    "fc_repeat_rmsle": 0.0,
+    "win": true,
+    "win_type": "active_beat_baseline",
+    "peak_ratio": 0.6471,
+    "traces": {
+      "n_U": [
+        22.0,
+        10.0,
+        7.0,
+        5.0
+      ],
+      "n_A": [
+        25.0,
+        11.0,
+        5.0,
+        1.0
+      ],
+      "n_D": [
+        77.0,
+        103.0,
+        114.0,
+        117.0
+      ],
+      "U_to_E": [
+        0.0,
+        12.0,
+        5.0,
+        2.0
+      ],
+      "E_to_A": [
+        0.0,
+        11.0,
+        5.0,
+        1.0
+      ],
+      "E_to_D": [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        25.0,
+        11.0,
+        5.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_02",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 0.6,
+    "alpha_0": 2.0,
+    "gamma_0": 3.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      2,
+      3
+    ],
+    "obs_first": [
+      2,
+      3
+    ],
+    "obs_repeat": [
+      0,
+      0
+    ],
+    "fc_active": [
+      2.0,
+      2.0
+    ],
+    "fc_first": [
+      2.0,
+      1.0
+    ],
+    "fc_repeat": [
+      1.0,
+      0.0
+    ],
+    "bl_zero": 1.2508,
+    "bl_best": 0.4753,
+    "bl_name": "exp",
+    "fc_rmsle": 0.2034,
+    "fc_first_rmsle": 0.4901,
+    "fc_repeat_rmsle": 0.4901,
+    "win": true,
+    "win_type": "active_beat_baseline",
+    "peak_ratio": 0.6667,
+    "traces": {
+      "n_U": [
+        5.0,
+        3.0,
+        2.0
+      ],
+      "n_A": [
+        17.0,
+        2.0,
+        2.0
+      ],
+      "n_D": [
+        102.0,
+        118.0,
+        121.0
+      ],
+      "U_to_E": [
+        0.0,
+        2.0,
+        1.0
+      ],
+      "E_to_A": [
+        0.0,
+        2.0,
+        1.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        16.0,
+        2.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_02",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 1.5,
+    "alpha_0": 1.0,
+    "gamma_0": 3.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      6,
+      5,
+      4
+    ],
+    "obs_first": [
+      5,
+      5,
+      3
+    ],
+    "obs_repeat": [
+      1,
+      0,
+      1
+    ],
+    "fc_active": [
+      10.0,
+      1.0,
+      0.0
+    ],
+    "fc_first": [
+      10.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "bl_zero": 1.7877,
+    "bl_best": 0.2828,
+    "bl_name": "exp",
+    "fc_rmsle": 1.1549,
+    "fc_first_rmsle": 1.354,
+    "fc_repeat_rmsle": 0.6931,
+    "win": false,
+    "win_type": "active_lose",
+    "peak_ratio": 1.6667,
+    "traces": {
+      "n_U": [
+        13.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        7.0,
+        10.0,
+        1.0,
+        0.0
+      ],
+      "n_D": [
+        203.0,
+        213.0,
+        222.0,
+        223.0
+      ],
+      "U_to_E": [
+        0.0,
+        13.0,
+        0.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        10.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        3.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        7.0,
+        10.0,
+        1.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_02",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 0.9,
+    "alpha_0": 1.0,
+    "gamma_0": 9.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      5,
+      4
+    ],
+    "obs_first": [
+      5,
+      3
+    ],
+    "obs_repeat": [
+      0,
+      1
+    ],
+    "fc_active": [
+      2.0,
+      2.0
+    ],
+    "fc_first": [
+      2.0,
+      2.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_zero": 1.703,
+    "bl_best": 0.2617,
+    "bl_name": "persist",
+    "fc_rmsle": 0.6088,
+    "fc_first_rmsle": 0.5307,
+    "fc_repeat_rmsle": 0.4901,
+    "win": false,
+    "win_type": "active_lose",
+    "peak_ratio": 0.4,
+    "traces": {
+      "n_U": [
+        8.0,
+        5.0,
+        2.0
+      ],
+      "n_A": [
+        6.0,
+        2.0,
+        2.0
+      ],
+      "n_D": [
+        209.0,
+        216.0,
+        218.0
+      ],
+      "U_to_E": [
+        0.0,
+        3.0,
+        3.0
+      ],
+      "E_to_A": [
+        0.0,
+        2.0,
+        2.0
+      ],
+      "E_to_D": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        6.0,
+        2.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_03",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 0.3,
+    "alpha_0": 1.0,
+    "gamma_0": 0.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      118,
+      8,
+      2
+    ],
+    "obs_first": [
+      118,
+      8,
+      2
+    ],
+    "obs_repeat": [
+      0,
+      0,
+      0
+    ],
+    "fc_active": [
+      111.0,
+      66.0,
+      41.0
+    ],
+    "fc_first": [
+      24.0,
+      16.0,
+      10.0
+    ],
+    "fc_repeat": [
+      84.0,
+      47.0,
+      30.0
+    ],
+    "bl_zero": 3.1024,
+    "bl_best": 2.3496,
+    "bl_name": "exp",
+    "fc_rmsle": 1.9147,
+    "fc_first_rmsle": 1.2284,
+    "fc_repeat_rmsle": 3.9377,
+    "win": true,
+    "win_type": "active_beat_baseline",
+    "peak_ratio": 0.9407,
+    "traces": {
+      "n_U": [
+        130.0,
+        100.0,
+        79.0,
+        65.0
+      ],
+      "n_A": [
+        188.0,
+        111.0,
+        66.0,
+        41.0
+      ],
+      "n_D": [
+        47.0,
+        154.0,
+        219.0,
+        259.0
+      ],
+      "U_to_E": [
+        0.0,
+        30.0,
+        21.0,
+        13.0
+      ],
+      "E_to_A": [
+        0.0,
+        24.0,
+        16.0,
+        10.0
+      ],
+      "E_to_D": [
+        0.0,
+        4.0,
+        4.0,
+        3.0
+      ],
+      "A_to_D": [
+        0.0,
+        104.0,
+        62.0,
+        35.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_03",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 0.3,
+    "alpha_0": 2.0,
+    "gamma_0": 0.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      8,
+      2
+    ],
+    "obs_first": [
+      8,
+      2
+    ],
+    "obs_repeat": [
+      0,
+      0
+    ],
+    "fc_active": [
+      56.0,
+      24.0
+    ],
+    "fc_first": [
+      3.0,
+      2.0
+    ],
+    "fc_repeat": [
+      54.0,
+      23.0
+    ],
+    "bl_zero": 1.7371,
+    "bl_best": 0.6049,
+    "bl_name": "exp",
+    "fc_rmsle": 1.9878,
+    "fc_first_rmsle": 0.5734,
+    "fc_repeat_rmsle": 3.6165,
+    "win": false,
+    "win_type": "active_lose",
+    "peak_ratio": 7.0,
+    "traces": {
+      "n_U": [
+        12.0,
+        8.0,
+        7.0
+      ],
+      "n_A": [
+        118.0,
+        56.0,
+        24.0
+      ],
+      "n_D": [
+        235.0,
+        301.0,
+        334.0
+      ],
+      "U_to_E": [
+        0.0,
+        4.0,
+        2.0
+      ],
+      "E_to_A": [
+        0.0,
+        3.0,
+        2.0
+      ],
+      "E_to_D": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        64.0,
+        34.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_03",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 0.9,
+    "alpha_0": 0.0,
+    "gamma_0": 6.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      7,
+      4,
+      0
+    ],
+    "obs_first": [
+      6,
+      4,
+      0
+    ],
+    "obs_repeat": [
+      1,
+      0,
+      0
+    ],
+    "fc_active": [
+      6.0,
+      1.0,
+      0.0
+    ],
+    "fc_first": [
+      6.0,
+      1.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_zero": 1.5182,
+    "bl_best": 1.1016,
+    "bl_name": "exp",
+    "fc_rmsle": 0.5346,
+    "fc_first_rmsle": 0.529,
+    "fc_repeat_rmsle": 0.4002,
+    "win": true,
+    "win_type": "active_beat_baseline",
+    "peak_ratio": 0.8571,
+    "traces": {
+      "n_U": [
+        11.0,
+        3.0,
+        1.0,
+        1.0
+      ],
+      "n_A": [
+        6.0,
+        6.0,
+        1.0,
+        0.0
+      ],
+      "n_D": [
+        417.0,
+        425.0,
+        432.0,
+        433.0
+      ],
+      "U_to_E": [
+        0.0,
+        8.0,
+        2.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        6.0,
+        1.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        2.0,
+        1.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        6.0,
+        6.0,
+        1.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_03",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 0.9,
+    "alpha_0": 1.0,
+    "gamma_0": 9.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      4,
+      0
+    ],
+    "obs_first": [
+      4,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0
+    ],
+    "fc_active": [
+      4.0,
+      1.0
+    ],
+    "fc_first": [
+      4.0,
+      1.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_zero": 1.138,
+    "bl_best": 1.138,
+    "bl_name": "zero",
+    "fc_rmsle": 0.4901,
+    "fc_first_rmsle": 0.4901,
+    "fc_repeat_rmsle": 0.0,
+    "win": true,
+    "win_type": "active_beat_baseline",
+    "peak_ratio": 1.0,
+    "traces": {
+      "n_U": [
+        5.0,
+        1.0,
+        0.0
+      ],
+      "n_A": [
+        7.0,
+        4.0,
+        1.0
+      ],
+      "n_D": [
+        422.0,
+        429.0,
+        433.0
+      ],
+      "U_to_E": [
+        0.0,
+        4.0,
+        1.0
+      ],
+      "E_to_A": [
+        0.0,
+        4.0,
+        1.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        7.0,
+        4.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_04",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 0.9,
+    "alpha_0": 0.0,
+    "gamma_0": 9.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      1,
+      0,
+      0
+    ],
+    "obs_first": [
+      1,
+      0,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0,
+      0
+    ],
+    "fc_active": [
+      2.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      2.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.4002,
+    "bl_best": 0.4002,
+    "bl_name": "zero",
+    "fc_rmsle": 0.2341,
+    "fc_first_rmsle": 0.2341,
+    "fc_repeat_rmsle": 0.0,
+    "win": true,
+    "win_type": "active_beat_baseline",
+    "peak_ratio": 2.0,
+    "traces": {
+      "n_U": [
+        4.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        2.0,
+        2.0,
+        0.0,
+        0.0
+      ],
+      "n_D": [
+        120.0,
+        123.0,
+        126.0,
+        126.0
+      ],
+      "U_to_E": [
+        0.0,
+        3.0,
+        1.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        2.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        1.0,
+        1.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        2.0,
+        2.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_04",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 0.9,
+    "alpha_0": 0.0,
+    "gamma_0": 9.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": true,
+    "obs_active": [
+      0,
+      0
+    ],
+    "obs_first": [
+      0,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0
+    ],
+    "fc_active": [
+      1.0,
+      0.0
+    ],
+    "fc_first": [
+      1.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.0,
+    "bl_best": 0.0,
+    "bl_name": "zero",
+    "fc_rmsle": 0.4901,
+    "fc_first_rmsle": 0.4901,
+    "fc_repeat_rmsle": 0.0,
+    "win": false,
+    "win_type": "zero_tail_correct",
+    "peak_ratio": 1.0,
+    "traces": {
+      "n_U": [
+        3.0,
+        2.0,
+        1.0
+      ],
+      "n_A": [
+        1.0,
+        1.0,
+        0.0
+      ],
+      "n_D": [
+        122.0,
+        124.0,
+        125.0
+      ],
+      "U_to_E": [
+        0.0,
+        1.0,
+        1.0
+      ],
+      "E_to_A": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        1.0,
+        1.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_04",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 0.9,
+    "alpha_0": 0.0,
+    "gamma_0": 9.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      1,
+      1,
+      1
+    ],
+    "obs_first": [
+      1,
+      1,
+      1
+    ],
+    "obs_repeat": [
+      0,
+      0,
+      0
+    ],
+    "fc_active": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.6931,
+    "bl_best": 0.6931,
+    "bl_name": "zero",
+    "fc_rmsle": 0.566,
+    "fc_first_rmsle": 0.566,
+    "fc_repeat_rmsle": 0.0,
+    "win": true,
+    "win_type": "active_beat_baseline",
+    "peak_ratio": 1.0,
+    "traces": {
+      "n_U": [
+        3.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        5.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "n_D": [
+        244.0,
+        249.0,
+        251.0,
+        252.0
+      ],
+      "U_to_E": [
+        0.0,
+        2.0,
+        0.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        5.0,
+        1.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_04",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 1.5,
+    "alpha_0": 1.0,
+    "gamma_0": 3.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      1,
+      1
+    ],
+    "obs_first": [
+      1,
+      1
+    ],
+    "obs_repeat": [
+      0,
+      0
+    ],
+    "fc_active": [
+      2.0,
+      0.0
+    ],
+    "fc_first": [
+      2.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.6931,
+    "bl_best": 0.0,
+    "bl_name": "persist",
+    "fc_rmsle": 0.5678,
+    "fc_first_rmsle": 0.5678,
+    "fc_repeat_rmsle": 0.0,
+    "win": false,
+    "win_type": "active_lose",
+    "peak_ratio": 2.0,
+    "traces": {
+      "n_U": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        1.0,
+        2.0,
+        0.0
+      ],
+      "n_D": [
+        249.0,
+        250.0,
+        252.0
+      ],
+      "U_to_E": [
+        0.0,
+        2.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        2.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        1.0,
+        2.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_05",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 0.6,
+    "alpha_0": 1.0,
+    "gamma_0": 0.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      1,
+      0,
+      0
+    ],
+    "obs_first": [
+      1,
+      0,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0,
+      0
+    ],
+    "fc_active": [
+      70.0,
+      28.0,
+      9.0
+    ],
+    "fc_first": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "fc_repeat": [
+      70.0,
+      27.0,
+      9.0
+    ],
+    "bl_zero": 0.4002,
+    "bl_best": 0.4002,
+    "bl_name": "zero",
+    "fc_rmsle": 3.1295,
+    "fc_first_rmsle": 0.566,
+    "fc_repeat_rmsle": 3.3949,
+    "win": false,
+    "win_type": "active_lose",
+    "peak_ratio": 70.0,
+    "traces": {
+      "n_U": [
+        2.0,
+        2.0,
+        1.0,
+        0.0
+      ],
+      "n_A": [
+        147.0,
+        70.0,
+        28.0,
+        9.0
+      ],
+      "n_D": [
+        57.0,
+        134.0,
+        178.0,
+        196.0
+      ],
+      "U_to_E": [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        77.0,
+        43.0,
+        20.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_05",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 0.6,
+    "alpha_0": 0.0,
+    "gamma_0": 3.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": true,
+    "obs_active": [
+      0,
+      0
+    ],
+    "obs_first": [
+      0,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0
+    ],
+    "fc_active": [
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.0,
+    "bl_best": 0.0,
+    "bl_name": "zero",
+    "fc_rmsle": 0.0,
+    "fc_first_rmsle": 0.0,
+    "fc_repeat_rmsle": 0.0,
+    "win": true,
+    "win_type": "zero_tail_correct",
+    "peak_ratio": 0.0,
+    "traces": {
+      "n_U": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "n_A": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "n_D": [
+        204.0,
+        205.0,
+        205.0
+      ],
+      "U_to_E": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        1.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_05",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 1.5,
+    "alpha_0": 2.0,
+    "gamma_0": 6.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      5,
+      0,
+      0
+    ],
+    "obs_first": [
+      4,
+      0,
+      0
+    ],
+    "obs_repeat": [
+      1,
+      0,
+      0
+    ],
+    "fc_active": [
+      3.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      3.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_zero": 1.0345,
+    "bl_best": 0.6996,
+    "bl_name": "exp",
+    "fc_rmsle": 0.2341,
+    "fc_first_rmsle": 0.1288,
+    "fc_repeat_rmsle": 0.4002,
+    "win": true,
+    "win_type": "active_beat_baseline",
+    "peak_ratio": 0.6,
+    "traces": {
+      "n_U": [
+        4.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        3.0,
+        3.0,
+        0.0,
+        0.0
+      ],
+      "n_D": [
+        337.0,
+        341.0,
+        344.0,
+        344.0
+      ],
+      "U_to_E": [
+        0.0,
+        4.0,
+        0.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        3.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        3.0,
+        3.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_05",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 0.9,
+    "alpha_0": 1.0,
+    "gamma_0": 9.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": true,
+    "obs_active": [
+      0,
+      0
+    ],
+    "obs_first": [
+      0,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0
+    ],
+    "fc_active": [
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.0,
+    "bl_best": 0.0,
+    "bl_name": "zero",
+    "fc_rmsle": 0.0,
+    "fc_first_rmsle": 0.0,
+    "fc_repeat_rmsle": 0.0,
+    "win": true,
+    "win_type": "zero_tail_correct",
+    "peak_ratio": 0.0,
+    "traces": {
+      "n_U": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        5.0,
+        0.0,
+        0.0
+      ],
+      "n_D": [
+        339.0,
+        344.0,
+        344.0
+      ],
+      "U_to_E": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        5.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_06",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 1.5,
+    "alpha_0": 1.0,
+    "gamma_0": 3.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      2,
+      1,
+      0
+    ],
+    "obs_first": [
+      2,
+      1,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0,
+      0
+    ],
+    "fc_active": [
+      4.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      4.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.75,
+    "bl_best": 0.75,
+    "bl_name": "zero",
+    "fc_rmsle": 0.4971,
+    "fc_first_rmsle": 0.4971,
+    "fc_repeat_rmsle": 0.0,
+    "win": true,
+    "win_type": "active_beat_baseline",
+    "peak_ratio": 2.0,
+    "traces": {
+      "n_U": [
+        4.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        5.0,
+        4.0,
+        0.0,
+        0.0
+      ],
+      "n_D": [
+        174.0,
+        179.0,
+        183.0,
+        183.0
+      ],
+      "U_to_E": [
+        0.0,
+        4.0,
+        0.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        4.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        5.0,
+        4.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_06",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 0.9,
+    "alpha_0": 1.0,
+    "gamma_0": 9.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      1,
+      0
+    ],
+    "obs_first": [
+      1,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0
+    ],
+    "fc_active": [
+      1.0,
+      1.0
+    ],
+    "fc_first": [
+      1.0,
+      1.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.4901,
+    "bl_best": 0.4901,
+    "bl_name": "zero",
+    "fc_rmsle": 0.4901,
+    "fc_first_rmsle": 0.4901,
+    "fc_repeat_rmsle": 0.0,
+    "win": false,
+    "win_type": "active_lose",
+    "peak_ratio": 1.0,
+    "traces": {
+      "n_U": [
+        2.0,
+        1.0,
+        0.0
+      ],
+      "n_A": [
+        2.0,
+        1.0,
+        1.0
+      ],
+      "n_D": [
+        179.0,
+        181.0,
+        182.0
+      ],
+      "U_to_E": [
+        0.0,
+        1.0,
+        1.0
+      ],
+      "E_to_A": [
+        0.0,
+        1.0,
+        1.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        2.0,
+        1.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_06",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 1.5,
+    "alpha_0": 2.0,
+    "gamma_0": 6.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      6,
+      6,
+      0
+    ],
+    "obs_first": [
+      5,
+      6,
+      0
+    ],
+    "obs_repeat": [
+      1,
+      0,
+      0
+    ],
+    "fc_active": [
+      12.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      12.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_zero": 1.5888,
+    "bl_best": 0.9216,
+    "bl_name": "pulse",
+    "fc_rmsle": 1.179,
+    "fc_first_rmsle": 1.2089,
+    "fc_repeat_rmsle": 0.4002,
+    "win": false,
+    "win_type": "active_lose",
+    "peak_ratio": 2.0,
+    "traces": {
+      "n_U": [
+        13.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        3.0,
+        12.0,
+        0.0,
+        0.0
+      ],
+      "n_D": [
+        243.0,
+        247.0,
+        259.0,
+        259.0
+      ],
+      "U_to_E": [
+        0.0,
+        13.0,
+        0.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        12.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        3.0,
+        12.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_06",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 0.9,
+    "alpha_0": 1.0,
+    "gamma_0": 9.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      6,
+      0
+    ],
+    "obs_first": [
+      6,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0
+    ],
+    "fc_active": [
+      4.0,
+      2.0
+    ],
+    "fc_first": [
+      4.0,
+      2.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_zero": 1.376,
+    "bl_best": 1.376,
+    "bl_name": "zero",
+    "fc_rmsle": 0.8125,
+    "fc_first_rmsle": 0.8125,
+    "fc_repeat_rmsle": 0.0,
+    "win": true,
+    "win_type": "active_beat_baseline",
+    "peak_ratio": 0.6667,
+    "traces": {
+      "n_U": [
+        8.0,
+        4.0,
+        2.0
+      ],
+      "n_A": [
+        6.0,
+        4.0,
+        2.0
+      ],
+      "n_D": [
+        245.0,
+        251.0,
+        255.0
+      ],
+      "U_to_E": [
+        0.0,
+        4.0,
+        2.0
+      ],
+      "E_to_A": [
+        0.0,
+        4.0,
+        2.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        6.0,
+        4.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_07",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 0.9,
+    "alpha_0": 2.0,
+    "gamma_0": 3.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": true,
+    "obs_active": [
+      0,
+      0,
+      0
+    ],
+    "obs_first": [
+      0,
+      0,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0,
+      0
+    ],
+    "fc_active": [
+      4.0,
+      1.0,
+      1.0
+    ],
+    "fc_first": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "fc_repeat": [
+      3.0,
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.0,
+    "bl_best": 0.0,
+    "bl_name": "zero",
+    "fc_rmsle": 1.088,
+    "fc_first_rmsle": 0.6931,
+    "fc_repeat_rmsle": 0.8004,
+    "win": false,
+    "win_type": "zero_tail_correct",
+    "peak_ratio": 4.0,
+    "traces": {
+      "n_U": [
+        2.0,
+        1.0,
+        1.0,
+        0.0
+      ],
+      "n_A": [
+        70.0,
+        4.0,
+        1.0,
+        1.0
+      ],
+      "n_D": [
+        266.0,
+        333.0,
+        337.0,
+        337.0
+      ],
+      "U_to_E": [
+        0.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "E_to_A": [
+        0.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        67.0,
+        4.0,
+        1.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_07",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 1.5,
+    "alpha_0": 2.0,
+    "gamma_0": 3.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": true,
+    "obs_active": [
+      0,
+      0
+    ],
+    "obs_first": [
+      0,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0
+    ],
+    "fc_active": [
+      1.0,
+      0.0
+    ],
+    "fc_first": [
+      1.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.0,
+    "bl_best": 0.0,
+    "bl_name": "zero",
+    "fc_rmsle": 0.4901,
+    "fc_first_rmsle": 0.4901,
+    "fc_repeat_rmsle": 0.0,
+    "win": false,
+    "win_type": "zero_tail_correct",
+    "peak_ratio": 1.0,
+    "traces": {
+      "n_U": [
+        2.0,
+        1.0,
+        0.0
+      ],
+      "n_A": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "n_D": [
+        336.0,
+        336.0,
+        337.0
+      ],
+      "U_to_E": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        0.0,
+        1.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_07",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 0.9,
+    "alpha_0": 2.0,
+    "gamma_0": 9.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      12,
+      2,
+      6
+    ],
+    "obs_first": [
+      12,
+      2,
+      6
+    ],
+    "obs_repeat": [
+      0,
+      0,
+      0
+    ],
+    "fc_active": [
+      16.0,
+      3.0,
+      2.0
+    ],
+    "fc_first": [
+      16.0,
+      3.0,
+      2.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_zero": 1.9641,
+    "bl_best": 1.4769,
+    "bl_name": "persist",
+    "fc_rmsle": 0.5393,
+    "fc_first_rmsle": 0.5393,
+    "fc_repeat_rmsle": 0.0,
+    "win": true,
+    "win_type": "active_beat_baseline",
+    "peak_ratio": 1.3333,
+    "traces": {
+      "n_U": [
+        25.0,
+        7.0,
+        5.0,
+        2.0
+      ],
+      "n_A": [
+        24.0,
+        16.0,
+        3.0,
+        2.0
+      ],
+      "n_D": [
+        395.0,
+        420.0,
+        437.0,
+        439.0
+      ],
+      "U_to_E": [
+        0.0,
+        18.0,
+        3.0,
+        2.0
+      ],
+      "E_to_A": [
+        0.0,
+        16.0,
+        3.0,
+        2.0
+      ],
+      "E_to_D": [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        24.0,
+        16.0,
+        3.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_07",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 0.9,
+    "alpha_0": 2.0,
+    "gamma_0": 9.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      2,
+      6
+    ],
+    "obs_first": [
+      2,
+      6
+    ],
+    "obs_repeat": [
+      0,
+      0
+    ],
+    "fc_active": [
+      7.0,
+      3.0
+    ],
+    "fc_first": [
+      7.0,
+      3.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_zero": 1.5801,
+    "bl_best": 1.1255,
+    "bl_name": "persist",
+    "fc_rmsle": 0.7985,
+    "fc_first_rmsle": 0.7985,
+    "fc_repeat_rmsle": 0.0,
+    "win": true,
+    "win_type": "active_beat_baseline",
+    "peak_ratio": 1.1667,
+    "traces": {
+      "n_U": [
+        13.0,
+        5.0,
+        3.0
+      ],
+      "n_A": [
+        12.0,
+        7.0,
+        3.0
+      ],
+      "n_D": [
+        419.0,
+        432.0,
+        439.0
+      ],
+      "U_to_E": [
+        0.0,
+        8.0,
+        3.0
+      ],
+      "E_to_A": [
+        0.0,
+        7.0,
+        3.0
+      ],
+      "E_to_D": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        12.0,
+        7.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_08",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 0.9,
+    "alpha_0": 2.0,
+    "gamma_0": 9.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      0,
+      1,
+      0
+    ],
+    "obs_first": [
+      0,
+      1,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0,
+      0
+    ],
+    "fc_active": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.4002,
+    "bl_best": 0.4002,
+    "bl_name": "zero",
+    "fc_rmsle": 0.566,
+    "fc_first_rmsle": 0.566,
+    "fc_repeat_rmsle": 0.0,
+    "win": false,
+    "win_type": "active_lose",
+    "peak_ratio": 1.0,
+    "traces": {
+      "n_U": [
+        2.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        6.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "n_D": [
+        134.0,
+        140.0,
+        141.0,
+        142.0
+      ],
+      "U_to_E": [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        6.0,
+        1.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_08",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 0.9,
+    "alpha_0": 1.0,
+    "gamma_0": 6.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      1,
+      0
+    ],
+    "obs_first": [
+      1,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0
+    ],
+    "fc_active": [
+      0.0,
+      1.0
+    ],
+    "fc_first": [
+      0.0,
+      1.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.4901,
+    "bl_best": 0.4901,
+    "bl_name": "exp",
+    "fc_rmsle": 0.6931,
+    "fc_first_rmsle": 0.6931,
+    "fc_repeat_rmsle": 0.0,
+    "win": false,
+    "win_type": "active_lose",
+    "peak_ratio": 1.0,
+    "traces": {
+      "n_U": [
+        2.0,
+        1.0,
+        1.0
+      ],
+      "n_A": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "n_D": [
+        140.0,
+        140.0,
+        141.0
+      ],
+      "U_to_E": [
+        0.0,
+        1.0,
+        1.0
+      ],
+      "E_to_A": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_08",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 1.5,
+    "alpha_0": 0.0,
+    "gamma_0": 3.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      3,
+      0,
+      1
+    ],
+    "obs_first": [
+      3,
+      0,
+      1
+    ],
+    "obs_repeat": [
+      0,
+      0,
+      0
+    ],
+    "fc_active": [
+      3.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      3.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.8948,
+    "bl_best": 0.8948,
+    "bl_name": "zero",
+    "fc_rmsle": 0.4002,
+    "fc_first_rmsle": 0.4002,
+    "fc_repeat_rmsle": 0.0,
+    "win": true,
+    "win_type": "active_beat_baseline",
+    "peak_ratio": 1.0,
+    "traces": {
+      "n_U": [
+        5.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        4.0,
+        3.0,
+        0.0,
+        0.0
+      ],
+      "n_D": [
+        228.0,
+        234.0,
+        237.0,
+        237.0
+      ],
+      "U_to_E": [
+        0.0,
+        5.0,
+        0.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        3.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        2.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        4.0,
+        3.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_08",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 0.9,
+    "alpha_0": 0.0,
+    "gamma_0": 12.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": true
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      0,
+      1
+    ],
+    "obs_first": [
+      0,
+      1
+    ],
+    "obs_repeat": [
+      0,
+      0
+    ],
+    "fc_active": [
+      1.0,
+      0.0
+    ],
+    "fc_first": [
+      1.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.4901,
+    "bl_best": 0.4901,
+    "bl_name": "zero",
+    "fc_rmsle": 0.6931,
+    "fc_first_rmsle": 0.6931,
+    "fc_repeat_rmsle": 0.0,
+    "win": false,
+    "win_type": "active_lose",
+    "peak_ratio": 1.0,
+    "traces": {
+      "n_U": [
+        2.0,
+        1.0,
+        0.0
+      ],
+      "n_A": [
+        3.0,
+        1.0,
+        0.0
+      ],
+      "n_D": [
+        232.0,
+        235.0,
+        237.0
+      ],
+      "U_to_E": [
+        0.0,
+        1.0,
+        1.0
+      ],
+      "E_to_A": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "A_to_D": [
+        0.0,
+        3.0,
+        1.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_09",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 1.5,
+    "alpha_0": 2.0,
+    "gamma_0": 6.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": true,
+    "obs_active": [
+      0,
+      0,
+      0
+    ],
+    "obs_first": [
+      0,
+      0,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0,
+      0
+    ],
+    "fc_active": [
+      2.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      2.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.0,
+    "bl_best": 0.0,
+    "bl_name": "zero",
+    "fc_rmsle": 0.6343,
+    "fc_first_rmsle": 0.6343,
+    "fc_repeat_rmsle": 0.0,
+    "win": false,
+    "win_type": "zero_tail_correct",
+    "peak_ratio": 2.0,
+    "traces": {
+      "n_U": [
+        2.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        2.0,
+        2.0,
+        0.0,
+        0.0
+      ],
+      "n_D": [
+        132.0,
+        134.0,
+        136.0,
+        136.0
+      ],
+      "U_to_E": [
+        0.0,
+        2.0,
+        0.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        2.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        2.0,
+        2.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_09",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 1.5,
+    "alpha_0": 2.0,
+    "gamma_0": 6.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": true,
+    "obs_active": [
+      0,
+      0
+    ],
+    "obs_first": [
+      0,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0
+    ],
+    "fc_active": [
+      2.0,
+      0.0
+    ],
+    "fc_first": [
+      2.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.0,
+    "bl_best": 0.0,
+    "bl_name": "zero",
+    "fc_rmsle": 0.7768,
+    "fc_first_rmsle": 0.7768,
+    "fc_repeat_rmsle": 0.0,
+    "win": false,
+    "win_type": "zero_tail_correct",
+    "peak_ratio": 2.0,
+    "traces": {
+      "n_U": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        0.0,
+        2.0,
+        0.0
+      ],
+      "n_D": [
+        134.0,
+        134.0,
+        136.0
+      ],
+      "U_to_E": [
+        0.0,
+        2.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        2.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        0.0,
+        2.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_09",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 0.9,
+    "alpha_0": 1.0,
+    "gamma_0": 9.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      1,
+      0,
+      0
+    ],
+    "obs_first": [
+      0,
+      0,
+      0
+    ],
+    "obs_repeat": [
+      1,
+      0,
+      0
+    ],
+    "fc_active": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.4002,
+    "bl_best": 0.4002,
+    "bl_name": "zero",
+    "fc_rmsle": 0.4002,
+    "fc_first_rmsle": 0.0,
+    "fc_repeat_rmsle": 0.4002,
+    "win": false,
+    "win_type": "active_lose",
+    "peak_ratio": 0.0,
+    "traces": {
+      "n_U": [
+        1.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        5.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_D": [
+        220.0,
+        225.0,
+        225.0,
+        226.0
+      ],
+      "U_to_E": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        5.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_09",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 0.9,
+    "alpha_0": 0.0,
+    "gamma_0": 6.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": true,
+    "obs_active": [
+      0,
+      0
+    ],
+    "obs_first": [
+      0,
+      0
+    ],
+    "obs_repeat": [
+      0,
+      0
+    ],
+    "fc_active": [
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.0,
+    "bl_best": 0.0,
+    "bl_name": "zero",
+    "fc_rmsle": 0.0,
+    "fc_first_rmsle": 0.0,
+    "fc_repeat_rmsle": 0.0,
+    "win": true,
+    "win_type": "zero_tail_correct",
+    "peak_ratio": 0.0,
+    "traces": {
+      "n_U": [
+        1.0,
+        1.0,
+        0.0
+      ],
+      "n_A": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "n_D": [
+        224.0,
+        225.0,
+        226.0
+      ],
+      "U_to_E": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        1.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_10",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 1.5,
+    "alpha_0": 2.0,
+    "gamma_0": 6.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      2,
+      0,
+      2
+    ],
+    "obs_first": [
+      2,
+      0,
+      2
+    ],
+    "obs_repeat": [
+      0,
+      0,
+      0
+    ],
+    "fc_active": [
+      3.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      3.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.897,
+    "bl_best": 0.5194,
+    "bl_name": "pulse",
+    "fc_rmsle": 0.6557,
+    "fc_first_rmsle": 0.6557,
+    "fc_repeat_rmsle": 0.0,
+    "win": false,
+    "win_type": "active_lose",
+    "peak_ratio": 1.5,
+    "traces": {
+      "n_U": [
+        4.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        1.0,
+        3.0,
+        0.0,
+        0.0
+      ],
+      "n_D": [
+        146.0,
+        148.0,
+        151.0,
+        151.0
+      ],
+      "U_to_E": [
+        0.0,
+        4.0,
+        0.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        3.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        1.0,
+        3.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_10",
+    "label": "fake",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 1.5,
+    "alpha_0": 2.0,
+    "gamma_0": 6.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      0,
+      2
+    ],
+    "obs_first": [
+      0,
+      2
+    ],
+    "obs_repeat": [
+      0,
+      0
+    ],
+    "fc_active": [
+      2.0,
+      0.0
+    ],
+    "fc_first": [
+      2.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_zero": 0.7768,
+    "bl_best": 0.7768,
+    "bl_name": "zero",
+    "fc_rmsle": 1.0986,
+    "fc_first_rmsle": 1.0986,
+    "fc_repeat_rmsle": 0.0,
+    "win": false,
+    "win_type": "active_lose",
+    "peak_ratio": 1.0,
+    "traces": {
+      "n_U": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        2.0,
+        2.0,
+        0.0
+      ],
+      "n_D": [
+        147.0,
+        149.0,
+        151.0
+      ],
+      "U_to_E": [
+        0.0,
+        2.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        2.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        2.0,
+        2.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_10",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "beta_M": 1.5,
+    "alpha_0": 2.0,
+    "gamma_0": 6.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": true,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      2,
+      10,
+      3
+    ],
+    "obs_first": [
+      1,
+      9,
+      1
+    ],
+    "obs_repeat": [
+      1,
+      1,
+      2
+    ],
+    "fc_active": [
+      10.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      10.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_zero": 1.7203,
+    "bl_best": 0.5575,
+    "bl_name": "persist",
+    "fc_rmsle": 1.7663,
+    "fc_first_rmsle": 1.7018,
+    "fc_repeat_rmsle": 0.8501,
+    "win": false,
+    "win_type": "active_lose",
+    "peak_ratio": 1.0,
+    "traces": {
+      "n_U": [
+        11.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "n_A": [
+        4.0,
+        10.0,
+        0.0,
+        0.0
+      ],
+      "n_D": [
+        246.0,
+        251.0,
+        261.0,
+        261.0
+      ],
+      "U_to_E": [
+        0.0,
+        11.0,
+        0.0,
+        0.0
+      ],
+      "E_to_A": [
+        0.0,
+        10.0,
+        0.0,
+        0.0
+      ],
+      "E_to_D": [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        4.0,
+        10.0,
+        0.0
+      ]
+    }
+  },
+  {
+    "pid": "pair_10",
+    "label": "real",
+    "note": "",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "beta_M": 0.9,
+    "alpha_0": 0.0,
+    "gamma_0": 9.0,
+    "bounds": {
+      "bM_at_upper": false,
+      "a0_at_upper": false,
+      "g0_at_upper": false
+    },
+    "is_zero_tail": false,
+    "obs_active": [
+      10,
+      3
+    ],
+    "obs_first": [
+      9,
+      1
+    ],
+    "obs_repeat": [
+      1,
+      2
+    ],
+    "fc_active": [
+      3.0,
+      2.0
+    ],
+    "fc_first": [
+      3.0,
+      2.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_zero": 1.9585,
+    "bl_best": 0.941,
+    "bl_name": "pulse",
+    "fc_rmsle": 0.7437,
+    "fc_first_rmsle": 0.7085,
+    "fc_repeat_rmsle": 0.9185,
+    "win": true,
+    "win_type": "active_beat_baseline",
+    "peak_ratio": 0.3,
+    "traces": {
+      "n_U": [
+        10.0,
+        5.0,
+        2.0
+      ],
+      "n_A": [
+        2.0,
+        3.0,
+        2.0
+      ],
+      "n_D": [
+        249.0,
+        253.0,
+        256.0
+      ],
+      "U_to_E": [
+        0.0,
+        5.0,
+        2.0
+      ],
+      "E_to_A": [
+        0.0,
+        3.0,
+        2.0
+      ],
+      "E_to_D": [
+        0.0,
+        2.0,
+        0.0
+      ],
+      "A_to_D": [
+        0.0,
+        2.0,
+        3.0
+      ]
+    }
+  }
+]

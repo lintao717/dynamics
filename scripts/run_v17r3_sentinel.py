@@ -31,10 +31,26 @@ STEP_H = 24.0
 FORECAST_SEEDS = (101, 103, 107, 109, 113)  # 5 seeds for forecast
 
 SENTINELS = [
-    ("pair_06","fake","25d9ed3994c2d5f030b864867facab47","fake-good"),
-    ("pair_09","fake","dfb9f2af5bb9b16ba717b91d6be5fa2f","fake-fail"),
-    ("pair_05","real","619f582e27e736ebc4c5def47f954535","real-rapid"),
-    ("pair_03","real","97bdff4a4098a06dc2b2597b514b2df3","real-tail"),
+    ("pair_01","fake","26f247cc05fd53e12daa91c98e7feab8",""),
+    ("pair_01","real","cf5522f51f8be6859840b0b948bb813c",""),
+    ("pair_02","fake","f983d8f70e265ec265acd9ea93e9b10d",""),
+    ("pair_02","real","d293a73970751898b5d83f5525a15fcc",""),
+    ("pair_03","fake","68665bf53973dea5036336fcc5dc9eea",""),
+    ("pair_03","real","97bdff4a4098a06dc2b2597b514b2df3",""),
+    ("pair_04","fake","7cfe610e01dafc496143664a1a8cf87d",""),
+    ("pair_04","real","9a74296ad4c231241c1ac6057c08bbcb",""),
+    ("pair_05","fake","afc5ba429bc79086f05d6798e4ed978a",""),
+    ("pair_05","real","619f582e27e736ebc4c5def47f954535",""),
+    ("pair_06","fake","25d9ed3994c2d5f030b864867facab47",""),
+    ("pair_06","real","f030f59e7579dcda946ab8a3bd2733c6",""),
+    ("pair_07","fake","b4a497151507853058c8c50b6c6670f5",""),
+    ("pair_07","real","6f2b7e632c64ba5835164abe2f1ab28e",""),
+    ("pair_08","fake","b9801872032a3bee629f6559bbf503ba",""),
+    ("pair_08","real","3b7e48be19979f9df3a146e2d0277c58",""),
+    ("pair_09","fake","dfb9f2af5bb9b16ba717b91d6be5fa2f",""),
+    ("pair_09","real","100536e843cd4e307e1a2865b28b1f05",""),
+    ("pair_10","fake","3dac58ea8cfef832bde25278a699fd45",""),
+    ("pair_10","real","22c6a11c223c838fa933b5b4af777fcc",""),
 ]
 
 BETA_GRID = [0.3, 0.6, 0.9, 1.5, 2.0]
@@ -228,7 +244,13 @@ def main():
               f"pr={r['peak_ratio']:.2f} "
               f"fc_firstR={r['fc_first_rmsle']:.4f} fc_repeatR={r['fc_repeat_rmsle']:.4f}")
 
-    save_path = OUT / "v17r3_sentinel_actor_flow.json"
+    # Convert numpy bools to Python bools for JSON
+    for r in all_results:
+        r["is_zero_tail"] = bool(r["is_zero_tail"])
+        r["win"] = bool(r["win"])
+        for k in ["bM_at_upper","a0_at_upper","g0_at_upper"]:
+            r["bounds"][k] = bool(r["bounds"][k])
+    save_path = OUT / "v17r3_full_10pairs.json"
     save_path.write_text(json.dumps(all_results, indent=2, default=str))
     print(f"\nSaved: {save_path}")
 
