@@ -142,11 +142,10 @@ class ForecastRunner:
         cutoff_state = build_cutoff_state(
             history, population, params, grid, cfg.cutoff_step, rng)
 
-        all_active_steps = []  # per-seed: list of per-step active arrays
+        all_active_steps = []
         all_first_steps = []
         all_repeat_steps = []
         all_traces = []
-        prior_m = cutoff_state.m.copy()  # tracks whether agent has ever been active
 
         for seed in cfg.forecast_seeds:
             # Build network provider
@@ -186,66 +185,54 @@ class ForecastRunner:
                 raise RuntimeError(
                     f"Forecast trajectory too short: {len(metrics.n_A_ts)} < {H + 1}")
 
-            # User-level behavioral emission per step
-            # active_during_step[i] = True if agent i was active (in A) at ANY
-            # point during this step. We approximate as: agent was in A either
-            # at start or became A during the step via E->A or D1->A.
-            # Since we only have snapshot-level data, we count:
-            #   active = A-state at step start OR new activation this step
-            n_A = np.array(metrics.n_A_ts, dtype=np.int32)
-            E_to_A = np.array(metrics.E_to_A_ts, dtype=np.int32)
-            D1_to_A = np.array(metrics.D1_to_A_ts, dtype=np.int32)
+            # V1.7R.2: user-level behavioral emission via step_observer
+            step_active = []   # per-step: count of agents active during step
+            step_first = []    # first-ever activation this step (E->A from m=0)
+            step_repeat = []   # repeat activity (already had m=1)
+            prior_m = cutoff_state.m.copy()
 
-            # Per-step: who is newly activated?
-            # We track via prior_m: if agent was m=0 before and now gets activated,
-            # it's a first actor. If m=1, it's a repeat.
-            per_step_active = []
-            per_step_first = []
-            per_step_repeat = []
+            def observer(step_idx, state_copy, events):
+                # Track who was in A at step start vs became A during step
+                start_A = (cutoff_state.z == 2) if step_idx == 1 else None
+                # Actually use the state_copy from observer
+                a_now = state_copy.z == 2
+                m_now = state_copy.m
+                # First actor: m changed from 0 to 1 this step
+                new_first = (m_now == 1) & (prior_m == 0)
+                # Repeat: already had m=1 from before
+                was_active_before = prior_m == 1
+                # Active during step: in A at step end OR newly activated
+                active_during = a_now | new_first
+                step_active.append(int(active_during.sum()))
+                step_first.append(int(new_first.sum()))
+                step_repeat.append(int((active_during & ~new_first).sum()))
+                prior_m[:] = m_now  # update for next step
+
+            sim_cfg.step_observer = observer
+
+            # Re-run with observer attached
+            runner2 = SimulationRunner(sim_cfg)
+            metrics2 = runner2.run()
+
+            if len(metrics2.n_A_ts) < H + 1:
+                raise RuntimeError(f"Forecast too short: {len(metrics2.n_A_ts)} < {H+1}")
+
+            # Save full traces from this seed
             traces = {
-                "n_U": [], "n_E": [], "n_A": [], "n_D": [],
-                "U_to_E": [], "E_to_A": [], "E_to_D": [],
-                "A_to_D": [], "D0_to_A": [], "D1_to_A": [],
+                "n_U": [int(x) for x in metrics2.n_U_ts[:H+1]],
+                "n_E": [int(x) for x in metrics2.n_E_ts[:H+1]],
+                "n_A": [int(x) for x in metrics2.n_A_ts[:H+1]],
+                "n_D": [int(x) for x in metrics2.n_D_ts[:H+1]],
+                "U_to_E": [int(x) for x in metrics2.U_to_E_ts[:H+1]],
+                "E_to_A": [int(x) for x in metrics2.E_to_A_ts[:H+1]],
+                "E_to_D": [int(x) for x in metrics2.E_to_D_ts[:H+1]],
+                "A_to_D": [int(x) for x in metrics2.A_to_D_ts[:H+1]],
+                "D0_to_A": [int(x) for x in metrics2.D0_to_A_ts[:H+1]],
+                "D1_to_A": [int(x) for x in metrics2.D1_to_A_ts[:H+1]],
             }
-
-            # Current state z at step end
-            for t in range(H + 1):  # t=0 is cutoff state, t=1..H are forecasts
-                n_U_t = int(metrics.n_U_ts[t]) if t < len(metrics.n_U_ts) else 0
-                n_A_t = int(metrics.n_A_ts[t]) if t < len(metrics.n_A_ts) else 0
-                n_E_t = int(metrics.n_E_ts[t]) if t < len(metrics.n_E_ts) else 0
-                n_D_t = int(metrics.n_D_ts[t]) if t < len(metrics.n_D_ts) else 0
-                u2e = int(metrics.U_to_E_ts[t]) if t < len(metrics.U_to_E_ts) else 0
-                e2a = int(metrics.E_to_A_ts[t]) if t < len(metrics.E_to_A_ts) else 0
-                e2d = int(metrics.E_to_D_ts[t]) if t < len(metrics.E_to_D_ts) else 0
-                a2d = int(metrics.A_to_D_ts[t]) if t < len(metrics.A_to_D_ts) else 0
-                d02a = int(metrics.D0_to_A_ts[t]) if t < len(metrics.D0_to_A_ts) else 0
-                d12a = int(metrics.D1_to_A_ts[t]) if t < len(metrics.D1_to_A_ts) else 0
-                traces["n_U"].append(n_U_t)
-                traces["n_E"].append(n_E_t)
-                traces["n_A"].append(n_A_t)
-                traces["n_D"].append(n_D_t)
-                traces["U_to_E"].append(u2e)
-                traces["E_to_A"].append(e2a)
-                traces["E_to_D"].append(e2d)
-                traces["A_to_D"].append(a2d)
-                traces["D0_to_A"].append(d02a)
-                traces["D1_to_A"].append(d12a)
-
-                # Behavioral: who was active? = A-stock at time t
-                # (Snapshot proxy: agent in A at step boundary)
-                # first = E->A (first-ever activation)
-                # repeat = D1->A (reactivation) + continuing A (already active before)
-                n_active = n_A_t
-                n_first_est = e2a  # new activations this step
-                n_repeat_est = n_active - n_first_est  # rest are continuing/reactivated
-
-                per_step_active.append(n_active)
-                per_step_first.append(n_first_est)
-                per_step_repeat.append(max(0, n_repeat_est))
-
-            all_active_steps.append(per_step_active)
-            all_first_steps.append(per_step_first)
-            all_repeat_steps.append(per_step_repeat)
+            all_active_steps.append(step_active)
+            all_first_steps.append(step_first)
+            all_repeat_steps.append(step_repeat)
             all_traces.append(traces)
 
         # Aggregate across seeds
