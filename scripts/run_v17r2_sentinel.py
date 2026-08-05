@@ -124,15 +124,16 @@ def main():
             hist_obs = obs_arr[:cutoff_step+1]
             n_data = len(obs_arr)
 
-            bf = BaselineForecast(hist_obs, n_data) if len(hist_obs) >= 2 else None
+            bf = BaselineForecast(hist_obs, cutoff_step + 1 + horizon_steps) if len(hist_obs) >= 2 else None
             zeros = np.zeros(horizon_steps, dtype=np.float64)
             bl_zero = rmsle(target.active_count, zeros)
             bl_best = bl_zero
             bl_name = "zero"
             if bf:
-                for bname, bpred in [("persist", bf.persistence_last),
+                for bname, bpred in [("persist", bf.persistence_last[:horizon_steps]),
                                       ("exp", bf.exp_decay_future[:horizon_steps]),
                                       ("pulse", bf.pulse_decay_future[:horizon_steps])]:
+                    if len(bpred) < horizon_steps: continue
                     br = rmsle(target.active_count, bpred)
                     if br < bl_best:
                         bl_best = br
@@ -140,11 +141,8 @@ def main():
 
             fc_rmsle = rmsle(target.active_count, result.fc_active)
             pk = peak_error(target.active_count, result.fc_active)
-            # Win: must beat ALL baselines (including zero)
-            win = fc_rmsle < bl_zero and (bf is None or fc_rmsle < min(
-                rmsle(target.active_count, bf.persistence_last),
-                rmsle(target.active_count, bf.exp_decay_future[:horizon_steps]),
-                rmsle(target.active_count, bf.pulse_decay_future[:horizon_steps])))
+            # Win: must beat the BEST baseline (including zero)
+            win = fc_rmsle < bl_best
 
             entry = {
                 "pid":pid, "label":label, "note":note,

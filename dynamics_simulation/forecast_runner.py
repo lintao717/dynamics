@@ -169,22 +169,6 @@ class ForecastRunner:
                 return timeline.inputs_at(n, abs_step, ms, mt)
 
             from dynamics_simulation.simulation import SimulationConfig, SimulationRunner
-            sim_cfg = SimulationConfig(
-                n_agents=N, T=H,  # simulate H steps forward from cutoff
-                micro_steps=cfg.micro_steps,
-                reactivation_mode=cfg.reactivation_mode.value,
-                seed=seed, params=params,
-                initial_state=cutoff_state.copy(),
-                network_provider=net_fn, input_fn=input_fn,
-                verbose=False,
-            )
-            runner = SimulationRunner(sim_cfg)
-            metrics = runner.run()
-
-            if len(metrics.n_A_ts) < H + 1:
-                raise RuntimeError(
-                    f"Forecast trajectory too short: {len(metrics.n_A_ts)} < {H + 1}")
-
             # V1.7R.2: user-level behavioral emission via step_observer
             step_active = []   # per-step: count of agents active during step
             step_first = []    # first-ever activation this step (E->A from m=0)
@@ -208,27 +192,31 @@ class ForecastRunner:
                 step_repeat.append(int((active_during & ~new_first).sum()))
                 prior_m[:] = m_now  # update for next step
 
-            sim_cfg.step_observer = observer
+            # Build sim config with observer from the start
+            sim_cfg = SimulationConfig(
+                n_agents=N, T=H,
+                micro_steps=cfg.micro_steps,
+                reactivation_mode=cfg.reactivation_mode.value,
+                seed=seed, params=params,
+                initial_state=cutoff_state.copy(),
+                network_provider=net_fn, input_fn=input_fn,
+                step_observer=observer, verbose=False,
+            )
+            runner = SimulationRunner(sim_cfg)
+            metrics = runner.run()
 
-            # Re-run with observer attached
-            runner2 = SimulationRunner(sim_cfg)
-            metrics2 = runner2.run()
-
-            if len(metrics2.n_A_ts) < H + 1:
-                raise RuntimeError(f"Forecast too short: {len(metrics2.n_A_ts)} < {H+1}")
+            if len(metrics.n_A_ts) < H + 1:
+                raise RuntimeError(f"Forecast too short: {len(metrics.n_A_ts)} < {H+1}")
 
             # Save full traces from this seed
             traces = {
-                "n_U": [int(x) for x in metrics2.n_U_ts[:H+1]],
-                "n_E": [int(x) for x in metrics2.n_E_ts[:H+1]],
-                "n_A": [int(x) for x in metrics2.n_A_ts[:H+1]],
-                "n_D": [int(x) for x in metrics2.n_D_ts[:H+1]],
-                "U_to_E": [int(x) for x in metrics2.U_to_E_ts[:H+1]],
-                "E_to_A": [int(x) for x in metrics2.E_to_A_ts[:H+1]],
-                "E_to_D": [int(x) for x in metrics2.E_to_D_ts[:H+1]],
-                "A_to_D": [int(x) for x in metrics2.A_to_D_ts[:H+1]],
-                "D0_to_A": [int(x) for x in metrics2.D0_to_A_ts[:H+1]],
-                "D1_to_A": [int(x) for x in metrics2.D1_to_A_ts[:H+1]],
+                "n_U": [int(x) for x in metrics.n_U_ts[:H+1]],
+                "n_A": [int(x) for x in metrics.n_A_ts[:H+1]],
+                "n_D": [int(x) for x in metrics.n_D_ts[:H+1]],
+                "U_to_E": [int(x) for x in metrics.U_to_E_ts[:H+1]],
+                "E_to_A": [int(x) for x in metrics.E_to_A_ts[:H+1]],
+                "E_to_D": [int(x) for x in metrics.E_to_D_ts[:H+1]],
+                "A_to_D": [int(x) for x in metrics.A_to_D_ts[:H+1]],
             }
             all_active_steps.append(step_active)
             all_first_steps.append(step_first)
@@ -246,10 +234,10 @@ class ForecastRunner:
         p50_f, _, _ = _agg(all_first_steps)
         p50_r, _, _ = _agg(all_repeat_steps)
 
-        # Future only: skip t=0 (cutoff), take t=1..H
-        fc_active = p50_a[1:H + 1]
-        fc_first = p50_f[1:H + 1]
-        fc_repeat = p50_r[1:H + 1]
+        # step_active already has only forecast values (no cutoff snapshot)
+        fc_active = p50_a[:H]
+        fc_first = p50_f[:H]
+        fc_repeat = p50_r[:H]
 
         # Aggregate traces
         agg_traces = {}
