@@ -55,19 +55,22 @@ def _fit_event(history, case, base, bM, a0, g0):
         propagation=replace(base.propagation, beta_M=bM),
         activation=replace(base.activation, alpha_0=a0),
         decay=replace(base.decay, gamma_0=g0))
-    cfg = ReplayConfig(step_hours=STEP_H, tail_steps=0,
-        network_mode=ReplayNetworkMode.BROADCAST, seeds=(42,),
-        micro_steps=1, reactivation_mode=ReactivationMode.ONE_SHOT.value)
-    r = run_replay(case, p, cfg)
-    if not r.simulated_mean: return 9.0
-    traj = build_observed_trajectory(case, NodeIndex.from_case(case),
-        TimeGrid.from_case(case, step_hours=STEP_H, tail_steps=0))
-    obs = np.array(traj.active_count, dtype=np.float64)
-    n_pre = history.cutoff_step + 1
-    sim = np.array(r.simulated_mean.get("n_A_ts",[0]), dtype=np.float64)
-    if len(sim) > n_pre: sim = sim[:n_pre]
-    elif len(sim) < n_pre: sim = np.pad(sim, (0,n_pre-len(sim)), mode="edge")
-    return rmsle(obs[:n_pre], sim[:len(obs[:n_pre])])
+    losses = []
+    for s in [11, 23, 37, 53, 71]:  # multi-seed
+        cfg = ReplayConfig(step_hours=STEP_H, tail_steps=0,
+            network_mode=ReplayNetworkMode.BROADCAST, seeds=(s,),
+            micro_steps=1, reactivation_mode=ReactivationMode.ONE_SHOT.value)
+        r = run_replay(case, p, cfg)
+        if not r.simulated_mean: continue
+        traj = build_observed_trajectory(case, NodeIndex.from_case(case),
+            TimeGrid.from_case(case, step_hours=STEP_H, tail_steps=0))
+        obs = np.array(traj.active_count, dtype=np.float64)
+        n_pre = history.cutoff_step + 1
+        sim = np.array(r.simulated_mean.get("n_A_ts",[0]), dtype=np.float64)
+        if len(sim) > n_pre: sim = sim[:n_pre]
+        elif len(sim) < n_pre: sim = np.pad(sim, (0,n_pre-len(sim)), mode="edge")
+        losses.append(rmsle(obs[:n_pre], sim[:len(obs[:n_pre])]))
+    return np.median(losses) if losses else 9.0
 
 
 def _eval_forecast(history, case, bM, a0, g0, cutoff_step, horizon_steps,
