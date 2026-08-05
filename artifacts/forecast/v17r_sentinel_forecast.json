@@ -1,0 +1,674 @@
+[
+  {
+    "pid": "pair_06",
+    "label": "fake",
+    "rationale": "fake-news, performed well in V1.5.2 ONE_SHOT (reachable)",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "population_mode": "oracle_cohort",
+    "n_agents": 183,
+    "n_observed": 179,
+    "n_future": 4,
+    "beta_M": 1.0,
+    "obs_future": [
+      2.0,
+      1.0,
+      0.0
+    ],
+    "fc_active": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_rmsle": 1.2777,
+    "fc_rmsle": 0.75,
+    "peak_ratio": 0.0,
+    "peak_step_error": 0,
+    "git_sha": "cc73c1dac900293149c47f18c6a567ace4440a6b",
+    "assertions": {
+      "trajectory_length_ok": true,
+      "first_plus_repeat_equals_active": true,
+      "no_padding_used": true
+    }
+  },
+  {
+    "pid": "pair_06",
+    "label": "fake",
+    "rationale": "fake-news, performed well in V1.5.2 ONE_SHOT (reachable)",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "population_mode": "observed_closed",
+    "n_agents": 179,
+    "n_observed": 179,
+    "n_future": 0,
+    "beta_M": 1.0,
+    "obs_future": [
+      2.0,
+      1.0,
+      0.0
+    ],
+    "fc_active": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_rmsle": 1.2777,
+    "fc_rmsle": 0.75,
+    "peak_ratio": 0.0,
+    "peak_step_error": 0,
+    "git_sha": "cc73c1dac900293149c47f18c6a567ace4440a6b",
+    "assertions": {
+      "trajectory_length_ok": true,
+      "first_plus_repeat_equals_active": true,
+      "no_padding_used": true
+    }
+  },
+  {
+    "pid": "pair_06",
+    "label": "fake",
+    "rationale": "fake-news, performed well in V1.5.2 ONE_SHOT (reachable)",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "population_mode": "oracle_cohort",
+    "n_agents": 183,
+    "n_observed": 181,
+    "n_future": 2,
+    "beta_M": 1.0,
+    "obs_future": [
+      1.0,
+      0.0
+    ],
+    "fc_active": [
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_rmsle": 1.3256,
+    "fc_rmsle": 0.4901,
+    "peak_ratio": 0.0,
+    "peak_step_error": 0,
+    "git_sha": "cc73c1dac900293149c47f18c6a567ace4440a6b",
+    "assertions": {
+      "trajectory_length_ok": true,
+      "first_plus_repeat_equals_active": true,
+      "no_padding_used": true
+    }
+  },
+  {
+    "pid": "pair_06",
+    "label": "fake",
+    "rationale": "fake-news, performed well in V1.5.2 ONE_SHOT (reachable)",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "population_mode": "observed_closed",
+    "n_agents": 181,
+    "n_observed": 181,
+    "n_future": 0,
+    "beta_M": 1.0,
+    "obs_future": [
+      1.0,
+      0.0
+    ],
+    "fc_active": [
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_rmsle": 1.3256,
+    "fc_rmsle": 0.4901,
+    "peak_ratio": 0.0,
+    "peak_step_error": 0,
+    "git_sha": "cc73c1dac900293149c47f18c6a567ace4440a6b",
+    "assertions": {
+      "trajectory_length_ok": true,
+      "first_plus_repeat_equals_active": true,
+      "no_padding_used": true
+    }
+  },
+  {
+    "pid": "pair_09",
+    "label": "fake",
+    "rationale": "fake-news, failed in V1.5.2 ONE_SHOT",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "population_mode": "oracle_cohort",
+    "n_agents": 136,
+    "n_observed": 134,
+    "n_future": 2,
+    "beta_M": 0.9,
+    "obs_future": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_active": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_rmsle": 1.7092,
+    "fc_rmsle": 0.0,
+    "peak_ratio": 0.0,
+    "peak_step_error": 0,
+    "git_sha": "cc73c1dac900293149c47f18c6a567ace4440a6b",
+    "assertions": {
+      "trajectory_length_ok": true,
+      "first_plus_repeat_equals_active": true,
+      "no_padding_used": true
+    }
+  },
+  {
+    "pid": "pair_09",
+    "label": "fake",
+    "rationale": "fake-news, failed in V1.5.2 ONE_SHOT",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "population_mode": "observed_closed",
+    "n_agents": 134,
+    "n_observed": 134,
+    "n_future": 0,
+    "beta_M": 0.9,
+    "obs_future": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_active": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_rmsle": 1.7092,
+    "fc_rmsle": 0.0,
+    "peak_ratio": 0.0,
+    "peak_step_error": 0,
+    "git_sha": "cc73c1dac900293149c47f18c6a567ace4440a6b",
+    "assertions": {
+      "trajectory_length_ok": true,
+      "first_plus_repeat_equals_active": true,
+      "no_padding_used": true
+    }
+  },
+  {
+    "pid": "pair_09",
+    "label": "fake",
+    "rationale": "fake-news, failed in V1.5.2 ONE_SHOT",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "population_mode": "oracle_cohort",
+    "n_agents": 136,
+    "n_observed": 134,
+    "n_future": 2,
+    "beta_M": 0.9,
+    "obs_future": [
+      0.0,
+      0.0
+    ],
+    "fc_active": [
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_rmsle": 0.0,
+    "fc_rmsle": 0.0,
+    "peak_ratio": 0.0,
+    "peak_step_error": 0,
+    "git_sha": "cc73c1dac900293149c47f18c6a567ace4440a6b",
+    "assertions": {
+      "trajectory_length_ok": true,
+      "first_plus_repeat_equals_active": true,
+      "no_padding_used": true
+    }
+  },
+  {
+    "pid": "pair_09",
+    "label": "fake",
+    "rationale": "fake-news, failed in V1.5.2 ONE_SHOT",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "population_mode": "observed_closed",
+    "n_agents": 134,
+    "n_observed": 134,
+    "n_future": 0,
+    "beta_M": 0.9,
+    "obs_future": [
+      0.0,
+      0.0
+    ],
+    "fc_active": [
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_rmsle": 0.0,
+    "fc_rmsle": 0.0,
+    "peak_ratio": 0.0,
+    "peak_step_error": 0,
+    "git_sha": "cc73c1dac900293149c47f18c6a567ace4440a6b",
+    "assertions": {
+      "trajectory_length_ok": true,
+      "first_plus_repeat_equals_active": true,
+      "no_padding_used": true
+    }
+  },
+  {
+    "pid": "pair_05",
+    "label": "real",
+    "rationale": "real-news, rapid post-peak decay",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "population_mode": "oracle_cohort",
+    "n_agents": 344,
+    "n_observed": 340,
+    "n_future": 4,
+    "beta_M": 0.9,
+    "obs_future": [
+      5.0,
+      0.0,
+      0.0
+    ],
+    "fc_active": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_rmsle": 1.1559,
+    "fc_rmsle": 1.0345,
+    "peak_ratio": 0.0,
+    "peak_step_error": 0,
+    "git_sha": "cc73c1dac900293149c47f18c6a567ace4440a6b",
+    "assertions": {
+      "trajectory_length_ok": true,
+      "first_plus_repeat_equals_active": true,
+      "no_padding_used": true
+    }
+  },
+  {
+    "pid": "pair_05",
+    "label": "real",
+    "rationale": "real-news, rapid post-peak decay",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "population_mode": "observed_closed",
+    "n_agents": 340,
+    "n_observed": 340,
+    "n_future": 0,
+    "beta_M": 0.9,
+    "obs_future": [
+      5.0,
+      0.0,
+      0.0
+    ],
+    "fc_active": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_rmsle": 1.1559,
+    "fc_rmsle": 1.0345,
+    "peak_ratio": 0.0,
+    "peak_step_error": 0,
+    "git_sha": "cc73c1dac900293149c47f18c6a567ace4440a6b",
+    "assertions": {
+      "trajectory_length_ok": true,
+      "first_plus_repeat_equals_active": true,
+      "no_padding_used": true
+    }
+  },
+  {
+    "pid": "pair_05",
+    "label": "real",
+    "rationale": "real-news, rapid post-peak decay",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "population_mode": "oracle_cohort",
+    "n_agents": 344,
+    "n_observed": 344,
+    "n_future": 0,
+    "beta_M": 0.9,
+    "obs_future": [
+      0.0,
+      0.0
+    ],
+    "fc_active": [
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_rmsle": 1.7918,
+    "fc_rmsle": 0.0,
+    "peak_ratio": 0.0,
+    "peak_step_error": 0,
+    "git_sha": "cc73c1dac900293149c47f18c6a567ace4440a6b",
+    "assertions": {
+      "trajectory_length_ok": true,
+      "first_plus_repeat_equals_active": true,
+      "no_padding_used": true
+    }
+  },
+  {
+    "pid": "pair_05",
+    "label": "real",
+    "rationale": "real-news, rapid post-peak decay",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "population_mode": "observed_closed",
+    "n_agents": 344,
+    "n_observed": 344,
+    "n_future": 0,
+    "beta_M": 0.9,
+    "obs_future": [
+      0.0,
+      0.0
+    ],
+    "fc_active": [
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_rmsle": 1.7918,
+    "fc_rmsle": 0.0,
+    "peak_ratio": 0.0,
+    "peak_step_error": 0,
+    "git_sha": "cc73c1dac900293149c47f18c6a567ace4440a6b",
+    "assertions": {
+      "trajectory_length_ok": true,
+      "first_plus_repeat_equals_active": true,
+      "no_padding_used": true
+    }
+  },
+  {
+    "pid": "pair_03",
+    "label": "real",
+    "rationale": "real-news, visible long tail (21 data steps)",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "population_mode": "oracle_cohort",
+    "n_agents": 434,
+    "n_observed": 423,
+    "n_future": 11,
+    "beta_M": 1.0,
+    "obs_future": [
+      7.0,
+      4.0,
+      0.0
+    ],
+    "fc_active": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_rmsle": 1.1427,
+    "fc_rmsle": 1.5182,
+    "peak_ratio": 0.0,
+    "peak_step_error": 0,
+    "git_sha": "cc73c1dac900293149c47f18c6a567ace4440a6b",
+    "assertions": {
+      "trajectory_length_ok": true,
+      "first_plus_repeat_equals_active": true,
+      "no_padding_used": true
+    }
+  },
+  {
+    "pid": "pair_03",
+    "label": "real",
+    "rationale": "real-news, visible long tail (21 data steps)",
+    "cutoff_h": 48,
+    "horizon_h": 72,
+    "cutoff_step": 2,
+    "horizon_steps": 3,
+    "population_mode": "observed_closed",
+    "n_agents": 423,
+    "n_observed": 423,
+    "n_future": 0,
+    "beta_M": 1.0,
+    "obs_future": [
+      7.0,
+      4.0,
+      0.0
+    ],
+    "fc_active": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bl_rmsle": 1.1427,
+    "fc_rmsle": 1.5182,
+    "peak_ratio": 0.0,
+    "peak_step_error": 0,
+    "git_sha": "cc73c1dac900293149c47f18c6a567ace4440a6b",
+    "assertions": {
+      "trajectory_length_ok": true,
+      "first_plus_repeat_equals_active": true,
+      "no_padding_used": true
+    }
+  },
+  {
+    "pid": "pair_03",
+    "label": "real",
+    "rationale": "real-news, visible long tail (21 data steps)",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "population_mode": "oracle_cohort",
+    "n_agents": 434,
+    "n_observed": 429,
+    "n_future": 5,
+    "beta_M": 1.0,
+    "obs_future": [
+      4.0,
+      0.0
+    ],
+    "fc_active": [
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_rmsle": 1.5075,
+    "fc_rmsle": 1.138,
+    "peak_ratio": 0.0,
+    "peak_step_error": 0,
+    "git_sha": "cc73c1dac900293149c47f18c6a567ace4440a6b",
+    "assertions": {
+      "trajectory_length_ok": true,
+      "first_plus_repeat_equals_active": true,
+      "no_padding_used": true
+    }
+  },
+  {
+    "pid": "pair_03",
+    "label": "real",
+    "rationale": "real-news, visible long tail (21 data steps)",
+    "cutoff_h": 72,
+    "horizon_h": 48,
+    "cutoff_step": 3,
+    "horizon_steps": 2,
+    "population_mode": "observed_closed",
+    "n_agents": 429,
+    "n_observed": 429,
+    "n_future": 0,
+    "beta_M": 1.0,
+    "obs_future": [
+      4.0,
+      0.0
+    ],
+    "fc_active": [
+      0.0,
+      0.0
+    ],
+    "fc_first": [
+      0.0,
+      0.0
+    ],
+    "fc_repeat": [
+      0.0,
+      0.0
+    ],
+    "bl_rmsle": 1.5075,
+    "fc_rmsle": 1.138,
+    "peak_ratio": 0.0,
+    "peak_step_error": 0,
+    "git_sha": "cc73c1dac900293149c47f18c6a567ace4440a6b",
+    "assertions": {
+      "trajectory_length_ok": true,
+      "first_plus_repeat_equals_active": true,
+      "no_padding_used": true
+    }
+  }
+]
