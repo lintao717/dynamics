@@ -175,22 +175,20 @@ class ForecastRunner:
             step_repeat = []   # repeat activity (already had m=1)
             prior_m = cutoff_state.m.copy()
 
-            def observer(step_idx, state_copy, events):
-                # Track who was in A at step start vs became A during step
-                start_A = (cutoff_state.z == 2) if step_idx == 1 else None
-                # Actually use the state_copy from observer
-                a_now = state_copy.z == 2
-                m_now = state_copy.m
-                # First actor: m changed from 0 to 1 this step
-                new_first = (m_now == 1) & (prior_m == 0)
+            def observer(step_idx, state_before, state_after, events):
+                # V1.7R.4: correct behavioral emission using pre AND post state
+                # Active during step: was A at start OR became A during step
+                was_A_start = state_before.z == 2
+                became_A = (state_before.z != 2) & (state_after.z == 2)
+                active_during = was_A_start | became_A
+                # First actor: prior_m was 0, now activated
+                new_first = (state_after.m == 1) & (prior_m == 0)
                 # Repeat: already had m=1 from before
-                was_active_before = prior_m == 1
-                # Active during step: in A at step end OR newly activated
-                active_during = a_now | new_first
+                repeat_during = active_during & ~new_first
                 step_active.append(int(active_during.sum()))
                 step_first.append(int(new_first.sum()))
-                step_repeat.append(int((active_during & ~new_first).sum()))
-                prior_m[:] = m_now  # update for next step
+                step_repeat.append(int(repeat_during.sum()))
+                prior_m[:] = state_after.m  # update for next step
 
             # Build sim config with observer from the start
             sim_cfg = SimulationConfig(

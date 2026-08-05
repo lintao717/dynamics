@@ -103,7 +103,7 @@ def test_step_observer_is_called():
     custom = _make_custom_state(3)
     observed_steps = []
 
-    def observer(step, state, events):
+    def observer(step, state_before, state_after, events):
         observed_steps.append(step)
 
     cfg = SimulationConfig(

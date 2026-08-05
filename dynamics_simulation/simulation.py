@@ -216,6 +216,9 @@ class SimulationRunner:
             macro_reactivations = 0
             macro_exposures = 0
 
+            # V1.7R.4: capture state before macro-step
+            state_before_macro = state.copy() if cfg.step_observer is not None else None
+
             for m in range(M):
                 # Micro-step input: passes macro-step t, T, micro-index m, total M
                 try:
@@ -249,9 +252,9 @@ class SimulationRunner:
 
             V_current = V_next  # Carry forward to next macro-step
 
-            # Step observer (called after macro-step completes)
+            # Step observer (V1.7R.4: passes both before and after state)
             if cfg.step_observer is not None:
-                cfg.step_observer(t + 1, state.copy(), macro_events)
+                cfg.step_observer(t + 1, state_before_macro, state.copy(), macro_events)
 
             # Record snapshot at MACRO-step boundary
             self.metrics.record(
