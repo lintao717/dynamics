@@ -1,0 +1,11 @@
+{
+  "work_items_dir": "docs/work-items",
+  "max_review_rounds": 2,
+  "max_blockers": 3,
+  "max_inline_diff_chars": 500000,
+  "default_test_commands": [],
+  "default_lint_commands": [],
+  "default_typecheck_commands": [],
+  "protected_branches": ["main", "master", "develop"],
+  "require_clean_tree_for_new_branch": true
+}
