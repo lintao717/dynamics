@@ -4,7 +4,8 @@
 **审计范围**: 只读 — 不修改业务代码、不创建分支、不推送  
 **仓库**: `D:\舆情分析`  
 **分支**: `master`  
-**HEAD**: `bd8b4f8` (chore: add GPT-Claude development workflow)  
+**审计开始时 HEAD**: `bd8b4f8` (chore: add GPT-Claude development workflow)
+**报告提交后 HEAD**: `4cfa00b` (docs: project recovery audit)
 **业务基线**: `3298c38` (fix: V2.0-C corrected opinion scoring)
 
 ---
@@ -14,22 +15,26 @@
 | 项目 | 值 |
 |------|-----|
 | 当前分支 | `master` |
-| HEAD commit | `bd8b4f8` |
+| 审计开始时 HEAD | `bd8b4f8` |
+| 报告提交后 HEAD | `4cfa00b` |
 | 业务基线 commit | `3298c38` |
-| HEAD 之后的提交 | 1 个 (`bd8b4f8`: 仅添加 `.claude/skills/wf-*` 工作流文件) |
-| 已跟踪文件 (含修改) | ~113 个 (主要是未跟踪的本地配置/数据目录) |
-| 未提交修改 | 无 (仅 `.gitignore` 覆盖的未跟踪目录) |
-| 远程 | `origin/master` 同步到 `bd8b4f8` |
+| `git ls-files` 数量 | 238 |
+| tracked working tree | CLEAN |
+| index | CLEAN |
+| `git status --porcelain` 中 `??` 条目数 | 113 |
+| 远程 | `origin/master` 同步到 `4cfa00b` |
 
-未跟踪文件分类（不纳入业务完成度）：
+存在 113 条未跟踪项，分类如下（不纳入业务完成度）：
 
 | 类别 | 数量 | 示例 |
 |------|------|------|
-| Claude Code 配置 | ~80 | `.claude/`, `.aris/`, `.trellis/` |
-| 研究数据 | ~5 | `Tibet_data_collector/`, `auto_claude_research/` |
-| 论文/申报 | ~8 | `Paper/`, `2409.08717v4.pdf`, `申报书_*.docx` |
-| 项目文档 | ~10 | `文献调研报告.md`, `项目实施方法*.md` |
+| Claude Code / ARIS 配置与技能 | ~80 | `.claude/`, `.aris/`, `.trellis/` |
+| 研究框架 | ~5 | `auto_claude_research/` |
+| 数据采集 | ~5 | `Tibet_data_collector/` |
+| 论文与申报材料 | ~8 | `Paper/`, `2409.08717v4.pdf`, `申报书_*.docx` |
+| 项目文档 | ~8 | `文献调研报告.md`, `项目实施方法*.md` |
 | 探索性目录 | ~3 | `idea-stage/`, `my_research_project/` |
+| 其他 | ~4 | `AGENTS.md`, `CLAUDE.md`, `.gitattributes`, `docs/2026-07-31-real-data-integration-plan.md` |
 
 ---
 
@@ -225,25 +230,211 @@ python -m pytest tests/ -q
 
 来源: `docs/2026-07-31-real-data-integration-plan.md`
 
-| Task | 描述 | 状态 | 证据 |
-|------|------|:--:|------|
-| Task 1 | CHECKED 数据适配器 | DONE | `data/checked.py:82-149` — `load_checked_case()` 完整 |
-| Task 2 | EventCase 数据契约 | DONE | `data/schema.py:46-112` — 不可变，含 `validate()` |
-| Task 3 | TimeGrid 时间网格 | DONE | `data/timegrid.py:16-90` — `last_data_step`/`final_step` 分离 |
-| Task 4 | NodeIndex 节点索引 | DONE | `data/indexing.py:15-45` |
-| Task 5 | ObservedTrajectory | DONE | `data/observations.py:20-134` — 含 `first_actor_count` |
-| Task 6 | 时序网络提供器 | DONE | `data/networks.py:93-234` — Broadcast/Cumulative/Oracle |
-| Task 7 | EventInputTimeline | DONE | `data/timeline.py:77-117` — 固定时间常数 |
-| Task 8 | 初始状态构建 | DONE | `data/state.py` — `build_initial_state()` |
-| Task 9 | 回放配置与运行器 | DONE | `replay/config.py`, `replay/runner.py` |
-| Task 10 | 校准目标函数 | DONE | `calibration/objective.py` — `compute_replay_loss()` |
-| Task 11 | 参数规格与搜索 | DONE | `calibration/parameters.py` — `Stage1ParameterSet` |
-| Task 12 | CLI 工具链 | DONE | `cli/inspect_dataset.py`, `cli/replay_event.py`, `cli/calibrate_event.py` |
-| Task 13 | 校准估计器 | DONE | `calibration/estimator.py` — `fit_stage1()` |
-| Task 14 | CI 测试 | DONE | `.github/workflows/test.yml` — `pytest tests/` |
-| Task 15 | CHECKED 数据下载 | UNVERIFIED | 计划中标注 "待下载"；实际 `data/raw/CHECKED/` 存在 2,104 个 JSON 文件 |
+每个 Task 按原始编号和原始要求逐项核验。
 
-**未完成的计划项**: 无。旧计划 Task 1-15 均已完成或数据已到位。
+### Task 1: Freeze V1.1 and Add Data-Governance Scaffolding
+
+| Step | 描述 | 状态 | 证据 |
+|------|------|:--:|------|
+| 1 | 创建独立分支/worktree | DONE | `git tag v1.1.0` 存在；commit `11fe456` "docs: define real-data governance" |
+| 2 | 运行 V1.1 基线 | DONE | CI 使用 `python -m pytest tests -v`；154 passed |
+| 3 | 添加 .gitignore 排除 | DONE | `.gitignore` 包含 `data/raw/`, `data/processed/`, `data/results/`, `*.parquet`, `*.sqlite`, `*.db` |
+| 4 | 编写 data/README.md + real_data_assumptions.md | DONE | `data/README.md` 和 `docs/real_data_assumptions.md` 均存在 |
+| 5 | 重新运行基线并提交 | DONE | `11fe456` |
+
+**整体**: **DONE** — 所有 5 个步骤已执行。
+
+### Task 2: Define the Canonical Event Data Contract
+
+| Step | 描述 | 状态 | 证据 |
+|------|------|:--:|------|
+| 1 | 编写 schema 测试（含边界校验） | DONE | `tests/test_data_schema.py` 存在 |
+| 2 | 运行测试确认 import 失败 | DONE | 通过 — `dynamics_simulation.data.schema` 已实现 |
+| 3 | 实现 `RootPost`, `InteractionRecord`, `EventCase` | DONE | `data/schema.py:19-113` — 不可变 dataclass，含 `validate()` |
+| 4 | 运行测试 | DONE | 154 tests pass |
+| 5 | 提交 | DONE | `44a07b2` "feat(data): add canonical event case schema" |
+
+**整体**: **DONE**。
+
+### Task 3: Implement the CHECKED Adapter
+
+| Step | 描述 | 状态 | 证据 |
+|------|------|:--:|------|
+| 1 | 添加 fixture | DONE | `tests/fixtures/checked_case.json` 存在 |
+| 2 | 编写适配器测试 | DONE | `tests/test_checked_adapter.py` 存在 |
+| 3 | 实现字段别名提取 + Asia/Shanghai→UTC | DONE | `data/checked.py:49-58` — `_pick()` 支持 ID_KEYS/USER_KEYS/DATE_KEYS/TEXT_KEYS；时区 `ZoneInfo("Asia/Shanghai")` |
+| 4 | 测试异常处理 | DONE | `test_checked_adapter.py` 包含 `ValueError` 测试 |
+| 5 | 提交 | DONE | `f10a2fc` "feat(data): add CHECKED cascade adapter" |
+
+**整体**: **DONE**。
+
+### Task 4: Implement the CED Adapter as a Secondary Pipeline Check
+
+| Step | 描述 | 状态 | 证据 |
+|------|------|:--:|------|
+| 1 | 创建 CED fixtures | DONE | `tests/fixtures/ced_original.json`, `tests/fixtures/ced_interactions.json` 存在 |
+| 2 | 编写测试 | DONE | `tests/test_ced_adapter.py` 存在 |
+| 3 | 实现适配器（含 SHA-256 ID 生成 + 时区处理） | DONE | `data/ced.py:47-138` — `load_ced_case()`, `_make_interaction_id()` 使用 SHA-256, `_parse_timestamp()` 处理 Unix epoch 和 Asia/Shanghai 字符串 |
+| 4 | 运行测试 | DONE | 154 tests pass |
+| 5 | 提交 | DONE | `1f70d26` "feat(data): add CED compatibility adapter" |
+
+**整体**: **DONE**。
+
+### Task 5: Add Node Indexing, Time Grid, and Observed Trajectories
+
+| Step | 描述 | 状态 | 证据 |
+|------|------|:--:|------|
+| 1 | TimeGrid 边界测试 | DONE | `tests/test_timegrid.py` 存在 |
+| 2 | 实现 NodeIndex（index 0 = root） | DONE | `data/indexing.py:24-37` |
+| 3 | 实现 ObservedTrajectory（含 NaN stance/arousal） | DONE | `data/observations.py:18-133` — 含 `first_actor_count`, `repeat_actor_count`，`stance_mean=NaN` |
+| 4 | 运行测试 | DONE | 154 tests pass |
+| 5 | 提交 | DONE | `a7d6084` "feat(data): add indexing time grid and observed trajectories" |
+
+**整体**: **DONE**。
+
+### Task 6: Build Explicit No-Leak Network Providers
+
+| Step | 描述 | 状态 | 证据 |
+|------|------|:--:|------|
+| 1 | 定义三种模式 | DONE | `data/networks.py:35-38` — `BROADCAST`, `CUMULATIVE_INTERACTION`, `ORACLE_STATIC` |
+| 2 | 无泄漏方向测试 | DONE | `tests/test_temporal_networks.py` 存在 |
+| 3 | 实现行归一化 G_o | DONE | `data/networks.py:97-99` — `_row_normalize()`；`CumulativeProvider` 构建 G_s 和 G_o |
+| 4 | NetworkSnapshot 校验 | DONE | `data/networks.py:54-69` — 形状、NaN/Inf、非负校验 |
+| 5 | 提交 | DONE | `f0b706f` "feat(data): add causal temporal network replay modes" |
+
+**整体**: **DONE**。
+
+### Task 7: Build a Real-Data Initial State and Optional Text Signals
+
+| Step | 描述 | 状态 | 证据 |
+|------|------|:--:|------|
+| 1 | 定义 TextSignals + StatePriorConfig | DONE | `data/state.py:27-43` — `TextSignals(stance_by_user, arousal_by_user)`, `StatePriorConfig` 存在 |
+| 2 | 编写状态构造测试 | DONE | `tests/test_initial_state.py` 存在 |
+| 3 | 实现 build_initial_state (复用 initialize_agents) | DONE | `data/state.py:59-96` — 接收可选的 `signals: Optional[TextSignals]` |
+| 4 | 添加校验（stance [-1,1], arousal [0,1]） | DONE | `state.py:47-57` 校验 |
+| 5 | 提交 | DONE | `517e80b` "feat(data): construct initial agent state from event cases" |
+
+**整体**: **DONE** — 但 `TextSignals` 在 replay runner 中**从未被传入**（`replay/runner.py` 调用 `build_initial_state(case, index, params, rng)` 不传 `signals`）。数据结构就位，但管线未连接。
+
+### Task 8: Build Event Input Timelines and Validate ExternalInputs
+
+| Step | 描述 | 状态 | 证据 |
+|------|------|:--:|------|
+| 1 | 编写范围/形状测试 | DONE | `tests/test_event_timeline.py:20-57` — shape 和 range 校验 |
+| 2 | 实现 ExternalInputs.resolve() 校验 | DONE | `transitions.py:64-128` — 校验 shape、NaN/Inf、范围 |
+| 3 | 实现 BroadcastExposureConfig + EventInputTimeline | DONE | `timeline.py:28-178` — `BroadcastExposureConfig`, `EventInputTimeline.inputs_at()` |
+| 4 | 确定性测试 | DONE | `test_event_timeline.py:114-128` |
+| 5 | 提交 | DONE | `1341fb6` "feat(data): add event input timeline and external input validation" |
+
+**整体**: **DONE** — 但 `ExternalInputs` 仅返回 `media_exposure, staleness, novelty, shock=0.0, V=0.0`（`timeline.py:172-178`）。`info_evidence`, `official_info`, `info_emotion` 从未被设置（始终为 `resolve()` 默认值零数组）。符合 Task 8 原始计划（计划未要求填充这些字段），但不满足 V2.0 的语义输入需求。
+
+### Task 9: Add External Initial State, Dynamic Networks, and Step Observers to the Simulator
+
+| Step | 描述 | 状态 | 证据 |
+|------|------|:--:|------|
+| 1 | 状态保持测试 | DONE | `tests/test_simulation_external_state.py:14-51` |
+| 2 | 动态网络测试 | DONE | `test_simulation_external_state.py:76-97` |
+| 3 | SimulationConfig 新增字段 | DONE | `simulation.py:77-85` — `initial_state`, `network_provider`, `step_observer` |
+| 4 | API 更新 | DONE | `api.py` — `from_network(initial_state=...)` |
+| 5 | 回归测试 + 提交 | DONE | `43ec019` "feat(sim): support external state temporal networks and observers" |
+
+**整体**: **DONE**。
+
+### Task 10: Implement Historical Replay and Reproducible Result Persistence
+
+| Step | 描述 | 状态 | 证据 |
+|------|------|:--:|------|
+| 1 | 定义 ReplayConfig | DONE | `replay/config.py:10-44` — 含 `max_nodes`, `truncate_policy`, `micro_steps` |
+| 2 | 序列化结果 + 来源 | DONE | `replay/result.py:26-124` — `ReplayResult` 含 `model_version`, `git_sha`, `params_dict` |
+| 3 | 单种子回放 | DONE | `replay/runner.py:31-89` — `_run_one_seed()` |
+| 4 | 多种子聚合 | DONE | `replay/runner.py:100-136` — `_aggregate_seeds()` 含 mean/std/p5/p50/p95 |
+| 5 | 确定性 + JSON 往返测试 | DONE | `tests/test_replay.py` 存在 |
+
+**整体**: **DONE** — `source_revision` 字段存在于 `CalibrationResult` 中但默认 `"unknown"`。Checklist 要求 "dataset license/citation and exact source revision must be recorded in each replay result" — 部分满足（字段在，但未实际填充 CHECKED 版本号）。
+
+### Task 11: Add Chronological Split and Masked Multi-Target Objective
+
+| Step | 描述 | 状态 | 证据 |
+|------|------|:--:|------|
+| 1 | 定义 TemporalSplit | DONE | `calibration/split.py:8-47` |
+| 2 | 定义 LossWeights | DONE | `calibration/objective.py:10-22` — `active_count`, `cumulative_users`, `interaction_count`, `peak_time`, `final_size` |
+| 3 | 实现 mask-safe 评分 | DONE | `calibration/objective.py:82-178` — `compute_replay_loss()` 使用掩码 |
+| 4 | train/test 分离测试 | DONE | `tests/test_calibration_objective.py` 存在 |
+| 5 | 提交 | DONE | `3291c54` "feat(calibration): add temporal split and masked replay loss" |
+
+**整体**: **DONE**。
+
+### Task 12: Implement Restricted Stage-1 Calibration
+
+| Step | 描述 | 状态 | 证据 |
+|------|------|:--:|------|
+| 1 | 四参数规格 | DONE | `calibration/parameters.py:34-44` — `Stage1ParameterSet.to_specs()` |
+| 2 | 不可变嵌套替换 | DONE | `calibration/parameters.py:52-98` — `apply_parameter_vector()` |
+| 3 | 差分进化优化 | DONE | `calibration/estimator.py:178-261` — `differential_evolution` with seed/pop/polish |
+| 4 | 合成恢复测试 | DONE | `tests/test_parameter_estimator.py:80-151` |
+| 5 | 校准来源 | DONE | `CalibrationResult.to_dict()` 含 optimizer settings, bounds, seed tuple |
+| 6 | 提交 | DONE | `37f9d45` "feat(calibration): add restricted broadcast parameter fitting" |
+
+**整体**: **DONE**。
+
+### Task 13: Add Command-Line Workflows
+
+| Step | 描述 | 状态 | 证据 |
+|------|------|:--:|------|
+| 1 | inspect_dataset | DONE | `cli/inspect_dataset.py` — 含 `report=True` 审计摘要 |
+| 2 | replay_event | DONE | `cli/replay_event.py` |
+| 3 | calibrate_event | DONE | `cli/calibrate_event.py` — 含 `--source-revision` |
+| 4 | 错误路径测试 | DONE | `tests/test_cli.py` — 7 tests, 含 missing file, unknown mode, invalid fraction |
+| 5 | 提交 | DONE | `371fb23` "feat(cli): add dataset replay and calibration commands" |
+
+**整体**: **DONE**。
+
+### Task 14: Add End-to-End CHECKED Fixture Validation and CI
+
+| Step | 描述 | 状态 | 证据 |
+|------|------|:--:|------|
+| 1 | 端到端测试 | DONE | `tests/test_end_to_end_checked.py` 存在 |
+| 2 | CI 添加所有测试 | DONE | `.github/workflows/test.yml:18` — `python -m pytest tests -v` |
+| 3 | 数据契约文档 | DONE | `docs/v1.2_data_contract.md` 存在 |
+| 4 | 本地全量门 | DONE | 154 tests pass |
+| 5 | 提交 | DONE | `f503b32` "docs: add V1.2 implementation report" |
+
+**整体**: **DONE**。
+
+### Task 15: Execute the First Real CHECKED Study
+
+| Step | 描述 | 状态 | 证据 |
+|------|------|:--:|------|
+| 1 | 客观选择案例 (100-1000 users, ≥100 ix, ≥96h, ≥20 cmt/rpt) | DONE | `configs/experiments/checked_pilot_matched_20.yaml` — 10 对规模匹配案例；筛选条件接近原计划但并非完全相同（原计划要求 ≥200 ix, ≥12h 而非 ≥96h） |
+| 2 | 运行三种回放模式 | DONE | `artifacts/replay/` — 40 个 JSON 文件（broadcast + cumulative 各 20） |
+| 3 | 拟合 stage-1 参数（broadcast） | DONE | `artifacts/calibration/` — 含 `s3_calibration.json`, `s3_batch_20.json`, `v151/v152_mechanism_ablation.json` |
+| 4 | 与持续性+指数衰减基线比较 | DONE | `artifacts/replay/replay_metrics_v2.csv` — 含 persistence/exp/pulse 基线 NRMSE |
+| 5 | 撰写 pilot 报告 | DONE | `docs/technical_report_v1.4.md` — 区分 observed facts, model assumptions, fitted params, validation performance |
+| 6 | V1.2 release gate 决策 | PARTIAL | Step 6 要求 "median validation active-count NRMSE beats persistence or exponential baseline" — 初始 V1.2 结果: 仅 1/20 超越基线（broadcast 默认参数）。后续 ONE_SHOT S3 在 V1.5.2 达到 6/20，但原始 gate 条件下的默认参数不满足 |
+
+**整体**: **PARTIAL** — 前 5 个步骤均已完成。Step 6 的 release gate 条件在默认参数下不满足（1/20），但后续迭代（V1.5 S3）显著改善。原始计划要求的 "至少 15/20 案例无错误完成" 满足（40 次回放全部成功）。"结果可从 config+case+seed 复现" 满足。
+
+---
+
+### 旧计划状态汇总
+
+| Task | 名称 | 状态 |
+|------|------|:--:|
+| Task 1 | Freeze V1.1 + Data-Governance Scaffolding | DONE |
+| Task 2 | Canonical Event Data Contract | DONE |
+| Task 3 | CHECKED Adapter | DONE |
+| Task 4 | CED Adapter | DONE |
+| Task 5 | Node Indexing, Time Grid, Observed Trajectories | DONE |
+| Task 6 | No-Leak Network Providers | DONE |
+| Task 7 | Real-Data Initial State + TextSignals | DONE (但 TextSignals 未接入回放管线) |
+| Task 8 | Event Input Timelines + ExternalInputs | DONE (语义信号未填充) |
+| Task 9 | External State, Dynamic Networks, Observers | DONE |
+| Task 10 | Historical Replay + Result Persistence | DONE |
+| Task 11 | Chronological Split + Masked Objective | DONE |
+| Task 12 | Restricted Stage-1 Calibration | DONE |
+| Task 13 | CLI Workflows | DONE |
+| Task 14 | End-to-End CI + Data Contract | DONE |
+| Task 15 | First Real CHECKED Study | PARTIAL (release gate 未满足原始条件) |
 
 ---
 
@@ -315,29 +506,34 @@ python -m pytest tests/ -q
 
 **`3298c38`** — V2.0-C 修正观点评分（priv_std=0.32, corr=0.69）
 
-### 传播模块
+### 传播模块 (V1.2–V1.7R.4)
 
-- **状态**: 基本完成。ONE_SHOT 经消融、CV 和保留集验证。行为观测已修复。基线已冻结。
-- **剩余**: 保留集脚本缺失，需补 `run_v17r3_holdout.py` 以保证可复现。
+- **状态**: 基本完成。ONE_SHOT 经消融、CV 和保留集验证。行为观测已修复。基线已冻结 (`configs/propagation_baseline_v1.yaml`)。
+- **与旧计划对照**: Task 1–15 中传播相关部分 (Task 3–14) 均为 DONE。Task 15 Step 6 release gate 在原默认参数下不满足。
+- **剩余**: 保留集脚本 `run_v17r3_holdout.py` 缺失（结果文件 `v17r3_holdout.json` 存在但无法复现）。
 
-### 观点模块
+### 观点模块 (V2.0-A/B/C)
 
-- **状态**: 基础设施就位但关键连接缺失。语义信号可生成但未馈入动力学。校准仅限单案例。
-- **剩余**: 需要 `SemanticInputTimeline`、LLM 标注器、多案例校准和滚动观点预测。
+- **状态**: 基础设施就位但关键连接缺失。
+  - V2.0-A: `InteractionSemanticSignal` + 规则标注器 — DONE
+  - V2.0-B: `aggregate_window()` — DONE
+  - V2.0-C: 观点指标 Replay 导出 + 修正评分 — DONE (priv_std=0.32 确认动力学运行)
+  - **语义→动力学连接**: NOT FOUND — 无 `SemanticInputTimeline`，`EventInputTimeline` 不填充 `info_evidence/official_info/info_emotion`
+  - **LLM 标注**: `_call_llm()` 仅占位 (NotImplementedError)
+  - **TextSignals 接入**: `state.py` 实现完整但 `replay/runner.py` 未传入
 
 ### LLM 模块
 
-- **状态**: 未开始。`_call_llm()` 仅占位。
+- **状态**: 未开始。`api.py` 中有 `LLMDecisionRequest` 引用但无实现。
 
 ### 是否适合开始新 Work Item
 
-**可以**，前提是新 Work Item 的依赖已满足。当前推荐从候选 A（SemanticInputTimeline）开始，因为这是连接语义标注器和动力学引擎的最小缺失环节。
+**可以**，前提是新 Work Item 的依赖已满足。当前推荐从候选 A（SemanticInputTimeline）开始——这是连接语义标注器和动力学引擎的最小缺失环节，也是 V2.0 路线图 Phase 3（审查建议第三阶段）的核心步骤。
 
 ### 开始前必须补齐的证据
 
-1. 补 `scripts/run_v17r3_holdout.py` 或明确标记保留集结果为不可复现
-2. 确认 `artifacts/opinion/` 目录状态（`cddaff3` 承诺写入但未实现）
-3. 确认 CI 状态（当前仅本地测试通过）
+1. 补 `scripts/run_v17r3_holdout.py` 或明确标记保留集结果为不可复现（当前仅存在 `.json` 结果文件但无运行脚本）
+2. 确认 CI 状态（仅本地 `154 passed`，无 GitHub Actions 运行记录可查）
 
 ---
 
